@@ -99,39 +99,39 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| AUTH-01 | — | Pending |
-| AUTH-02 | — | Pending |
-| AUTH-03 | — | Pending |
-| AUTH-04 | — | Pending |
-| AUTH-05 | — | Pending |
-| TASK-01 | — | Pending |
-| TASK-02 | — | Pending |
-| TASK-03 | — | Pending |
-| TASK-04 | — | Pending |
-| TASK-05 | — | Pending |
-| TASK-06 | — | Pending |
-| HABIT-01 | — | Pending |
-| HABIT-02 | — | Pending |
-| HABIT-03 | — | Pending |
-| HABIT-04 | — | Pending |
-| PLAN-01 | — | Pending |
-| PLAN-02 | — | Pending |
-| PLAN-03 | — | Pending |
-| PLAN-04 | — | Pending |
-| BOARD-01 | — | Pending |
-| BOARD-02 | — | Pending |
-| BOARD-03 | — | Pending |
-| BOARD-04 | — | Pending |
-| UX-01 | — | Pending |
-| UX-02 | — | Pending |
-| UX-03 | — | Pending |
-| UX-04 | — | Pending |
+| AUTH-01 | Phase 1: Foundation & Auth | Pending |
+| AUTH-02 | Phase 1: Foundation & Auth | Pending |
+| AUTH-03 | Phase 1: Foundation & Auth | Pending |
+| AUTH-04 | Phase 1: Foundation & Auth | Pending |
+| AUTH-05 | Phase 1: Foundation & Auth | Pending |
+| TASK-01 | Phase 2: Task Management | Pending |
+| TASK-02 | Phase 3: Smart Task Input | Pending |
+| TASK-03 | Phase 2: Task Management | Pending |
+| TASK-04 | Phase 2: Task Management | Pending |
+| TASK-05 | Phase 2: Task Management | Pending |
+| TASK-06 | Phase 3: Smart Task Input | Pending |
+| HABIT-01 | Phase 4: Habit Tracking | Pending |
+| HABIT-02 | Phase 4: Habit Tracking | Pending |
+| HABIT-03 | Phase 4: Habit Tracking | Pending |
+| HABIT-04 | Phase 4: Habit Tracking | Pending |
+| PLAN-01 | Phase 5: AI Daily Planner | Pending |
+| PLAN-02 | Phase 5: AI Daily Planner | Pending |
+| PLAN-03 | Phase 5: AI Daily Planner | Pending |
+| PLAN-04 | Phase 7: Notifications & Reminders | Pending |
+| BOARD-01 | Phase 6: Collaborative Boards | Pending |
+| BOARD-02 | Phase 6: Collaborative Boards | Pending |
+| BOARD-03 | Phase 6: Collaborative Boards | Pending |
+| BOARD-04 | Phase 6: Collaborative Boards | Pending |
+| UX-01 | Phase 1: Foundation & Auth | Pending |
+| UX-02 | Phase 8: Integration, Animations & Deployment | Pending |
+| UX-03 | Phase 7: Notifications & Reminders | Pending |
+| UX-04 | Phase 8: Integration, Animations & Deployment | Pending |
 
 **Coverage:**
 - v1 requirements: 27 total
-- Mapped to phases: 0
-- Unmapped: 27 (pending roadmap creation)
+- Mapped to phases: 27
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-03-16*
-*Last updated: 2026-03-16 after initial definition*
+*Last updated: 2026-03-16 after roadmap creation*
