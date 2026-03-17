@@ -38,12 +38,12 @@ Decimal phases appear between their surrounding integers in numeric order.
   3. User can view and edit their profile (display name, avatar, energy pattern preferences)
   4. User can toggle between light mode, dark mode, and system default with Material 3 theming
   5. New user sees an onboarding flow (3-4 screens) on first launch that can be skipped
-**Plans**: TBD
+**Plans**: 3 plans
 
 Plans:
-- [ ] 01-01: TBD
-- [ ] 01-02: TBD
-- [ ] 01-03: TBD
+- [ ] 01-01-PLAN.md — Flutter project scaffold, Material 3 theme system, shared widgets, test infrastructure
+- [ ] 01-02-PLAN.md — Auth feature (email/password, Google OAuth, router guards, DB migration)
+- [ ] 01-03-PLAN.md — Profile, app shell, onboarding, settings, final router wiring
 
 ### Phase 2: Task Management
 **Goal**: Users can create, organize, filter, and manage tasks with full CRUD and recurring schedules
@@ -158,7 +158,7 @@ Phase 1 first, then Phases 2-7 in parallel, then Phase 8 last.
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation & Auth | 0/0 | Not started | - |
+| 1. Foundation & Auth | 0/3 | Planning complete | - |
 | 2. Task Management | 0/0 | Not started | - |
 | 3. Smart Task Input | 0/0 | Not started | - |
 | 4. Habit Tracking | 0/0 | Not started | - |
