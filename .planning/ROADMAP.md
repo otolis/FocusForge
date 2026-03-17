@@ -99,11 +99,12 @@ Plans:
   2. User can view their daily schedule as a visual time-blocked timeline
   3. User can drag tasks to different time slots on the timeline with snap-to-15-minute increments
   4. Generated schedule respects user's energy pattern (deep work in peak hours, light tasks in low-energy periods)
-**Plans**: TBD
+**Plans**: 3 plans
 
 Plans:
-- [ ] 05-01: TBD
-- [ ] 05-02: TBD
+- [ ] 05-01-PLAN.md — Data foundation: DB migration, domain models, Edge Function with Groq API, repository, Riverpod providers
+- [ ] 05-02-PLAN.md — Timeline UI: planner screen, timeline widget, time block cards, energy zones, add-item sheet, shimmer loading, router wiring
+- [ ] 05-03-PLAN.md — Drag-to-reschedule: LongPressDraggable blocks, 15-minute snap, push-down displacement, auto-save
 
 ### Phase 6: Collaborative Boards
 **Goal**: Users can collaborate on Kanban boards with realtime sync, role-based access, and live presence
@@ -163,7 +164,7 @@ Phase 1 first, then Phases 2-7 in parallel, then Phase 8 last.
 | 2. Task Management | 0/0 | Not started | - |
 | 3. Smart Task Input | 0/3 | Planned | - |
 | 4. Habit Tracking | 0/0 | Not started | - |
-| 5. AI Daily Planner | 0/0 | Not started | - |
+| 5. AI Daily Planner | 0/3 | Planned | - |
 | 6. Collaborative Boards | 0/0 | Not started | - |
 | 7. Notifications & Reminders | 0/0 | Not started | - |
 | 8. Integration, Animations & Deployment | 0/0 | Not started | - |
