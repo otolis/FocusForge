@@ -1,0 +1,206 @@
+text,category
+prepare quarterly report for the team,work
+finish the presentation slides,work
+send email to client about project update,work
+schedule meeting with marketing team,work
+review pull request on GitHub,work
+deploy new version to production,work
+fix bug in the authentication module,work
+write documentation for the API,work
+attend standup meeting at nine,work
+update project timeline in Jira,work
+submit expense report to accounting,work
+prepare slides for board meeting,work
+call vendor about contract renewal,work
+review candidates for developer position,work
+set up new staging environment,work
+merge feature branch into main,work
+write unit tests for payment service,work
+refactor database queries for performance,work
+respond to client feedback on proposal,work
+organize team building event for friday,work
+create sprint planning agenda,work
+complete code review for backend changes,work
+schedule one on one with manager,work
+draft press release for product launch,work
+update employee handbook policies,work
+plan product roadmap for next quarter,work
+conduct user research interviews,work
+analyze sales data from last month,work
+set up ci cd pipeline for new service,work
+prepare onboarding materials for new hire,work
+clean the kitchen and bathroom,personal
+organize closet and donate old clothes,personal
+water the plants in the garden,personal
+rearrange furniture in the living room,personal
+set up new phone with all apps,personal
+backup photos to cloud storage,personal
+plan vacation itinerary for summer,personal
+book flight tickets to paris,personal
+update resume with recent experience,personal
+renew gym membership,personal
+declutter the garage this weekend,personal
+paint the bedroom walls,personal
+fix leaky faucet in bathroom,personal
+hang new curtains in living room,personal
+sort through old paperwork and shred,personal
+update emergency contacts list,personal
+charge all electronics before trip,personal
+organize digital photos by year,personal
+set up automatic bill payments,personal
+create a weekly meal plan,personal
+deep clean the refrigerator,personal
+replace batteries in smoke detectors,personal
+organize spice rack in kitchen,personal
+update phone software to latest version,personal
+clean out email inbox and unsubscribe,personal
+go for a morning run in the park,health
+schedule annual physical exam,health
+take daily vitamins and supplements,health
+book dentist appointment for cleaning,health
+sign up for yoga class on wednesday,health
+track water intake throughout the day,health
+prepare healthy meal prep for the week,health
+go to the gym after work,health
+schedule eye exam appointment,health
+meditate for twenty minutes before bed,health
+stretch and do morning exercises,health
+refill prescription at the pharmacy,health
+make smoothie with protein powder,health
+walk ten thousand steps today,health
+book massage therapy session,health
+register for local marathon in october,health
+do thirty minutes of cardio,health
+check blood pressure at home,health
+practice deep breathing exercises,health
+cook a vegetable stir fry for dinner,health
+cut back on sugar this week,health
+try new healthy recipe from cookbook,health
+get flu shot at the clinic,health
+schedule therapy appointment for tuesday,health
+do fifteen minutes of stretching,health
+buy groceries for the week,shopping
+order new headphones from amazon,shopping
+pick up dry cleaning from the store,shopping
+get new running shoes online,shopping
+buy birthday present for mom,shopping
+return defective blender to target,shopping
+order printer ink cartridges,shopping
+buy new bed sheets and pillows,shopping
+shop for winter coat on sale,shopping
+get school supplies for the kids,shopping
+order contact lenses online,shopping
+buy dog food and treats,shopping
+pick up prescriptions from pharmacy,shopping
+purchase new laptop charger,shopping
+buy flowers for anniversary,shopping
+order groceries for delivery,shopping
+get new phone case and screen protector,shopping
+buy camping gear for weekend trip,shopping
+shop for holiday gifts for family,shopping
+pick up fresh bread from bakery,shopping
+buy cleaning supplies for the house,shopping
+order replacement water filter,shopping
+purchase new yoga mat online,shopping
+get new batteries for remote control,shopping
+buy snacks for movie night,shopping
+pay electricity bill before due date,finance
+review monthly bank statement,finance
+transfer money to savings account,finance
+submit tax documents to accountant,finance
+check credit card rewards balance,finance
+set up automatic rent payment,finance
+review and update monthly budget,finance
+pay off outstanding credit card balance,finance
+file quarterly estimated tax payment,finance
+compare car insurance quotes online,finance
+check investment portfolio performance,finance
+pay water and gas utility bills,finance
+review retirement fund contributions,finance
+dispute incorrect charge on statement,finance
+calculate total expenses for the month,finance
+renew home insurance policy,finance
+track all receipts for tax deductions,finance
+transfer funds to emergency savings,finance
+review subscription services and cancel unused,finance
+pay student loan monthly installment,finance
+check mortgage interest rate options,finance
+set up college savings plan for kids,finance
+review annual credit report for errors,finance
+pay property tax assessment,finance
+update beneficiary information on accounts,finance
+study for calculus exam on friday,education
+read chapter five of history textbook,education
+complete online course module three,education
+write essay on climate change impacts,education
+practice spanish vocabulary flashcards,education
+attend chemistry lab session,education
+submit homework assignment before midnight,education
+review lecture notes from monday,education
+prepare for physics final exam,education
+watch tutorial video on machine learning,education
+work on group project presentation,education
+register for next semester classes,education
+study organic chemistry reactions,education
+complete programming assignment in python,education
+read research paper on neural networks,education
+take practice test for certification exam,education
+review study guide for biology midterm,education
+attend office hours with professor,education
+write lab report for chemistry class,education
+study for drivers license written test,education
+complete online learning module on leadership,education
+practice math problems for gre prep,education
+read assigned chapters for book club,education
+prepare thesis outline and bibliography,education
+review grammar rules for english essay,education
+do the laundry and fold clothes,errands
+take car to mechanic for oil change,errands
+drop off package at the post office,errands
+pick up kids from soccer practice,errands
+return library books before due date,errands
+get car washed at the car wash,errands
+take dog to the vet for checkup,errands
+drop off donations at goodwill,errands
+renew drivers license at the dmv,errands
+pick up suit from the tailor,errands
+take out trash and recycling bins,errands
+get keys copied at hardware store,errands
+drop off shoes for repair,errands
+pick up cake order from bakery,errands
+take clothes to dry cleaners,errands
+get passport photos taken,errands
+fill up gas tank before road trip,errands
+drop off car for tire rotation,errands
+pick up mail from post office box,errands
+take recycling to the collection center,errands
+return borrowed tools to neighbor,errands
+pick up prescription glasses from optician,errands
+drop off rent check at landlord office,errands
+get spare house key made,errands
+take broken laptop to repair shop,errands
+plan dinner party with friends this weekend,social
+call mom and wish her happy birthday,social
+send thank you card to the host,social
+organize game night for saturday,social
+rsvp to wedding invitation by friday,social
+plan surprise party for best friend,social
+schedule coffee date with old colleague,social
+invite neighbors over for barbecue,social
+send holiday cards to family members,social
+organize reunion with college friends,social
+plan potluck dinner for the group,social
+buy gift for baby shower party,social
+set up video call with grandparents,social
+attend community volunteer event saturday,social
+plan housewarming party for new apartment,social
+text friends about weekend hiking trip,social
+arrange group dinner at italian restaurant,social
+call brother to catch up on news,social
+plan birthday celebration for dad,social
+organize book club meeting for next month,social
+volunteer at local food bank saturday,social
+plan picnic in the park with family,social
+send invitations for graduation party,social
+schedule lunch date with sister,social
+arrange farewell dinner for coworker,social

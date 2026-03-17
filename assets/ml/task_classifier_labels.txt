@@ -1,0 +1,8 @@
+work
+personal
+health
+shopping
+finance
+education
+errands
+social
