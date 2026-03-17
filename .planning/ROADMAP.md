@@ -116,12 +116,12 @@ Plans:
   2. Board changes (card moves, edits, column changes) sync instantly across all connected users via Supabase Realtime
   3. User can invite members to boards by email and assign roles (owner/editor/viewer) with appropriate permissions
   4. User can see live presence indicators showing who is currently online on a shared board
-**Plans**: TBD
+**Plans**: 3 plans
 
 Plans:
-- [ ] 06-01: TBD
-- [ ] 06-02: TBD
-- [ ] 06-03: TBD
+- [ ] 06-01-PLAN.md — Database schema (4 tables, RLS, RPC), domain models, repositories, realtime service, Riverpod providers
+- [ ] 06-02-PLAN.md — Board list screen (2-col grid, FAB), Kanban detail screen (appflowy_board), routing (5th tab)
+- [ ] 06-03-PLAN.md — Member management (invite, roles, settings screen), presence widgets (green dot, avatar row)
 
 ### Phase 7: Notifications & Reminders
 **Goal**: Users receive timely push notifications for deadlines with adaptive reminder timing
@@ -166,6 +166,6 @@ Phase 1 first, then Phases 2-7 in parallel, then Phase 8 last.
 | 3. Smart Task Input | 0/3 | Planned | - |
 | 4. Habit Tracking | 0/3 | Planned | - |
 | 5. AI Daily Planner | 0/3 | Planned | - |
-| 6. Collaborative Boards | 0/0 | Not started | - |
+| 6. Collaborative Boards | 0/3 | Planned | - |
 | 7. Notifications & Reminders | 0/0 | Not started | - |
 | 8. Integration, Animations & Deployment | 0/0 | Not started | - |
