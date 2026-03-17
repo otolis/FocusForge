@@ -57,15 +57,17 @@ All sizes use Flutter logical pixels (dp). Font families loaded via `google_font
 | Role | Font | Size | Weight | Line Height | Usage |
 |------|------|------|--------|-------------|-------|
 | Body | Inter | 16dp | 400 (regular) | 1.5 | Default text, descriptions, form inputs |
-| Label | Inter | 14dp | 500 (medium) | 1.4 | Button labels, captions, helper text, nav labels |
+| Label | Inter | 14dp | 400 (regular) | 1.4 | Button labels, captions, helper text, nav labels, inline form errors |
 | Heading | Nunito | 22dp | 700 (bold) | 1.3 | Screen titles, section headers |
-| Display | Nunito | 28dp | 800 (extrabold) | 1.2 | Onboarding titles, hero text, welcome screen |
+| Display | Nunito | 28dp | 700 (bold) | 1.2 | Onboarding titles, hero text, welcome screen |
+
+**Weight rationale:** Two weights only — 400 (regular) for body and labels, 700 (bold) for headings and display. The visual distinction between Heading and Display roles is achieved through size difference (22dp vs 28dp), not weight variation.
 
 **Implementation note:** Apply via `GoogleFonts.nunitoTextTheme()` merged with `GoogleFonts.interTextTheme()` for body styles. Override specific `TextTheme` roles:
-- `displayLarge`, `displayMedium` -> Nunito 28dp/800
+- `displayLarge`, `displayMedium` -> Nunito 28dp/700
 - `headlineMedium`, `headlineSmall` -> Nunito 22dp/700
 - `bodyLarge`, `bodyMedium` -> Inter 16dp/400
-- `labelLarge`, `labelMedium` -> Inter 14dp/500
+- `labelLarge`, `labelMedium` -> Inter 14dp/400
 
 ---
 
@@ -151,15 +153,15 @@ darkColorScheme = ColorScheme.fromSeed(
 
 ### Screen Inventory (Phase 1)
 
-| Screen | Route | Layout | Key Interactions |
-|--------|-------|--------|-----------------|
-| Onboarding | `/onboarding` | Full-screen PageView, 3 pages | Swipe between pages, tap "Skip" or "Get Started" |
-| Login | `/login` | Centered single-column form | Email/password input, tap "Sign In", tap "Sign in with Google", navigate to Register |
-| Register | `/register` | Centered single-column form | Email/password/name input, tap "Create Account", tap "Sign in with Google", navigate to Login |
-| Forgot Password | `/forgot-password` | Centered single-column form | Email input, tap "Send Reset Link", navigate back to Login |
-| Home (App Shell) | `/` | Bottom nav with 4 tabs | Tab switching, placeholder content for Tasks/Habits/Planner |
-| Profile | `/profile` | Scrollable single-column | Avatar display/edit, display name edit, energy pattern picker, theme toggle, sign out |
-| Settings | `/settings` | Scrollable list | Theme mode selector, account actions |
+| Screen | Route | Layout | Key Interactions | Focal Point |
+|--------|-------|--------|-----------------|-------------|
+| Onboarding | `/onboarding` | Full-screen PageView, 3 pages | Swipe between pages, tap "Skip" or "Get Started" | Illustration area (240dp) centered above title — draws eye to feature visual before reading text |
+| Login | `/login` | Centered single-column form | Email/password input, tap "Sign In", tap "Sign in with Google", navigate to Register | "Sign In" primary CTA button — full-width amber filled button at visual center of form |
+| Register | `/register` | Centered single-column form | Email/password/name input, tap "Create Account", tap "Sign in with Google", navigate to Login | "Create Account" primary CTA button — full-width amber filled button at visual center of form |
+| Forgot Password | `/forgot-password` | Centered single-column form | Email input, tap "Send Reset Link", navigate back to Login | "Send Reset Link" primary CTA button — single action with minimal surrounding elements |
+| Home (App Shell) | `/` | Bottom nav with 4 tabs | Tab switching, placeholder content for Tasks/Habits/Planner | Active tab content area — placeholder illustration centered vertically in remaining space |
+| Profile | `/profile` | Scrollable single-column | Avatar display/edit, display name edit, energy pattern picker, theme toggle, sign out | Avatar + display name cluster — large circular avatar with name directly below, centered at top of scroll area |
+| Settings | `/settings` | Scrollable list | Theme mode selector, account actions | Theme mode SegmentedButton — primary interactive control positioned prominently at top of list |
 
 ### Navigation Structure
 
@@ -180,7 +182,7 @@ Bottom navigation bar with 4 tabs (placeholder content for Phases 2-5):
     SingleChildScrollView
       Padding (horizontal: 32dp, vertical: 48dp)
         Column (crossAxis: center, gap: 24dp)
-          [App logo / wordmark — Nunito 28dp extrabold, amber primary]
+          [App logo / wordmark — Nunito 28dp bold, amber primary]
           [Tagline — Inter 16dp regular, onSurfaceVariant]
           --- 32dp spacer ---
           [Email TextField — outlined, 12dp radius]
@@ -203,15 +205,15 @@ Bottom navigation bar with 4 tabs (placeholder content for Phases 2-5):
 [Screen — full bleed, no app bar]
   SafeArea
     Column
-      [Skip button — top right, text button, Inter 14dp medium]
+      [Skip button — top right, text button, Inter 14dp regular]
       Expanded
         PageView (3 pages)
           [Page]
             Column (center)
               [Illustration area — 240dp height, SVG or icon-based]
               --- 32dp spacer ---
-              [Title — Nunito 28dp extrabold, center aligned]
-              --- 12dp spacer ---
+              [Title — Nunito 28dp bold, center aligned]
+              --- 16dp spacer ---
               [Description — Inter 16dp regular, center aligned, onSurfaceVariant, max 2 lines]
       --- 24dp spacer ---
       [SmoothPageIndicator — 3 dots, active: tertiary accent, inactive: outlineVariant]
@@ -234,12 +236,12 @@ Bottom navigation bar with 4 tabs (placeholder content for Phases 2-5):
           [Edit button — small icon button overlaid bottom-right]
         --- 8dp spacer ---
         [Display name — Nunito 22dp bold, centered]
-        [Email — Inter 14dp medium, onSurfaceVariant, centered]
+        [Email — Inter 14dp regular, onSurfaceVariant, centered]
         --- 24dp spacer ---
         [Card: Display Name]
           ListTile (label + current value + edit icon)
         [Card: Energy Preferences]
-          [Section title — Inter 14dp medium]
+          [Section title — Inter 14dp regular]
           [Peak hours picker — horizontal scrollable chips for hours 6-22]
           [Low hours picker — horizontal scrollable chips for hours 6-22]
           [Helper text — "AI planner uses this to schedule your day"]
@@ -317,7 +319,7 @@ Bottom navigation bar with 4 tabs (placeholder content for Phases 2-5):
 
 | Context | Pattern |
 |---------|---------|
-| Form validation | Inline error text below field, `colorScheme.error` color, Inter 12dp |
+| Form validation | Inline error text below field, `colorScheme.error` color, Inter 14dp (Label role) |
 | Auth API error | SnackBar at bottom, 4-second auto-dismiss, error background with white text |
 | Network error | SnackBar with retry action button |
 | Profile load failure | Full-screen centered error with retry button |
@@ -355,7 +357,7 @@ Bottom navigation bar with 4 tabs (placeholder content for Phases 2-5):
 
 **Primary:** Initials-based avatar derived from display name.
 - Background: `colorScheme.primaryContainer`
-- Text: `colorScheme.onPrimaryContainer`, Nunito 20dp bold
+- Text: `colorScheme.onPrimaryContainer`, Nunito 22dp bold
 - Fallback (no name): single letter "?" or generic person icon
 
 **Secondary:** Optional photo upload via `image_picker`.
@@ -373,13 +375,13 @@ Bottom navigation bar with 4 tabs (placeholder content for Phases 2-5):
 **Layout:** Two rows of horizontally scrollable `FilterChip` widgets.
 
 **Peak hours row:**
-- Label: "Peak Energy Hours" (Inter 14dp medium)
+- Label: "Peak Energy Hours" (Inter 14dp regular)
 - Chips for hours 6 AM through 10 PM (displayed as "6 AM", "7 AM", etc.)
 - Selected state: `colorScheme.primary` background, white text
 - Unselected state: outlined, `colorScheme.outline` border
 
 **Low hours row:**
-- Label: "Low Energy Hours" (Inter 14dp medium)
+- Label: "Low Energy Hours" (Inter 14dp regular)
 - Same chip layout
 - Selected state: `colorScheme.tertiary` background (teal/sage)
 - Unselected state: same as peak unselected
