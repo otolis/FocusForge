@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Completed 01-02-PLAN.md
-last_updated: "2026-03-17T16:49:05Z"
-last_activity: 2026-03-17 -- Completed Plan 01-02 (Auth flow with Supabase + GoRouter + UI screens)
+stopped_at: Completed 01-03-PLAN.md (awaiting human-verify checkpoint)
+last_updated: "2026-03-17T16:58:33Z"
+last_activity: 2026-03-17 -- Completed Plan 01-03 (Profile, onboarding, navigation, settings)
 progress:
   total_phases: 8
-  completed_phases: 0
+  completed_phases: 1
   total_plans: 3
-  completed_plans: 2
-  percent: 8
+  completed_plans: 3
+  percent: 13
 ---
 
 # Project State
@@ -25,29 +25,29 @@ See: .planning/PROJECT.md (updated 2026-03-16)
 
 ## Current Position
 
-Phase: 1 of 8 (Foundation & Auth)
-Plan: 2 of 3 in current phase
-Status: Executing
-Last activity: 2026-03-17 -- Completed Plan 01-02 (Auth flow with Supabase + GoRouter + UI screens)
+Phase: 1 of 8 (Foundation & Auth) -- COMPLETE (pending visual verification)
+Plan: 3 of 3 in current phase
+Status: Awaiting human-verify checkpoint
+Last activity: 2026-03-17 -- Completed Plan 01-03 (Profile, onboarding, navigation, settings)
 
-Progress: [▓░░░░░░░░░] 8%
+Progress: [▓▓░░░░░░░░] 13%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 2
-- Average duration: 7 min
-- Total execution time: 0.22 hours
+- Total plans completed: 3
+- Average duration: 6 min
+- Total execution time: 0.32 hours
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
-| 01 (Foundation & Auth) | 2/3 | 13 min | 7 min |
+| 01 (Foundation & Auth) | 3/3 | 19 min | 6 min |
 
 **Recent Trend:**
-- Last 5 plans: 01-01 (8min), 01-02 (5min)
-- Trend: accelerating
+- Last 5 plans: 01-01 (8min), 01-02 (5min), 01-03 (6min)
+- Trend: steady
 
 *Updated after each plan completion*
 
@@ -67,6 +67,10 @@ Recent decisions affecting current work:
 - [01-02]: AuthNotifier (ChangeNotifier) separate from AuthStateNotifier (StateNotifier) -- GoRouter needs ChangeNotifier, UI needs StateNotifier
 - [01-02]: Google Sign-In uses placeholder webClientId -- user replaces during setup
 - [01-02]: Tests created but not runnable without Flutter SDK -- verified via content checks
+- [01-03]: Onboarding status preloaded in main.dart before runApp for synchronous router redirect
+- [01-03]: Profile uses FutureProvider.family keyed by userId for per-user caching
+- [01-03]: Energy picker validates no overlap between peak and low hours
+- [01-03]: Theme toggle on both ProfileScreen and SettingsScreen for discovery
 
 ### Pending Todos
 
@@ -80,6 +84,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-17T16:49:05Z
-Stopped at: Completed 01-02-PLAN.md
-Resume file: .planning/phases/01-foundation-auth/01-03-PLAN.md
+Last session: 2026-03-17T16:58:33Z
+Stopped at: Completed 01-03-PLAN.md (awaiting human-verify checkpoint)
+Resume file: Phase 1 complete -- next phase TBD

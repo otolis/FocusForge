@@ -17,7 +17,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - Phases 2-7 are fully independent and run in parallel
 - Phase 8 depends on all feature phases completing
 
-- [ ] **Phase 1: Foundation & Auth** - Supabase setup, auth flows, user profile, dark mode, onboarding
+- [x] **Phase 1: Foundation & Auth** - Supabase setup, auth flows, user profile, dark mode, onboarding
 - [ ] **Phase 2: Task Management** - Task CRUD, categories, filters, search, recurring tasks
 - [ ] **Phase 3: Smart Task Input** - Natural language parsing and on-device TFLite classification
 - [ ] **Phase 4: Habit Tracking** - Habit CRUD, streaks, check-in, analytics charts
@@ -41,9 +41,9 @@ Decimal phases appear between their surrounding integers in numeric order.
 **Plans**: 3 plans
 
 Plans:
-- [ ] 01-01-PLAN.md — Flutter project scaffold, Material 3 theme system, shared widgets, test infrastructure
-- [ ] 01-02-PLAN.md — Auth feature (email/password, Google OAuth, router guards, DB migration)
-- [ ] 01-03-PLAN.md — Profile, app shell, onboarding, settings, final router wiring
+- [x] 01-01-PLAN.md — Flutter project scaffold, Material 3 theme system, shared widgets, test infrastructure
+- [x] 01-02-PLAN.md — Auth feature (email/password, Google OAuth, router guards, DB migration)
+- [x] 01-03-PLAN.md — Profile, app shell, onboarding, settings, final router wiring
 
 ### Phase 2: Task Management
 **Goal**: Users can create, organize, filter, and manage tasks with full CRUD and recurring schedules
@@ -158,7 +158,7 @@ Phase 1 first, then Phases 2-7 in parallel, then Phase 8 last.
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation & Auth | 0/3 | Planning complete | - |
+| 1. Foundation & Auth | 3/3 | Complete | 2026-03-17 |
 | 2. Task Management | 0/0 | Not started | - |
 | 3. Smart Task Input | 0/0 | Not started | - |
 | 4. Habit Tracking | 0/0 | Not started | - |

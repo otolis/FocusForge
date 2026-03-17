@@ -11,9 +11,9 @@ Requirements for initial release. Each maps to roadmap phases.
 
 - [x] **AUTH-01**: User can sign up with email and password via Supabase Auth
 - [x] **AUTH-02**: User can sign in with Google OAuth via Supabase Auth
-- [ ] **AUTH-03**: User can create and edit profile with display name and avatar
-- [ ] **AUTH-04**: User can set energy pattern preferences (peak/low hours) for AI scheduling
-- [ ] **AUTH-05**: New user sees 3-4 screen onboarding flow explaining app features
+- [x] **AUTH-03**: User can create and edit profile with display name and avatar
+- [x] **AUTH-04**: User can set energy pattern preferences (peak/low hours) for AI scheduling
+- [x] **AUTH-05**: New user sees 3-4 screen onboarding flow explaining app features
 
 ### Task Management
 
@@ -101,9 +101,9 @@ Which phases cover which requirements. Updated during roadmap creation.
 |-------------|-------|--------|
 | AUTH-01 | Phase 1: Foundation & Auth | Complete |
 | AUTH-02 | Phase 1: Foundation & Auth | Complete |
-| AUTH-03 | Phase 1: Foundation & Auth | Pending |
-| AUTH-04 | Phase 1: Foundation & Auth | Pending |
-| AUTH-05 | Phase 1: Foundation & Auth | Pending |
+| AUTH-03 | Phase 1: Foundation & Auth | Complete |
+| AUTH-04 | Phase 1: Foundation & Auth | Complete |
+| AUTH-05 | Phase 1: Foundation & Auth | Complete |
 | TASK-01 | Phase 2: Task Management | Pending |
 | TASK-02 | Phase 3: Smart Task Input | Pending |
 | TASK-03 | Phase 2: Task Management | Pending |
