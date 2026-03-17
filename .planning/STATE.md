@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: verifying
-stopped_at: Completed 03-02-PLAN.md
-last_updated: "2026-03-17T23:14:47.400Z"
+stopped_at: Completed 03-01-PLAN.md
+last_updated: "2026-03-17T23:15:42.797Z"
 last_activity: 2026-03-17 -- Completed Plan 01-03 (Profile, onboarding, navigation, settings)
 progress:
   total_phases: 8
   completed_phases: 1
-  total_plans: 18
-  completed_plans: 4
+  total_plans: 19
+  completed_plans: 5
   percent: 13
 ---
 
@@ -51,6 +51,7 @@ Progress: [▓▓░░░░░░░░] 13%
 
 *Updated after each plan completion*
 | Phase 03 P02 | 4min | 2 tasks | 9 files |
+| Phase 03 P01 | 4min | 2 tasks | 5 files |
 
 ## Accumulated Context
 
@@ -73,6 +74,9 @@ Recent decisions affecting current work:
 - [01-03]: Energy picker validates no overlap between peak and low hours
 - [01-03]: Theme toggle on both ProfileScreen and SettingsScreen for discovery
 - [Phase 03]: Used @visibleForTesting initializeForTesting() for TFLite service unit testing without native bindings
+- [Phase 03]: P2 regex uses multi-word 'high priority' pattern to avoid false positives on common words
+- [Phase 03]: Category keywords NOT stripped from title -- they carry task meaning unlike priority/date tokens
+- [Phase 03]: chrono_dart date parsing wrapped in try/catch for graceful degradation on unusual input
 
 ### Pending Todos
 
@@ -86,6 +90,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-17T23:14:47.398Z
-Stopped at: Completed 03-02-PLAN.md
+Last session: 2026-03-17T23:15:38.082Z
+Stopped at: Completed 03-01-PLAN.md
 Resume file: None
