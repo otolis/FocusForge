@@ -68,11 +68,12 @@ Plans:
   1. User can type a natural language sentence (e.g., "Buy groceries tomorrow high priority") and the app auto-extracts deadline, priority, and category
   2. On-device TFLite model suggests category and priority for new tasks based on the task text
   3. Parsing and classification results are presented as editable suggestions the user can accept or override
-**Plans**: TBD
+**Plans**: 3 plans
 
 Plans:
-- [ ] 03-01: TBD
-- [ ] 03-02: TBD
+- [ ] 03-01-PLAN.md — NLP parser service with regex priority extraction, chrono_dart date parsing, category keyword matching
+- [ ] 03-02-PLAN.md — TFLite classifier service, training pipeline, model assets, and unit tests
+- [ ] 03-03-PLAN.md — Smart input orchestrator, Riverpod providers, UI widgets, demo screen, widget tests
 
 ### Phase 4: Habit Tracking
 **Goal**: Users can track habits with streaks, one-tap check-in, and visual analytics
@@ -160,7 +161,7 @@ Phase 1 first, then Phases 2-7 in parallel, then Phase 8 last.
 |-------|----------------|--------|-----------|
 | 1. Foundation & Auth | 3/3 | Complete | 2026-03-17 |
 | 2. Task Management | 0/0 | Not started | - |
-| 3. Smart Task Input | 0/0 | Not started | - |
+| 3. Smart Task Input | 0/3 | Planned | - |
 | 4. Habit Tracking | 0/0 | Not started | - |
 | 5. AI Daily Planner | 0/0 | Not started | - |
 | 6. Collaborative Boards | 0/0 | Not started | - |
