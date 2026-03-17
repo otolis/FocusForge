@@ -132,11 +132,12 @@ Plans:
   1. User receives FCM push notifications for upcoming task deadlines with configurable reminder timing
   2. Reminder timing adapts based on user's completion patterns (e.g., if user consistently completes tasks last-minute, reminders come earlier)
   3. User can configure notification preferences (enable/disable, timing offsets) from settings
-**Plans**: TBD
+**Plans**: 3 plans
 
 Plans:
-- [ ] 07-01: TBD
-- [ ] 07-02: TBD
+- [ ] 07-01-PLAN.md — Database schema (3 tables, RLS), domain models, repository, NotificationService (FCM, token lifecycle, action buttons), providers
+- [ ] 07-02-PLAN.md — send-reminders Edge Function (adaptive timing, quiet hours, FCM delivery), pending_reminders view, pg_cron schedule
+- [ ] 07-03-PLAN.md — Notification settings screen (master toggle, category cards, quiet hours picker, snooze), settings integration, router wiring
 
 ### Phase 8: Integration, Animations & Deployment
 **Goal**: All features are wired together, polished with animations, and deployed as a live Flutter web demo
@@ -168,5 +169,5 @@ Phase 1 first, then Phases 2-7 in parallel, then Phase 8 last.
 | 4. Habit Tracking | 0/3 | Planned | - |
 | 5. AI Daily Planner | 0/3 | Planned | - |
 | 6. Collaborative Boards | 0/3 | Planned | - |
-| 7. Notifications & Reminders | 0/0 | Not started | - |
+| 7. Notifications & Reminders | 0/3 | Planned | - |
 | 8. Integration, Animations & Deployment | 0/0 | Not started | - |
