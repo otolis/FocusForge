@@ -13,25 +13,29 @@ void main() {
     });
 
     test('initial state is ThemeMode.system', () {
-      final notifier = ThemeNotifier();
-      expect(notifier.state, equals(ThemeMode.system));
+      final container = createContainer();
+      addTearDown(container.dispose);
+      expect(container.read(themeProvider), equals(ThemeMode.system));
     });
 
     test('setTheme updates state to dark', () async {
-      final notifier = ThemeNotifier();
-      await notifier.setTheme(ThemeMode.dark);
-      expect(notifier.state, equals(ThemeMode.dark));
+      final container = createContainer();
+      addTearDown(container.dispose);
+      await container.read(themeProvider.notifier).setTheme(ThemeMode.dark);
+      expect(container.read(themeProvider), equals(ThemeMode.dark));
     });
 
     test('setTheme updates state to light', () async {
-      final notifier = ThemeNotifier();
-      await notifier.setTheme(ThemeMode.light);
-      expect(notifier.state, equals(ThemeMode.light));
+      final container = createContainer();
+      addTearDown(container.dispose);
+      await container.read(themeProvider.notifier).setTheme(ThemeMode.light);
+      expect(container.read(themeProvider), equals(ThemeMode.light));
     });
 
     test('persists theme mode to SharedPreferences', () async {
-      final notifier = ThemeNotifier();
-      await notifier.setTheme(ThemeMode.dark);
+      final container = createContainer();
+      addTearDown(container.dispose);
+      await container.read(themeProvider.notifier).setTheme(ThemeMode.dark);
 
       // Verify the value was persisted
       final prefs = await SharedPreferences.getInstance();
@@ -43,12 +47,16 @@ void main() {
       // Pre-set a saved theme mode (light = index 1)
       SharedPreferences.setMockInitialValues({'theme_mode': 1});
 
-      final notifier = ThemeNotifier();
+      final container = createContainer();
+      addTearDown(container.dispose);
+
+      // Trigger provider creation (starts async _loadTheme)
+      container.read(themeProvider);
 
       // Give time for the async _loadTheme to complete
       await Future<void>.delayed(const Duration(milliseconds: 100));
 
-      expect(notifier.state, equals(ThemeMode.light));
+      expect(container.read(themeProvider), equals(ThemeMode.light));
     });
   });
 }

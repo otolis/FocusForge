@@ -37,7 +37,7 @@ class OnboardingPage extends StatelessWidget {
               child: Icon(
                 icon,
                 size: 120,
-                color: context.colorScheme.primary.withOpacity(0.7),
+                color: context.colorScheme.primary.withValues(alpha: 0.7),
               ),
             ),
           ),

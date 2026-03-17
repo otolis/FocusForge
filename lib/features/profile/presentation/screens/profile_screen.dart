@@ -7,7 +7,6 @@ import '../../../../core/utils/extensions.dart';
 import '../../../../shared/widgets/app_button.dart';
 import '../../../auth/presentation/providers/auth_provider.dart';
 import '../../../settings/presentation/providers/theme_provider.dart';
-import '../../data/profile_repository.dart';
 import '../../domain/profile_model.dart';
 import '../providers/profile_provider.dart';
 import '../widgets/avatar_widget.dart';
@@ -69,15 +68,15 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
       }
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: const Row(
+          const SnackBar(
+            content: Row(
               children: [
                 Icon(Icons.check, color: Colors.white),
                 SizedBox(width: 8),
                 Text('Profile updated'),
               ],
             ),
-            duration: const Duration(seconds: 2),
+            duration: Duration(seconds: 2),
           ),
         );
       }
@@ -97,15 +96,15 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     }
     if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: const Row(
+        const SnackBar(
+          content: Row(
             children: [
               Icon(Icons.check, color: Colors.white),
               SizedBox(width: 8),
               Text('Profile updated'),
             ],
           ),
-          duration: const Duration(seconds: 2),
+          duration: Duration(seconds: 2),
         ),
       );
     }
@@ -129,15 +128,15 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
 
     if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: const Row(
+        const SnackBar(
+          content: Row(
             children: [
               Icon(Icons.check, color: Colors.white),
               SizedBox(width: 8),
               Text('Profile updated'),
             ],
           ),
-          duration: const Duration(seconds: 2),
+          duration: Duration(seconds: 2),
         ),
       );
     }

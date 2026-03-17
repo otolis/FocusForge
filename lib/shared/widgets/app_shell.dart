@@ -41,7 +41,7 @@ class _AppShellState extends State<AppShell> {
         decoration: BoxDecoration(
           border: Border(
             top: BorderSide(
-              color: context.colorScheme.outlineVariant.withOpacity(0.5),
+              color: context.colorScheme.outlineVariant.withValues(alpha: 0.5),
               width: 1,
             ),
           ),

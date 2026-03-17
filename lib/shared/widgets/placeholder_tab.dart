@@ -25,7 +25,7 @@ class PlaceholderTab extends StatelessWidget {
               Icon(
                 Icons.construction_rounded,
                 size: 64,
-                color: context.colorScheme.onSurfaceVariant.withOpacity(0.5),
+                color: context.colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
               ),
               const SizedBox(height: 16),
               Text(

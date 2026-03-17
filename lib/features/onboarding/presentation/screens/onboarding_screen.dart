@@ -7,8 +7,6 @@ import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import '../../../../core/utils/extensions.dart';
 import '../../../../shared/widgets/app_button.dart';
 import '../../../auth/presentation/providers/auth_provider.dart';
-import '../../../profile/data/profile_repository.dart';
-import '../../../profile/domain/profile_model.dart';
 import '../../../profile/presentation/providers/profile_provider.dart';
 import '../widgets/onboarding_page.dart';
 

@@ -15,10 +15,11 @@ void setupMockSharedPreferences([Map<String, Object> values = const {}]) {
 /// Optionally accepts [overrides] for Riverpod provider overrides.
 Widget createTestApp(
   Widget child, {
-  List<Override> overrides = const [],
+  // ignore: strict_raw_type
+  List overrides = const [],
 }) {
   return ProviderScope(
-    overrides: overrides,
+    overrides: overrides.cast(),
     child: MaterialApp(
       home: child,
     ),
@@ -29,8 +30,9 @@ Widget createTestApp(
 ///
 /// Remember to call `container.dispose()` in `tearDown()`.
 ProviderContainer createContainer({
-  List<Override> overrides = const [],
+  // ignore: strict_raw_type
+  List overrides = const [],
 }) {
-  final container = ProviderContainer(overrides: overrides);
+  final container = ProviderContainer(overrides: overrides.cast());
   return container;
 }

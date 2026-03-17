@@ -40,24 +40,20 @@ class AuthNotifier extends ChangeNotifier {
 /// Handles sign-up, sign-in, sign-out, Google sign-in, and password reset.
 /// Maps Supabase exceptions to user-friendly error messages matching the
 /// UI-SPEC copywriting contract.
-class AuthStateNotifier extends StateNotifier<AppAuthState> {
-  AuthStateNotifier(this._repository) : super(const AppAuthState()) {
-    _init();
-  }
+class AuthStateNotifier extends Notifier<AppAuthState> {
+  late final AuthRepository _repository;
 
-  final AuthRepository _repository;
-
-  /// Checks the current session on initialization.
-  void _init() {
+  @override
+  AppAuthState build() {
+    _repository = ref.read(authRepositoryProvider);
     final user = _repository.currentUser;
     if (user != null) {
-      state = state.copyWith(
+      return AppAuthState(
         status: AuthStatus.authenticated,
         user: user,
       );
-    } else {
-      state = state.copyWith(status: AuthStatus.unauthenticated);
     }
+    return const AppAuthState(status: AuthStatus.unauthenticated);
   }
 
   /// Signs up with email and password, optionally setting a display name.
@@ -207,6 +203,6 @@ final authRepositoryProvider = Provider<AuthRepository>(
 
 /// Provides the full [AppAuthState] for UI consumption.
 final authStateProvider =
-    StateNotifierProvider<AuthStateNotifier, AppAuthState>(
-  (ref) => AuthStateNotifier(ref.read(authRepositoryProvider)),
+    NotifierProvider<AuthStateNotifier, AppAuthState>(
+  AuthStateNotifier.new,
 );

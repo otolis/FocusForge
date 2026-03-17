@@ -6,16 +6,19 @@ import 'package:shared_preferences/shared_preferences.dart';
 /// to [SharedPreferences].
 ///
 /// Defaults to [ThemeMode.system] on first launch.
-class ThemeNotifier extends StateNotifier<ThemeMode> {
-  ThemeNotifier() : super(ThemeMode.system) {
-    _loadTheme();
-  }
-
+class ThemeNotifier extends Notifier<ThemeMode> {
   static const _key = 'theme_mode';
+
+  @override
+  ThemeMode build() {
+    _loadTheme();
+    return ThemeMode.system;
+  }
 
   /// Loads the persisted theme mode from [SharedPreferences].
   Future<void> _loadTheme() async {
     final prefs = await SharedPreferences.getInstance();
+    if (!ref.mounted) return;
     final themeIndex = prefs.getInt(_key) ?? 2; // default: system
     state = ThemeMode.values[themeIndex];
   }
@@ -32,6 +35,6 @@ class ThemeNotifier extends StateNotifier<ThemeMode> {
 ///
 /// Watch this provider in [MaterialApp] to reactively switch between
 /// light, dark, and system theme modes.
-final themeProvider = StateNotifierProvider<ThemeNotifier, ThemeMode>(
-  (ref) => ThemeNotifier(),
+final themeProvider = NotifierProvider<ThemeNotifier, ThemeMode>(
+  ThemeNotifier.new,
 );

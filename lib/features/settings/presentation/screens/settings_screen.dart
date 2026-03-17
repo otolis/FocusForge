@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/utils/extensions.dart';
-import '../../providers/theme_provider.dart';
+import '../providers/theme_provider.dart';
 
 /// A settings screen providing theme toggle and app information.
 ///

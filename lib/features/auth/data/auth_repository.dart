@@ -18,6 +18,17 @@ class AuthRepository {
   static const String webClientId =
       'YOUR_WEB_CLIENT_ID.apps.googleusercontent.com';
 
+  bool _googleInitialized = false;
+
+  /// Ensures the Google Sign-In platform is initialized exactly once.
+  Future<void> _ensureGoogleInitialized() async {
+    if (_googleInitialized) return;
+    await GoogleSignIn.instance.initialize(
+      serverClientId: webClientId,
+    );
+    _googleInitialized = true;
+  }
+
   /// Signs up a new user with email and password.
   ///
   /// Optionally passes [displayName] as `full_name` in user metadata,
@@ -48,22 +59,25 @@ class AuthRepository {
 
   /// Signs in with Google using the native Android flow.
   ///
-  /// Uses [GoogleSignIn] to obtain an ID token, which is then passed to
-  /// Supabase via [signInWithIdToken]. Requires both a Web Application
-  /// OAuth Client ID (used as `serverClientId`) and an Android OAuth
-  /// Client ID (registered in Google Cloud Console with your SHA-1).
+  /// Uses [GoogleSignIn] to obtain an ID token via [authenticate], which
+  /// is then passed to Supabase via [signInWithIdToken]. Requires both a
+  /// Web Application OAuth Client ID (used as `serverClientId`) and an
+  /// Android OAuth Client ID (registered in Google Cloud Console with
+  /// your SHA-1).
   Future<AuthResponse> signInWithGoogle() async {
-    final googleSignIn = GoogleSignIn(
-      serverClientId: webClientId,
-    );
+    await _ensureGoogleInitialized();
 
-    final googleUser = await googleSignIn.signIn();
-    if (googleUser == null) {
-      throw Exception('Google sign-in cancelled');
+    final GoogleSignInAccount account;
+    try {
+      account = await GoogleSignIn.instance.authenticate();
+    } on GoogleSignInException catch (e) {
+      if (e.code == GoogleSignInExceptionCode.canceled) {
+        throw Exception('Google sign-in cancelled');
+      }
+      rethrow;
     }
 
-    final googleAuth = await googleUser.authentication;
-    final idToken = googleAuth.idToken;
+    final idToken = account.authentication.idToken;
     if (idToken == null) {
       throw Exception('No ID token received from Google');
     }
