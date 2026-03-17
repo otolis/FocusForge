@@ -22,7 +22,7 @@ Requirements for initial release. Each maps to roadmap phases.
 - [ ] **TASK-03**: User can filter tasks by priority, category, and date range, and search tasks with full-text search
 - [ ] **TASK-04**: User can create, edit, and assign color-coded categories/labels to tasks
 - [ ] **TASK-05**: User can set tasks to recur on daily, weekly, monthly, or custom intervals
-- [ ] **TASK-06**: Tasks are auto-classified by on-device TFLite model for category and priority suggestions
+- [x] **TASK-06**: Tasks are auto-classified by on-device TFLite model for category and priority suggestions
 
 ### Habit Tracking
 
@@ -109,7 +109,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | TASK-03 | Phase 2: Task Management | Pending |
 | TASK-04 | Phase 2: Task Management | Pending |
 | TASK-05 | Phase 2: Task Management | Pending |
-| TASK-06 | Phase 3: Smart Task Input | Pending |
+| TASK-06 | Phase 3: Smart Task Input | Complete |
 | HABIT-01 | Phase 4: Habit Tracking | Pending |
 | HABIT-02 | Phase 4: Habit Tracking | Pending |
 | HABIT-03 | Phase 4: Habit Tracking | Pending |
