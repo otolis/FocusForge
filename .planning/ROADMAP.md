@@ -84,11 +84,12 @@ Plans:
   2. User can see their current streak (consecutive-day counter) and a visual chain display for each habit
   3. User can check in a habit with one tap and see satisfying feedback animation
   4. User can view habit analytics with completion rate charts (weekly/monthly/yearly) rendered via fl_chart
-**Plans**: TBD
+**Plans**: 3 plans
 
 Plans:
-- [ ] 04-01: TBD
-- [ ] 04-02: TBD
+- [ ] 04-01-PLAN.md — Supabase migration (habits + habit_logs), domain models, repository, Riverpod providers, pubspec dependencies
+- [ ] 04-02-PLAN.md — Habit list screen, creation/edit form, check-in button with animation and haptics, router wiring
+- [ ] 04-03-PLAN.md — Streak calculator, GitHub-style heat map, analytics bar charts, stat cards, habit detail screen
 
 ### Phase 5: AI Daily Planner
 **Goal**: Users get an AI-generated daily schedule optimized for their energy patterns with a visual timeline
@@ -163,7 +164,7 @@ Phase 1 first, then Phases 2-7 in parallel, then Phase 8 last.
 | 1. Foundation & Auth | 3/3 | Complete | 2026-03-17 |
 | 2. Task Management | 0/0 | Not started | - |
 | 3. Smart Task Input | 0/3 | Planned | - |
-| 4. Habit Tracking | 0/0 | Not started | - |
+| 4. Habit Tracking | 0/3 | Planned | - |
 | 5. AI Daily Planner | 0/3 | Planned | - |
 | 6. Collaborative Boards | 0/0 | Not started | - |
 | 7. Notifications & Reminders | 0/0 | Not started | - |
