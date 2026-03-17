@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Completed 05-01-PLAN.md
-last_updated: "2026-03-17T23:17:46.884Z"
+stopped_at: Completed 06-01-PLAN.md
+last_updated: "2026-03-17T23:20:43.779Z"
 last_activity: 2026-03-17 -- Completed Plan 05-01 (AI Planner data foundation)
 progress:
   total_phases: 8
   completed_phases: 1
-  total_plans: 20
+  total_plans: 21
   completed_plans: 7
   percent: 32
 ---
@@ -53,6 +53,7 @@ Progress: [███░░░░░░░] 32%
 | Phase 03 P02 | 4min | 2 tasks | 9 files |
 | Phase 03 P01 | 4min | 2 tasks | 5 files |
 | Phase 05 P01 | 3 | 2 tasks | 9 files |
+| Phase 06 P01 | 5min | 3 tasks | 13 files |
 
 ## Accumulated Context
 
@@ -81,6 +82,9 @@ Recent decisions affecting current work:
 - [Phase 05]: Edge Function uses llama-3.3-70b-versatile with temperature 0.3 and json_object response format
 - [Phase 05]: Shared CORS module in _shared/cors.ts for reuse across all Edge Functions
 - [Phase 05]: PlannerRepository follows ProfileRepository DI pattern (optional SupabaseClient param)
+- [Phase 06]: Migration numbered 00003 (not 00002) due to parallel phase 05 already using 00002
+- [Phase 06]: Realtime publication on board_cards and board_columns only; boards/board_members excluded (infrequent changes)
+- [Phase 06]: REPLICA IDENTITY FULL on cards/columns for complete DELETE event payloads in realtime
 
 ### Pending Todos
 
@@ -94,6 +98,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-17T23:17:46.848Z
-Stopped at: Completed 05-01-PLAN.md
+Last session: 2026-03-17T23:20:43.776Z
+Stopped at: Completed 06-01-PLAN.md
 Resume file: None

@@ -40,10 +40,10 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Collaborative Boards
 
-- [ ] **BOARD-01**: User can create boards with Kanban columns and drag-and-drop cards between columns
-- [ ] **BOARD-02**: Board changes sync instantly across all connected users via Supabase Realtime
-- [ ] **BOARD-03**: User can invite members to boards by email and assign roles (owner/editor/viewer)
-- [ ] **BOARD-04**: User can see live presence indicators showing who is online on a shared board
+- [x] **BOARD-01**: User can create boards with Kanban columns and drag-and-drop cards between columns
+- [x] **BOARD-02**: Board changes sync instantly across all connected users via Supabase Realtime
+- [x] **BOARD-03**: User can invite members to boards by email and assign roles (owner/editor/viewer)
+- [x] **BOARD-04**: User can see live presence indicators showing who is online on a shared board
 
 ### Polish & Deployment
 
@@ -118,10 +118,10 @@ Which phases cover which requirements. Updated during roadmap creation.
 | PLAN-02 | Phase 5: AI Daily Planner | Pending |
 | PLAN-03 | Phase 5: AI Daily Planner | Pending |
 | PLAN-04 | Phase 7: Notifications & Reminders | Pending |
-| BOARD-01 | Phase 6: Collaborative Boards | Pending |
-| BOARD-02 | Phase 6: Collaborative Boards | Pending |
-| BOARD-03 | Phase 6: Collaborative Boards | Pending |
-| BOARD-04 | Phase 6: Collaborative Boards | Pending |
+| BOARD-01 | Phase 6: Collaborative Boards | Complete |
+| BOARD-02 | Phase 6: Collaborative Boards | Complete |
+| BOARD-03 | Phase 6: Collaborative Boards | Complete |
+| BOARD-04 | Phase 6: Collaborative Boards | Complete |
 | UX-01 | Phase 1: Foundation & Auth | Complete |
 | UX-02 | Phase 8: Integration, Animations & Deployment | Pending |
 | UX-03 | Phase 7: Notifications & Reminders | Pending |
