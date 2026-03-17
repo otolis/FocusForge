@@ -9,6 +9,7 @@ import '../../features/auth/presentation/screens/forgot_password_screen.dart';
 import '../../features/onboarding/presentation/screens/onboarding_screen.dart';
 import '../../features/profile/presentation/screens/profile_screen.dart';
 import '../../features/settings/presentation/screens/settings_screen.dart';
+import '../../features/smart_input/presentation/screens/smart_input_demo_screen.dart';
 import '../../shared/widgets/app_shell.dart';
 import '../../shared/widgets/placeholder_tab.dart';
 
@@ -116,6 +117,13 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/settings',
         builder: (context, state) => const SettingsScreen(),
+      ),
+
+      // Smart input demo (outside the shell — dev/demo screen)
+      GoRoute(
+        path: '/smart-input-demo',
+        name: 'smartInputDemo',
+        builder: (context, state) => const SmartInputDemoScreen(),
       ),
     ],
   );
