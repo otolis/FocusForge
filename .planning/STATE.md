@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Completed 07-02-PLAN.md
-last_updated: "2026-03-22T13:03:10Z"
+stopped_at: Completed 07-01-PLAN.md
+last_updated: "2026-03-22T13:05:51.239Z"
 last_activity: 2026-03-22 -- Completed Plan 07-02 (Server-side notification delivery with adaptive timing)
 progress:
   total_phases: 8
   completed_phases: 6
   total_plans: 21
-  completed_plans: 19
-  percent: 86
+  completed_plans: 20
+  percent: 90
 ---
 
 # Project State
@@ -65,6 +65,7 @@ Progress: [█████████░] 90%
 | Phase 02 P03 | 5min | 3 tasks | 6 files |
 | Phase 05 P03 | 1min | 2 tasks | 3 files |
 | Phase 07 P02 | 4min | 2 tasks | 5 files |
+| Phase 07 P01 | 5min | 2 tasks | 10 files |
 
 ## Accumulated Context
 
@@ -128,6 +129,9 @@ Recent decisions affecting current work:
 - [Phase 07]: Vault secrets for pg_cron HTTP auth -- project_url and anon_key stored in Supabase Vault
 - [Phase 07]: Adaptive insight limited to task_deadline reminders only (not habits/planner)
 - [Phase 07]: Stale FCM token cleanup on UNREGISTERED/NOT_FOUND errors from FCM API
+- [Phase 07]: Global notificationNavigatorKey for deep-link navigation (separate from router's private _rootNavigatorKey)
+- [Phase 07]: Three notification channels: task_reminders (high), habit_reminders (default), planner_notifications (default)
+- [Phase 07]: FCM data-only messages displayed as local notifications for full control over content and actions
 
 ### Pending Todos
 
@@ -141,6 +145,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-22T13:03:10Z
-Stopped at: Completed 07-02-PLAN.md
+Last session: 2026-03-22T13:05:51.236Z
+Stopped at: Completed 07-01-PLAN.md
 Resume file: None
