@@ -12,6 +12,8 @@ import '../../features/settings/presentation/screens/settings_screen.dart';
 import '../../features/boards/presentation/screens/board_list_screen.dart';
 import '../../features/boards/presentation/screens/board_detail_screen.dart';
 import '../../features/boards/presentation/screens/board_settings_screen.dart';
+import '../../features/habits/presentation/screens/habit_list_screen.dart';
+import '../../features/habits/presentation/screens/habit_form_screen.dart';
 import '../../features/planner/presentation/screens/planner_screen.dart';
 import '../../features/smart_input/presentation/screens/smart_input_demo_screen.dart';
 import '../../shared/widgets/app_shell.dart';
@@ -102,8 +104,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
           ),
           GoRoute(
             path: '/habits',
-            builder: (context, state) =>
-                const PlaceholderTab(title: 'Habits'),
+            builder: (context, state) => const HabitListScreen(),
           ),
           GoRoute(
             path: '/planner',
@@ -120,7 +121,29 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         ],
       ),
 
-      // Board settings (outside the shell — full screen)
+      // Habit form: create new habit (outside the shell -- full screen)
+      GoRoute(
+        path: '/habits/new',
+        builder: (context, state) => const HabitFormScreen(),
+      ),
+
+      // Habit detail placeholder (outside the shell -- replaced in Plan 03)
+      GoRoute(
+        path: '/habits/:id',
+        builder: (context, state) =>
+            const PlaceholderTab(title: 'Habit Detail'),
+      ),
+
+      // Habit form: edit existing habit (outside the shell -- full screen)
+      GoRoute(
+        path: '/habits/:id/edit',
+        builder: (context, state) {
+          final habitId = state.pathParameters['id']!;
+          return HabitFormScreen(habitId: habitId);
+        },
+      ),
+
+      // Board settings (outside the shell -- full screen)
       GoRoute(
         path: '/boards/:id/settings',
         builder: (context, state) {
@@ -129,7 +152,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         },
       ),
 
-      // Board detail (outside the shell — full screen Kanban view)
+      // Board detail (outside the shell -- full screen Kanban view)
       GoRoute(
         path: '/boards/:id',
         builder: (context, state) {
@@ -138,13 +161,13 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         },
       ),
 
-      // Settings (outside the shell — full screen)
+      // Settings (outside the shell -- full screen)
       GoRoute(
         path: '/settings',
         builder: (context, state) => const SettingsScreen(),
       ),
 
-      // Smart input demo (outside the shell — dev/demo screen)
+      // Smart input demo (outside the shell -- dev/demo screen)
       GoRoute(
         path: '/smart-input-demo',
         name: 'smartInputDemo',

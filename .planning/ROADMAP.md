@@ -57,7 +57,7 @@ Plans:
 **Plans**: 3 plans
 
 Plans:
-- [ ] 02-01-PLAN.md — Supabase migration (tasks, categories, recurrence_rules), domain models, repositories, Riverpod providers
+- [x] 02-01-PLAN.md — Supabase migration (tasks, categories, recurrence_rules), domain models, repositories, Riverpod providers
 - [ ] 02-02-PLAN.md — Task list screen with date grouping, task card widgets, swipe actions, filter bar, search, quick-create bottom sheet
 - [ ] 02-03-PLAN.md — Task create/edit form, category management screen, recurrence picker, router wiring
 
@@ -164,7 +164,7 @@ Phase 1 first, then Phases 2-7 in parallel, then Phase 8 last.
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Foundation & Auth | 3/3 | Complete | 2026-03-17 |
-| 2. Task Management | 0/3 | Planned | - |
+| 2. Task Management | 1/3 | In Progress | - |
 | 3. Smart Task Input | 0/3 | Planned | - |
 | 4. Habit Tracking | 0/3 | Planned | - |
 | 5. AI Daily Planner | 0/3 | Planned | - |
