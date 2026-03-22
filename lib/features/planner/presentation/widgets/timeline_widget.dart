@@ -13,11 +13,14 @@ import 'time_block_card.dart';
 ///
 /// Layers (back to front):
 /// 1. Energy zone background bands (amber for peak, sage for low)
-/// 2. Faint 15-minute guide lines
+/// 2. Faint 15-minute guide lines (brighter during drag)
 /// 3. Hour markers with AM/PM labels
 /// 4. Empty slots (dotted placeholders for unoccupied hours)
-/// 5. Schedule block cards (proportionally sized by duration)
-class TimelineWidget extends StatelessWidget {
+/// 5. Draggable schedule block cards (proportionally sized by duration)
+///
+/// Supports drag-to-reschedule: blocks can be long-pressed and dragged
+/// vertically to new time slots with 15-minute snap alignment.
+class TimelineWidget extends StatefulWidget {
   /// The generated schedule blocks to render on the timeline.
   final List<ScheduleBlock> blocks;
 
@@ -27,38 +30,88 @@ class TimelineWidget extends StatelessWidget {
   /// Called when the user taps an empty slot's "+" icon.
   final VoidCallback onEmptySlotTap;
 
+  /// Called when a block is dragged to a new time position.
+  ///
+  /// Parameters: item ID and the new start minute (snapped to 15-minute grid).
+  final Function(String itemId, int newStartMinute) onBlockMoved;
+
   const TimelineWidget({
     super.key,
     required this.blocks,
     required this.energyPattern,
     required this.onEmptySlotTap,
+    required this.onBlockMoved,
   });
 
   @override
+  State<TimelineWidget> createState() => _TimelineWidgetState();
+}
+
+class _TimelineWidgetState extends State<TimelineWidget> {
+  final ScrollController _scrollController = ScrollController();
+  final GlobalKey _timelineKey = GlobalKey();
+
+  /// Whether a drag operation is currently active over the timeline.
+  bool _isDragActive = false;
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      physics: const ClampingScrollPhysics(),
-      child: SizedBox(
-        height: TimelineConstants.totalHeight,
-        child: Stack(
-          children: [
-            // Layer 1: Energy zone bands
-            ..._buildEnergyZones(),
+    return DragTarget<ScheduleBlock>(
+      onWillAcceptWithDetails: (details) {
+        setState(() => _isDragActive = true);
+        return true;
+      },
+      onLeave: (_) {
+        setState(() => _isDragActive = false);
+      },
+      onAcceptWithDetails: (details) {
+        setState(() => _isDragActive = false);
+        final RenderBox renderBox =
+            _timelineKey.currentContext!.findRenderObject() as RenderBox;
+        final localOffset = renderBox.globalToLocal(details.offset);
+        final scrollOffset = _scrollController.offset;
+        final adjustedY = localOffset.dy + scrollOffset;
+        final snappedMinute = TimelineConstants.yToSnappedMinute(adjustedY);
+        final clampedMinute = snappedMinute.clamp(
+          TimelineConstants.startHour * 60,
+          TimelineConstants.endHour * 60 - details.data.durationMinutes,
+        );
+        widget.onBlockMoved(details.data.itemId, clampedMinute);
+      },
+      builder: (context, candidateData, rejectedData) {
+        return SingleChildScrollView(
+          controller: _scrollController,
+          physics: const ClampingScrollPhysics(),
+          child: SizedBox(
+            key: _timelineKey,
+            height: TimelineConstants.totalHeight,
+            child: Stack(
+              children: [
+                // Layer 1: Energy zone bands
+                ..._buildEnergyZones(),
 
-            // Layer 2: 15-minute guide lines
-            ..._buildGuideLines(context),
+                // Layer 2: 15-minute guide lines
+                ..._buildGuideLines(context),
 
-            // Layer 3: Hour markers
-            ..._buildHourMarkers(),
+                // Layer 3: Hour markers
+                ..._buildHourMarkers(),
 
-            // Layer 4: Empty slots (only for unoccupied hours)
-            ..._buildEmptySlots(),
+                // Layer 4: Empty slots (only for unoccupied hours)
+                ..._buildEmptySlots(),
 
-            // Layer 5: Schedule blocks
-            ..._buildBlocks(),
-          ],
-        ),
-      ),
+                // Layer 5: Draggable schedule blocks
+                ..._buildBlocks(),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 
@@ -67,7 +120,7 @@ class TimelineWidget extends StatelessWidget {
     for (var hour = TimelineConstants.startHour;
         hour < TimelineConstants.endHour;
         hour++) {
-      final zone = TimelineConstants.getZone(hour, energyPattern);
+      final zone = TimelineConstants.getZone(hour, widget.energyPattern);
       zones.add(
         Positioned(
           top: TimelineConstants.minuteToY(hour * 60),
@@ -86,7 +139,9 @@ class TimelineWidget extends StatelessWidget {
 
   List<Widget> _buildGuideLines(BuildContext context) {
     final lines = <Widget>[];
-    final lineColor = context.colorScheme.outlineVariant.withOpacity(0.15);
+    final guideOpacity = _isDragActive ? 0.4 : 0.15;
+    final lineColor =
+        context.colorScheme.outlineVariant.withOpacity(guideOpacity);
 
     for (var hour = TimelineConstants.startHour;
         hour < TimelineConstants.endHour;
@@ -132,7 +187,7 @@ class TimelineWidget extends StatelessWidget {
       final hourEnd = (hour + 1) * 60;
 
       // Check if any block overlaps this hour
-      final isOccupied = blocks.any(
+      final isOccupied = widget.blocks.any(
         (b) => b.startMinute < hourEnd && b.endMinute > hourStart,
       );
 
@@ -142,7 +197,7 @@ class TimelineWidget extends StatelessWidget {
             top: TimelineConstants.minuteToY(hourStart),
             left: 0,
             right: 0,
-            child: EmptySlot(hour: hour, onTap: onEmptySlotTap),
+            child: EmptySlot(hour: hour, onTap: widget.onEmptySlotTap),
           ),
         );
       }
@@ -151,13 +206,20 @@ class TimelineWidget extends StatelessWidget {
   }
 
   List<Widget> _buildBlocks() {
-    return blocks
+    return widget.blocks
         .map(
           (block) => Positioned(
             top: block.topOffset,
             left: 0,
             right: 0,
-            child: TimeBlockCard(block: block),
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                return DraggableTimeBlockCard(
+                  block: block,
+                  cardWidth: constraints.maxWidth - 64,
+                );
+              },
+            ),
           ),
         )
         .toList();

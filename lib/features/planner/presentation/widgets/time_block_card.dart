@@ -126,3 +126,45 @@ class TimeBlockCard extends StatelessWidget {
     return '$displayH:${m.toString().padLeft(2, '0')} $period';
   }
 }
+
+/// Wraps [TimeBlockCard] in a [LongPressDraggable] for drag-to-reschedule.
+///
+/// Long-press initiates a vertical-axis drag. The feedback widget shows the
+/// card with Material elevation 8 shadow. The original position displays a
+/// translucent ghost outline via [TimeBlockCard.isGhost].
+class DraggableTimeBlockCard extends StatelessWidget {
+  const DraggableTimeBlockCard({
+    super.key,
+    required this.block,
+    required this.cardWidth,
+  });
+
+  /// The schedule block data for this card.
+  final ScheduleBlock block;
+
+  /// The width to use for the drag feedback widget.
+  final double cardWidth;
+
+  @override
+  Widget build(BuildContext context) {
+    return LongPressDraggable<ScheduleBlock>(
+      axis: Axis.vertical,
+      data: block,
+      feedback: Material(
+        elevation: 8,
+        borderRadius: BorderRadius.circular(12),
+        shadowColor: context.colorScheme.shadow.withOpacity(0.3),
+        child: SizedBox(
+          width: cardWidth,
+          height: block.height,
+          child: TimeBlockCard(block: block, isDragging: true),
+        ),
+      ),
+      childWhenDragging: Opacity(
+        opacity: 0.3,
+        child: TimeBlockCard(block: block, isGhost: true),
+      ),
+      child: TimeBlockCard(block: block),
+    );
+  }
+}

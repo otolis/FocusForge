@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -33,6 +35,7 @@ class PlannerScreen extends ConsumerStatefulWidget {
 
 class _PlannerScreenState extends ConsumerState<PlannerScreen> {
   bool _initialLoadDone = false;
+  Timer? _saveDebounceTimer;
 
   String get _userId {
     return ref.read(authStateProvider).user?.id ?? '';
@@ -48,6 +51,12 @@ class _PlannerScreenState extends ConsumerState<PlannerScreen> {
           .read(plannerProvider(_userId).notifier)
           .loadCachedSchedule(notifier.selectedDate);
     }
+  }
+
+  @override
+  void dispose() {
+    _saveDebounceTimer?.cancel();
+    super.dispose();
   }
 
   @override
@@ -223,6 +232,19 @@ class _PlannerScreenState extends ConsumerState<PlannerScreen> {
       blocks: plannerState.blocks,
       energyPattern: energyPattern,
       onEmptySlotTap: () => _showAddItemSheet(userId),
+      onBlockMoved: (itemId, newStartMinute) {
+        ref
+            .read(plannerProvider(userId).notifier)
+            .moveBlock(itemId, newStartMinute);
+        _saveDebounceTimer?.cancel();
+        _saveDebounceTimer = Timer(const Duration(seconds: 2), () {
+          ref.read(plannerProvider(userId).notifier).saveCurrentSchedule(
+                ref
+                    .read(plannableItemsProvider(userId).notifier)
+                    .selectedDate,
+              );
+        });
+      },
     );
   }
 
