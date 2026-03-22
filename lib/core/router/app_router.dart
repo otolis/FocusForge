@@ -13,6 +13,7 @@ import '../../features/boards/presentation/screens/board_list_screen.dart';
 import '../../features/boards/presentation/screens/board_detail_screen.dart';
 import '../../features/boards/presentation/screens/board_settings_screen.dart';
 import '../../features/habits/presentation/screens/habit_list_screen.dart';
+import '../../features/habits/presentation/screens/habit_detail_screen.dart';
 import '../../features/habits/presentation/screens/habit_form_screen.dart';
 import '../../features/planner/presentation/screens/planner_screen.dart';
 import '../../features/smart_input/presentation/screens/smart_input_demo_screen.dart';
@@ -127,11 +128,13 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         builder: (context, state) => const HabitFormScreen(),
       ),
 
-      // Habit detail placeholder (outside the shell -- replaced in Plan 03)
+      // Habit detail (outside the shell -- full screen)
       GoRoute(
         path: '/habits/:id',
-        builder: (context, state) =>
-            const PlaceholderTab(title: 'Habit Detail'),
+        builder: (context, state) {
+          final habitId = state.pathParameters['id']!;
+          return HabitDetailScreen(habitId: habitId);
+        },
       ),
 
       // Habit form: edit existing habit (outside the shell -- full screen)
