@@ -164,6 +164,7 @@ class _BoardDetailScreenState extends ConsumerState<BoardDetailScreen> {
         actions: [
           IconButton(
             icon: const Icon(Icons.settings_outlined),
+            tooltip: 'Board settings',
             onPressed: () {
               // Will be wired in Plan 03
             },

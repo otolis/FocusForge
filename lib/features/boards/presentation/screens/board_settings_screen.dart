@@ -368,6 +368,7 @@ class _BoardSettingsScreenState extends ConsumerState<BoardSettingsScreen> {
                   const SizedBox(width: 8),
                   IconButton(
                     icon: const Icon(Icons.send_rounded),
+                    tooltip: 'Send invite',
                     onPressed: _inviteMember,
                   ),
                 ],

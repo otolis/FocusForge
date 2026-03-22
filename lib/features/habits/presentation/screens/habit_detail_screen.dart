@@ -283,6 +283,7 @@ class _HabitDetailScreenState extends ConsumerState<HabitDetailScreen> {
         actions: [
           IconButton(
             icon: const Icon(Icons.edit),
+            tooltip: 'Edit habit',
             onPressed: () => context.push('/habits/${widget.habitId}/edit'),
           ),
         ],

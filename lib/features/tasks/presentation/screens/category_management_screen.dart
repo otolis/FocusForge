@@ -24,6 +24,7 @@ class CategoryManagementScreen extends ConsumerWidget {
         actions: [
           IconButton(
             icon: const Icon(Icons.add),
+            tooltip: 'Add category',
             onPressed: () => _showCreateDialog(context, ref),
           ),
         ],

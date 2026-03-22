@@ -95,6 +95,7 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen> {
           if (_isEditMode)
             IconButton(
               icon: const Icon(Icons.delete_outline),
+              tooltip: 'Delete task',
               onPressed: _handleDelete,
             ),
         ],

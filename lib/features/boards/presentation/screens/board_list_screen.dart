@@ -88,6 +88,7 @@ class BoardListScreen extends ConsumerWidget {
         },
       ),
       floatingActionButton: FloatingActionButton(
+        tooltip: 'Create board',
         onPressed: () => _showCreateBoardDialog(context, ref),
         child: const Icon(Icons.add),
       ),
