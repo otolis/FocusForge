@@ -58,8 +58,8 @@ Plans:
 
 Plans:
 - [x] 02-01-PLAN.md — Supabase migration (tasks, categories, recurrence_rules), domain models, repositories, Riverpod providers
-- [ ] 02-02-PLAN.md — Task list screen with date grouping, task card widgets, swipe actions, filter bar, search, quick-create bottom sheet
-- [ ] 02-03-PLAN.md — Task create/edit form, category management screen, recurrence picker, router wiring
+- [x] 02-02-PLAN.md — Task list screen with date grouping, task card widgets, swipe actions, filter bar, search, quick-create bottom sheet
+- [x] 02-03-PLAN.md — Task create/edit form, category management screen, recurrence picker, router wiring
 
 ### Phase 3: Smart Task Input
 **Goal**: Users get intelligent task creation assistance through natural language parsing and ML-powered classification
@@ -72,9 +72,9 @@ Plans:
 **Plans**: 3 plans
 
 Plans:
-- [ ] 03-01-PLAN.md — NLP parser service with regex priority extraction, chrono_dart date parsing, category keyword matching
-- [ ] 03-02-PLAN.md — TFLite classifier service, training pipeline, model assets, and unit tests
-- [ ] 03-03-PLAN.md — Smart input orchestrator, Riverpod providers, UI widgets, demo screen, widget tests
+- [x] 03-01-PLAN.md — NLP parser service with regex priority extraction, chrono_dart date parsing, category keyword matching
+- [x] 03-02-PLAN.md — TFLite classifier service, training pipeline, model assets, and unit tests
+- [x] 03-03-PLAN.md — Smart input orchestrator, Riverpod providers, UI widgets, demo screen, widget tests
 
 ### Phase 4: Habit Tracking
 **Goal**: Users can track habits with streaks, one-tap check-in, and visual analytics
@@ -88,9 +88,9 @@ Plans:
 **Plans**: 3 plans
 
 Plans:
-- [ ] 04-01-PLAN.md — Supabase migration (habits + habit_logs), domain models, repository, Riverpod providers, pubspec dependencies
-- [ ] 04-02-PLAN.md — Habit list screen, creation/edit form, check-in button with animation and haptics, router wiring
-- [ ] 04-03-PLAN.md — Streak calculator, GitHub-style heat map, analytics bar charts, stat cards, habit detail screen
+- [x] 04-01-PLAN.md — Supabase migration (habits + habit_logs), domain models, repository, Riverpod providers, pubspec dependencies
+- [x] 04-02-PLAN.md — Habit list screen, creation/edit form, check-in button with animation and haptics, router wiring
+- [x] 04-03-PLAN.md — Streak calculator, GitHub-style heat map, analytics bar charts, stat cards, habit detail screen
 
 ### Phase 5: AI Daily Planner
 **Goal**: Users get an AI-generated daily schedule optimized for their energy patterns with a visual timeline
@@ -120,9 +120,9 @@ Plans:
 **Plans**: 3 plans
 
 Plans:
-- [ ] 06-01-PLAN.md — Database schema (4 tables, RLS, RPC), domain models, repositories, realtime service, Riverpod providers
-- [ ] 06-02-PLAN.md — Board list screen (2-col grid, FAB), Kanban detail screen (appflowy_board), routing (5th tab)
-- [ ] 06-03-PLAN.md — Member management (invite, roles, settings screen), presence widgets (green dot, avatar row)
+- [x] 06-01-PLAN.md — Database schema (4 tables, RLS, RPC), domain models, repositories, realtime service, Riverpod providers
+- [x] 06-02-PLAN.md — Board list screen (2-col grid, FAB), Kanban detail screen (appflowy_board), routing (5th tab)
+- [x] 06-03-PLAN.md — Member management (invite, roles, settings screen), presence widgets (green dot, avatar row)
 
 ### Phase 7: Notifications & Reminders
 **Goal**: Users receive timely push notifications for deadlines with adaptive reminder timing
@@ -135,9 +135,9 @@ Plans:
 **Plans**: 3 plans
 
 Plans:
-- [ ] 07-01-PLAN.md — Database schema (3 tables, RLS), domain models, repository, NotificationService (FCM, token lifecycle, action buttons), providers
-- [ ] 07-02-PLAN.md — send-reminders Edge Function (adaptive timing, quiet hours, FCM delivery), pending_reminders view, pg_cron schedule
-- [ ] 07-03-PLAN.md — Notification settings screen (master toggle, category cards, quiet hours picker, snooze), settings integration, router wiring
+- [x] 07-01-PLAN.md — Database schema (3 tables, RLS), domain models, repository, NotificationService (FCM, token lifecycle, action buttons), providers
+- [x] 07-02-PLAN.md — send-reminders Edge Function (adaptive timing, quiet hours, FCM delivery), pending_reminders view, pg_cron schedule
+- [x] 07-03-PLAN.md — Notification settings screen (master toggle, category cards, quiet hours picker, snooze), settings integration, router wiring
 
 ### Phase 8: Integration, Animations & Deployment
 **Goal**: All features are wired together, polished with animations, and deployed as a live Flutter web demo
@@ -164,10 +164,10 @@ Phase 1 first, then Phases 2-7 in parallel, then Phase 8 last.
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Foundation & Auth | 3/3 | Complete | 2026-03-17 |
-| 2. Task Management | 1/3 | In Progress | - |
-| 3. Smart Task Input | 0/3 | Planned | - |
-| 4. Habit Tracking | 0/3 | Planned | - |
+| 2. Task Management | 3/3 | Complete | 2026-03-22 |
+| 3. Smart Task Input | 3/3 | Complete | 2026-03-22 |
+| 4. Habit Tracking | 3/3 | Complete | 2026-03-22 |
 | 5. AI Daily Planner | 3/3 | Complete | 2026-03-22 |
-| 6. Collaborative Boards | 0/3 | Planned | - |
-| 7. Notifications & Reminders | 3/3 | Complete   | 2026-03-22 |
-| 8. Integration, Animations & Deployment | 0/3 | Planned | - |
+| 6. Collaborative Boards | 3/3 | Complete | 2026-03-22 |
+| 7. Notifications & Reminders | 3/3 | Complete | 2026-03-22 |
+| 8. Integration, Animations & Deployment | 0/3 | Not started | - |
