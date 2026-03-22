@@ -2,12 +2,15 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../../core/utils/extensions.dart';
 import '../../../../shared/widgets/app_button.dart';
 import '../../../auth/presentation/providers/auth_provider.dart';
+import '../../../habits/presentation/providers/habit_provider.dart';
 import '../../../profile/domain/profile_model.dart';
 import '../../../profile/presentation/providers/profile_provider.dart';
+import '../../../tasks/presentation/providers/task_provider.dart';
 import '../../domain/plannable_item_model.dart';
 import '../providers/plannable_items_provider.dart';
 import '../providers/planner_provider.dart';
@@ -251,6 +254,8 @@ class _PlannerScreenState extends ConsumerState<PlannerScreen> {
               );
         });
       },
+      onBlockTap: _navigateToSource,
+      onBlockComplete: _toggleBlockCompletion,
     );
   }
 
@@ -281,6 +286,54 @@ class _PlannerScreenState extends ConsumerState<PlannerScreen> {
     }
 
     return null;
+  }
+
+  /// Navigates to the source task or habit detail screen for a planner block.
+  ///
+  /// Looks up [itemId] in taskListProvider first, then habitListProvider.
+  /// Tasks navigate to /tasks/:id, habits navigate to /habits/:id.
+  void _navigateToSource(String itemId) {
+    final tasks = ref.read(taskListProvider).valueOrNull ?? [];
+    final isTask = tasks.any((t) => t.id == itemId);
+    if (isTask) {
+      context.push('/tasks/$itemId');
+      return;
+    }
+
+    final habits = ref.read(habitListProvider).valueOrNull ?? [];
+    final isHabit = habits.any((h) => h.id == itemId);
+    if (isHabit) {
+      context.push('/habits/$itemId');
+    }
+  }
+
+  /// Toggles completion of the underlying task or habit for a planner block.
+  ///
+  /// For tasks: calls toggleComplete on taskListProvider.
+  /// For habits: calls checkIn on habitListProvider.
+  Future<void> _toggleBlockCompletion(String itemId) async {
+    final tasks = ref.read(taskListProvider).valueOrNull ?? [];
+    final isTask = tasks.any((t) => t.id == itemId);
+    if (isTask) {
+      await ref.read(taskListProvider.notifier).toggleComplete(itemId);
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Task completion toggled')),
+        );
+      }
+      return;
+    }
+
+    final habits = ref.read(habitListProvider).valueOrNull ?? [];
+    final isHabit = habits.any((h) => h.id == itemId);
+    if (isHabit) {
+      await ref.read(habitListProvider.notifier).checkIn(itemId, count: 1);
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Habit checked in')),
+        );
+      }
+    }
   }
 
   /// Imports uncompleted tasks and incomplete habits as plannable items.

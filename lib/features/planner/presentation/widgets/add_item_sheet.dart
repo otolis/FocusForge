@@ -3,7 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/utils/extensions.dart';
 import '../../../../shared/widgets/app_button.dart';
-import '../../../../shared/widgets/app_text_field.dart';
+import '../../../smart_input/domain/parsed_task_input.dart';
+import '../../../smart_input/presentation/widgets/smart_input_field.dart';
 import '../../domain/plannable_item_model.dart';
 import '../providers/plannable_items_provider.dart';
 
@@ -23,7 +24,6 @@ class AddItemSheet extends ConsumerStatefulWidget {
 }
 
 class _AddItemSheetState extends ConsumerState<AddItemSheet> {
-  final _formKey = GlobalKey<FormState>();
   final _titleController = TextEditingController();
   int _selectedDuration = 30;
   EnergyLevel _selectedEnergy = EnergyLevel.medium;
@@ -46,9 +46,7 @@ class _AddItemSheetState extends ConsumerState<AddItemSheet> {
         top: 16,
         bottom: MediaQuery.of(context).viewInsets.bottom + 24,
       ),
-      child: Form(
-        key: _formKey,
-        child: Column(
+      child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -72,17 +70,11 @@ class _AddItemSheetState extends ConsumerState<AddItemSheet> {
             ),
             const SizedBox(height: 16),
 
-            // Title input
-            AppTextField(
-              label: 'What do you need to do?',
+            // Title input with NLP parsing
+            SmartInputField(
               controller: _titleController,
-              validator: (value) {
-                if (value == null || value.trim().isEmpty) {
-                  return 'Please enter a title';
-                }
-                return null;
-              },
-              textInputAction: TextInputAction.done,
+              hintText: 'e.g., "Review slides 45min high energy"',
+              onParsed: _onSmartInputParsed,
             ),
             const SizedBox(height: 20),
 
@@ -165,18 +157,48 @@ class _AddItemSheetState extends ConsumerState<AddItemSheet> {
             ),
             const SizedBox(height: 8),
           ],
-        ),
       ),
     );
   }
 
+  /// Handles parsed NLP result from SmartInputField, auto-selecting energy level.
+  void _onSmartInputParsed(ParsedTaskInput parsed) {
+    if (!mounted) return;
+    setState(() {
+      if (parsed.suggestedPriority != null) {
+        _selectedEnergy = _mapPriorityToEnergy(parsed.suggestedPriority!);
+      }
+    });
+  }
+
+  /// Maps NLP-parsed priority (P1-P4) to planner energy level.
+  /// P1/P2 = high energy (deep focus), P3 = medium, P4 = low.
+  EnergyLevel _mapPriorityToEnergy(String priority) {
+    switch (priority) {
+      case 'P1':
+      case 'P2':
+        return EnergyLevel.high;
+      case 'P3':
+        return EnergyLevel.medium;
+      case 'P4':
+      default:
+        return EnergyLevel.low;
+    }
+  }
+
   Future<void> _submit() async {
-    if (!_formKey.currentState!.validate()) return;
+    final title = _titleController.text.trim();
+    if (title.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please enter a title')),
+      );
+      return;
+    }
 
     await ref
         .read(plannableItemsProvider(widget.userId).notifier)
         .addItem(
-          title: _titleController.text.trim(),
+          title: title,
           durationMinutes: _selectedDuration,
           energyLevel: _selectedEnergy,
         );
