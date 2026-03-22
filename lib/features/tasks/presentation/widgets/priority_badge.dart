@@ -1,25 +1,22 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/utils/extensions.dart';
+import '../../../../core/utils/priority_color.dart';
 import '../../domain/task_model.dart';
 
 /// A small colored badge displaying the priority level (P1-P4).
 ///
-/// Colors are chosen for quick visual distinction:
-/// P1 = urgent red, P2 = warning orange, P3 = default blue, P4 = low-priority
-/// blue-grey.
+/// Uses theme-aware [priorityColor] utility so colors adapt to
+/// light/dark mode automatically.
 class PriorityBadge extends StatelessWidget {
   const PriorityBadge({super.key, required this.priority});
 
   final Priority priority;
 
-  /// Maps each priority to its display color.
-  static const Map<Priority, Color> priorityColors = {
-    Priority.p1: Color(0xFFD32F2F), // urgent red
-    Priority.p2: Color(0xFFF57C00), // warning orange
-    Priority.p3: Color(0xFF1976D2), // default blue
-    Priority.p4: Color(0xFF78909C), // low-priority blue-grey
-  };
+  /// Returns the theme-aware color for the given [Priority].
+  static Color colorFor(Priority priority, ColorScheme cs) {
+    return priorityColor(priority.index + 1, cs);
+  }
 
   /// Short labels for each priority level.
   static const Map<Priority, String> _labels = {
@@ -31,7 +28,7 @@ class PriorityBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final color = priorityColors[priority]!;
+    final color = colorFor(priority, context.colorScheme);
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
       decoration: BoxDecoration(

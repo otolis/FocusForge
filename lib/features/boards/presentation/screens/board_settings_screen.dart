@@ -92,8 +92,10 @@ class _BoardSettingsScreenState extends ConsumerState<BoardSettingsScreen> {
           ),
           TextButton(
             onPressed: () => Navigator.of(context).pop(true),
-            child:
-                const Text('Remove', style: TextStyle(color: Colors.red)),
+            child: Text(
+                'Remove',
+                style: TextStyle(color: Theme.of(context).colorScheme.error),
+              ),
           ),
         ],
       ),
@@ -173,8 +175,10 @@ class _BoardSettingsScreenState extends ConsumerState<BoardSettingsScreen> {
           ),
           TextButton(
             onPressed: () => Navigator.of(context).pop(true),
-            child:
-                const Text('Delete', style: TextStyle(color: Colors.red)),
+            child: Text(
+                'Delete',
+                style: TextStyle(color: Theme.of(context).colorScheme.error),
+              ),
           ),
         ],
       ),
@@ -297,9 +301,9 @@ class _BoardSettingsScreenState extends ConsumerState<BoardSettingsScreen> {
                             },
                           ),
                           IconButton(
-                            icon: const Icon(
+                            icon: Icon(
                               Icons.remove_circle_outline,
-                              color: Colors.red,
+                              color: context.colorScheme.error,
                             ),
                             onPressed: () => _removeMember(
                               member.id,
@@ -392,15 +396,15 @@ class _BoardSettingsScreenState extends ConsumerState<BoardSettingsScreen> {
               child: Text(
                 'Danger Zone',
                 style: context.textTheme.titleSmall?.copyWith(
-                  color: Colors.red,
+                  color: context.colorScheme.error,
                 ),
               ),
             ),
             ListTile(
-              leading: const Icon(Icons.delete_forever, color: Colors.red),
-              title: const Text(
+              leading: Icon(Icons.delete_forever, color: context.colorScheme.error),
+              title: Text(
                 'Delete Board',
-                style: TextStyle(color: Colors.red),
+                style: TextStyle(color: context.colorScheme.error),
               ),
               subtitle: const Text(
                 'Permanently delete this board and all its data',

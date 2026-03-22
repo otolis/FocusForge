@@ -38,8 +38,8 @@ class TaskCard extends StatelessWidget {
         children: [
           SlidableAction(
             onPressed: (_) => onToggleComplete(task.id),
-            backgroundColor: const Color(0xFF43A047),
-            foregroundColor: Colors.white,
+            backgroundColor: context.colorScheme.primary,
+            foregroundColor: context.colorScheme.onPrimary,
             icon: Icons.check_circle,
             label: 'Complete',
           ),
@@ -53,8 +53,8 @@ class TaskCard extends StatelessWidget {
         children: [
           SlidableAction(
             onPressed: (_) => onDelete(task.id),
-            backgroundColor: const Color(0xFFE53935),
-            foregroundColor: Colors.white,
+            backgroundColor: context.colorScheme.error,
+            foregroundColor: context.colorScheme.onError,
             icon: Icons.delete,
             label: 'Delete',
           ),

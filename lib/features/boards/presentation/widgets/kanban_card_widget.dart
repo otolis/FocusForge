@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import '../../../../core/utils/extensions.dart';
+import '../../../../core/utils/priority_color.dart' as pc;
 import '../../domain/board_model.dart';
 
 /// Renders a single card inside an AppFlowyBoard column.
@@ -23,17 +24,9 @@ class KanbanCardWidget extends StatelessWidget {
   /// Called when the user taps this card (opens detail sheet).
   final VoidCallback? onTap;
 
-  /// Maps priority values (1-4) to display colors.
-  static const _priorityColors = {
-    1: Colors.red,
-    2: Colors.orange,
-    3: Colors.blue,
-    4: Colors.grey,
-  };
-
   @override
   Widget build(BuildContext context) {
-    final priorityColor = _priorityColors[card.priority] ?? Colors.grey;
+    final priorityColor = pc.priorityColor(card.priority, context.colorScheme);
 
     return GestureDetector(
       onTap: onTap,

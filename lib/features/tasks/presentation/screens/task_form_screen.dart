@@ -174,7 +174,7 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen> {
         Row(
           children: Priority.values.map((priority) {
             final isSelected = _selectedPriority == priority;
-            final color = PriorityBadge.priorityColors[priority]!;
+            final color = PriorityBadge.colorFor(priority, context.colorScheme);
             final label = switch (priority) {
               Priority.p1 => 'P1 Urgent',
               Priority.p2 => 'P2 High',

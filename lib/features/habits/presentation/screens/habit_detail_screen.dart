@@ -308,9 +308,9 @@ class _HabitDetailScreenState extends ConsumerState<HabitDetailScreen> {
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Row(
                 children: [
-                  const Icon(
+                  Icon(
                     Icons.local_fire_department,
-                    color: Colors.orange,
+                    color: context.colorScheme.tertiary,
                     size: 24,
                   ),
                   const SizedBox(width: 4),
@@ -325,7 +325,7 @@ class _HabitDetailScreenState extends ConsumerState<HabitDetailScreen> {
                     Text(
                       'Keep it up!',
                       style: context.textTheme.bodySmall?.copyWith(
-                        color: Colors.orange,
+                        color: context.colorScheme.tertiary,
                       ),
                     ),
                   ],
@@ -355,13 +355,13 @@ class _HabitDetailScreenState extends ConsumerState<HabitDetailScreen> {
                     label: 'Best Streak',
                     value: '$_bestStreak days',
                     icon: Icons.emoji_events,
-                    iconColor: Colors.amber,
+                    iconColor: context.colorScheme.tertiary,
                   ),
                   StatCard(
                     label: 'Current Streak',
                     value: '$_currentStreak days',
                     icon: Icons.local_fire_department,
-                    iconColor: Colors.orange,
+                    iconColor: context.colorScheme.tertiary,
                   ),
                   StatCard(
                     label: 'Total Check-ins',

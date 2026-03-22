@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
 import '../../../../core/utils/extensions.dart';
+import '../../../../core/utils/priority_color.dart' as pc;
 import '../../../../shared/widgets/app_button.dart';
 import '../../domain/board_model.dart';
 import '../providers/board_detail_provider.dart';
@@ -55,13 +56,8 @@ class _CardDetailContentState extends ConsumerState<_CardDetailContent> {
   DateTime? _dueDate;
   bool _isSaving = false;
 
-  /// Priority labels and their associated colors.
-  static const _priorities = [
-    (label: 'P1', color: Colors.red),
-    (label: 'P2', color: Colors.orange),
-    (label: 'P3', color: Colors.blue),
-    (label: 'P4', color: Colors.grey),
-  ];
+  /// Priority labels.
+  static const _priorityLabels = ['P1', 'P2', 'P3', 'P4'];
 
   @override
   void initState() {
@@ -145,23 +141,24 @@ class _CardDetailContentState extends ConsumerState<_CardDetailContent> {
                 ),
                 const SizedBox(height: 8),
                 Row(
-                  children: List.generate(_priorities.length, (index) {
-                    final p = _priorities[index];
+                  children: List.generate(_priorityLabels.length, (index) {
+                    final label = _priorityLabels[index];
                     final priorityValue = index + 1;
                     final isSelected = _priority == priorityValue;
+                    final color = pc.priorityColor(priorityValue, context.colorScheme);
                     return Padding(
                       padding: const EdgeInsets.only(right: 8),
                       child: ChoiceChip(
-                        label: Text(p.label),
+                        label: Text(label),
                         selected: isSelected,
-                        selectedColor: p.color.withValues(alpha: 0.2),
+                        selectedColor: color.withValues(alpha: 0.2),
                         labelStyle: TextStyle(
-                          color: isSelected ? p.color : null,
+                          color: isSelected ? color : null,
                           fontWeight:
                               isSelected ? FontWeight.w600 : FontWeight.normal,
                         ),
                         side: isSelected
-                            ? BorderSide(color: p.color)
+                            ? BorderSide(color: color)
                             : null,
                         onSelected: (_) {
                           setState(() => _priority = priorityValue);

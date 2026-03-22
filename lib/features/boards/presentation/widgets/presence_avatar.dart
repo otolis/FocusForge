@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/utils/extensions.dart';
+import '../../../../core/utils/priority_color.dart';
 import '../../../../features/profile/presentation/widgets/avatar_widget.dart';
 
 /// Displays a circular avatar with an online presence indicator.
@@ -42,7 +43,7 @@ class PresenceAvatar extends StatelessWidget {
               width: 10,
               height: 10,
               decoration: BoxDecoration(
-                color: Colors.green,
+                color: kPresenceGreen,
                 shape: BoxShape.circle,
                 border: Border.all(
                   color: context.colorScheme.surface,

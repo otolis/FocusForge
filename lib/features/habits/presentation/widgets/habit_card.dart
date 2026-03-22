@@ -89,7 +89,7 @@ class HabitCard extends StatelessWidget {
                         if (habit.currentStreak > 0) ...[
                           Icon(
                             Icons.local_fire_department,
-                            color: Colors.orange,
+                            color: context.colorScheme.tertiary,
                             size: 16,
                           ),
                           const SizedBox(width: 2),
