@@ -15,27 +15,28 @@ Users can capture tasks naturally (voice or text), get an AI-optimized daily sch
 - ✓ AI daily planner via Supabase Edge Function calling Groq API (Llama 3) — Phase 5
 - ✓ Daily timeline view with drag-to-reschedule — Phase 5
 - ✓ Energy pattern settings that influence AI schedule optimization — Phase 5
+- ✓ Authentication with email and Google sign-in via Supabase Auth — Phase 1
+- ✓ User profiles with display name, avatar, and energy pattern preferences — Phase 1
+- ✓ Dark mode and custom Material 3 theme toggle — Phase 1
+- ✓ Task CRUD with title, description, priority (1-4), category, and deadline — Phase 2
+- ✓ Task list with filters, search, and priority badges — Phase 2
+- ✓ Smart task input: regex+NLP heuristics for deadline, priority, category extraction — Phase 3
+- ✓ TFLite on-device model for task classification — Phase 3
+- ✓ Habit CRUD with daily/weekly/custom frequency and target counts — Phase 4
+- ✓ Habit streak calculation and visual streaks via `fl_chart` — Phase 4
+- ✓ Habit analytics screen with progress charts — Phase 4
+- ✓ Push notifications via FCM with adaptive reminder timing — Phase 7
+- ✓ Notification preferences configurable from settings — Phase 7
+- ✓ Collaborative project boards with Kanban UI and drag-and-drop — Phase 6
+- ✓ Board member invite and role management — Phase 6
+- ✓ Supabase Realtime subscriptions for live board updates — Phase 6
+- ✓ Live presence indicators on shared boards — Phase 6
 
 ### Active
 
-- [ ] Authentication with email and Google sign-in via Supabase Auth
-- [ ] User profiles with display name, avatar, and energy pattern preferences
-- [ ] Task CRUD with title, description, priority (1-4), category, and deadline
-- [ ] Smart task input: voice-to-text via `speech_to_text`, parsed with regex+NLP heuristics
-- [ ] TFLite on-device model upgrade for task classification (post-regex phase)
-- [ ] Task list with filters, search, and priority badges
-- [ ] Habit CRUD with daily/weekly/custom frequency and target counts
-- [ ] Habit streak calculation and visual streaks via `fl_chart`
-- [ ] Habit analytics screen with progress charts
-- [ ] AI daily planner schedule cache and reload on return to planner tab
-- [ ] Collaborative project boards with Kanban UI and drag-and-drop
-- [ ] Board member invite and role management
-- [ ] Supabase Realtime subscriptions for live board updates
-- [ ] Live presence indicators on shared boards
-- [ ] Push notifications via FCM with adaptive reminder timing
-- [ ] Dark mode and custom Material 3 theme toggle
 - [ ] Lottie/Rive animations on task completions and milestones
 - [ ] Flutter web deployment for live portfolio demo
+- [ ] Cross-feature wiring (smart input → task creation, real items → AI planner)
 - [ ] Polished GitHub README with screenshots and demo video
 
 ### Out of Scope
@@ -78,4 +79,4 @@ Users can capture tasks naturally (voice or text), get an AI-optimized daily sch
 | Email + Google auth only | Apple requires Mac for testing, defer to post-v1 | — Pending |
 
 ---
-*Last updated: 2026-03-22 after Phase 5*
+*Last updated: 2026-03-22 after Phase 7*
