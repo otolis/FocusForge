@@ -31,7 +31,7 @@ class CategoryManagementScreen extends ConsumerWidget {
       body: categoriesAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (err, _) => Center(
-          child: Text('Error loading categories: $err'),
+          child: Text('Could not load categories.'),
         ),
         data: (categories) {
           if (categories.isEmpty) {

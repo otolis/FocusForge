@@ -96,7 +96,7 @@ class _HabitFormScreenState extends ConsumerState<HabitFormScreen> {
       setState(() => _isLoading = false);
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to load habit: $e')),
+          const SnackBar(content: Text('Could not load habit. Please try again.')),
         );
         context.pop();
       }
@@ -143,7 +143,7 @@ class _HabitFormScreenState extends ConsumerState<HabitFormScreen> {
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to save habit: $e')),
+          const SnackBar(content: Text('Could not save habit. Please try again.')),
         );
       }
     } finally {
@@ -190,7 +190,7 @@ class _HabitFormScreenState extends ConsumerState<HabitFormScreen> {
       } catch (e) {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Failed to delete habit: $e')),
+            const SnackBar(content: Text('Could not delete habit. Please try again.')),
           );
           setState(() => _isLoading = false);
         }

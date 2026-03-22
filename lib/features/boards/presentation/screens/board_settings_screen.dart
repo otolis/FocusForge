@@ -56,7 +56,7 @@ class _BoardSettingsScreenState extends ConsumerState<BoardSettingsScreen> {
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to invite: ${e.toString()}')),
+          const SnackBar(content: Text('Could not send invite. Please try again.')),
         );
       }
     }
@@ -72,7 +72,7 @@ class _BoardSettingsScreenState extends ConsumerState<BoardSettingsScreen> {
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to update role: ${e.toString()}')),
+          const SnackBar(content: Text('Could not update role. Please try again.')),
         );
       }
     }
@@ -106,8 +106,8 @@ class _BoardSettingsScreenState extends ConsumerState<BoardSettingsScreen> {
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-              content: Text('Failed to remove member: ${e.toString()}')),
+          const SnackBar(
+              content: Text('Could not remove member. Please try again.')),
         );
       }
     }
@@ -149,8 +149,8 @@ class _BoardSettingsScreenState extends ConsumerState<BoardSettingsScreen> {
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-              content: Text('Failed to rename board: ${e.toString()}')),
+          const SnackBar(
+              content: Text('Could not rename board. Please try again.')),
         );
       }
     }
@@ -190,8 +190,8 @@ class _BoardSettingsScreenState extends ConsumerState<BoardSettingsScreen> {
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-              content: Text('Failed to delete board: ${e.toString()}')),
+          const SnackBar(
+              content: Text('Could not delete board. Please try again.')),
         );
       }
     }
@@ -217,7 +217,7 @@ class _BoardSettingsScreenState extends ConsumerState<BoardSettingsScreen> {
     if (state.error != null) {
       return Scaffold(
         appBar: AppBar(title: const Text('Board Settings')),
-        body: Center(child: Text('Error: ${state.error}')),
+        body: Center(child: Text('Could not load board settings.')),
       );
     }
 

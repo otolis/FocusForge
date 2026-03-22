@@ -137,7 +137,7 @@ class _BoardDetailScreenState extends ConsumerState<BoardDetailScreen> {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                state.error!,
+                'Could not load board. Check your connection.',
                 style: context.textTheme.bodyMedium,
                 textAlign: TextAlign.center,
               ),
@@ -277,7 +277,7 @@ class _BoardDetailScreenState extends ConsumerState<BoardDetailScreen> {
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to add card: $e')),
+          const SnackBar(content: Text('Could not add card. Please try again.')),
         );
       }
     }

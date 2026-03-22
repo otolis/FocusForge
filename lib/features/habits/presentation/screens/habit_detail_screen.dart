@@ -115,7 +115,7 @@ class _HabitDetailScreenState extends ConsumerState<HabitDetailScreen> {
       if (mounted) {
         setState(() => _isLoading = false);
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error loading habit: $e')),
+          const SnackBar(content: Text('Could not load habit details. Please try again.')),
         );
       }
     }

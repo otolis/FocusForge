@@ -31,7 +31,7 @@ class BoardListScreen extends ConsumerWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                error.toString(),
+                'Could not load boards. Check your connection.',
                 style: context.textTheme.bodyMedium,
                 textAlign: TextAlign.center,
               ),
@@ -148,7 +148,7 @@ class BoardListScreen extends ConsumerWidget {
     } catch (e) {
       if (parentContext.mounted) {
         ScaffoldMessenger.of(parentContext).showSnackBar(
-          SnackBar(content: Text('Failed to create board: $e')),
+          const SnackBar(content: Text('Could not create board. Please try again.')),
         );
       }
     }

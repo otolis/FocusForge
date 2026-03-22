@@ -282,7 +282,7 @@ class _CardDetailContentState extends ConsumerState<_CardDetailContent> {
       if (mounted) {
         setState(() => _isSaving = false);
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to save: $e')),
+          const SnackBar(content: Text('Could not save card. Please try again.')),
         );
       }
     }
@@ -324,7 +324,7 @@ class _CardDetailContentState extends ConsumerState<_CardDetailContent> {
       } catch (e) {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Failed to delete: $e')),
+            const SnackBar(content: Text('Could not delete card. Please try again.')),
           );
         }
       }

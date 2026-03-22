@@ -214,7 +214,7 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen> {
         categoriesAsync.when(
           loading: () =>
               const Center(child: CircularProgressIndicator()),
-          error: (err, _) => Text('Error loading categories: $err'),
+          error: (err, _) => const Text('Could not load categories.'),
           data: (categories) => Wrap(
             spacing: 8,
             runSpacing: 8,
@@ -302,7 +302,7 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen> {
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error: $e')),
+          const SnackBar(content: Text('Could not save task. Please try again.')),
         );
       }
     } finally {
@@ -436,7 +436,7 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen> {
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error: $e')),
+          const SnackBar(content: Text('Could not save task. Please try again.')),
         );
       }
     } finally {
@@ -464,7 +464,7 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen> {
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error: $e')),
+          const SnackBar(content: Text('Could not delete task. Please try again.')),
         );
       }
     } finally {
@@ -544,7 +544,7 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen> {
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error: $e')),
+          const SnackBar(content: Text('Could not delete task. Please try again.')),
         );
       }
     } finally {
