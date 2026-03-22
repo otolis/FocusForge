@@ -11,6 +11,7 @@ import '../../../profile/presentation/providers/profile_provider.dart';
 import '../../domain/plannable_item_model.dart';
 import '../providers/plannable_items_provider.dart';
 import '../providers/planner_provider.dart';
+import '../providers/real_items_bridge_provider.dart';
 import '../widgets/add_item_sheet.dart';
 import '../widgets/regenerate_bar.dart';
 import '../widgets/shimmer_timeline.dart';
@@ -78,6 +79,11 @@ class _PlannerScreenState extends ConsumerState<PlannerScreen> {
       appBar: AppBar(
         title: const Text('Daily Planner'),
         actions: [
+          IconButton(
+            icon: const Icon(Icons.download),
+            tooltip: 'Import tasks & habits',
+            onPressed: _importRealItems,
+          ),
           TextButton.icon(
             icon: const Icon(Icons.calendar_today_rounded, size: 18),
             label: Text(_formatDate(selectedDate)),
@@ -275,6 +281,31 @@ class _PlannerScreenState extends ConsumerState<PlannerScreen> {
     }
 
     return null;
+  }
+
+  /// Imports uncompleted tasks and incomplete habits as plannable items.
+  void _importRealItems() {
+    final userId = _userId;
+    if (userId.isEmpty) return;
+
+    final realItems = ref.read(realPlannableItemsProvider);
+    if (realItems.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('No pending tasks or habits to import')),
+      );
+      return;
+    }
+    final notifier = ref.read(plannableItemsProvider(userId).notifier);
+    for (final item in realItems) {
+      notifier.addItem(
+        title: item.title,
+        durationMinutes: item.durationMinutes,
+        energyLevel: item.energyLevel,
+      );
+    }
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Imported ${realItems.length} items')),
+    );
   }
 
   Future<void> _generate(String userId) async {
