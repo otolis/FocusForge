@@ -35,12 +35,20 @@ class TimelineWidget extends StatefulWidget {
   /// Parameters: item ID and the new start minute (snapped to 15-minute grid).
   final Function(String itemId, int newStartMinute) onBlockMoved;
 
+  /// Called when the user taps a schedule block to navigate to its source.
+  final Function(String itemId)? onBlockTap;
+
+  /// Called when the user taps a block's completion checkmark.
+  final Function(String itemId)? onBlockComplete;
+
   const TimelineWidget({
     super.key,
     required this.blocks,
     required this.energyPattern,
     required this.onEmptySlotTap,
     required this.onBlockMoved,
+    this.onBlockTap,
+    this.onBlockComplete,
   });
 
   @override
@@ -217,6 +225,12 @@ class _TimelineWidgetState extends State<TimelineWidget> {
                 return DraggableTimeBlockCard(
                   block: block,
                   cardWidth: constraints.maxWidth - 64,
+                  onTap: widget.onBlockTap != null
+                      ? () => widget.onBlockTap!(block.itemId)
+                      : null,
+                  onComplete: widget.onBlockComplete != null
+                      ? () => widget.onBlockComplete!(block.itemId)
+                      : null,
                 );
               },
             ),

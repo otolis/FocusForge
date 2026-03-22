@@ -18,12 +18,16 @@ class TimeBlockCard extends StatelessWidget {
   final ScheduleBlock block;
   final bool isDragging;
   final bool isGhost;
+  final VoidCallback? onTap;
+  final VoidCallback? onComplete;
 
   const TimeBlockCard({
     super.key,
     required this.block,
     this.isDragging = false,
     this.isGhost = false,
+    this.onTap,
+    this.onComplete,
   });
 
   @override
@@ -48,58 +52,76 @@ class TimeBlockCard extends StatelessWidget {
       );
     }
 
-    return Container(
-      width: double.infinity,
-      height: block.height,
-      margin: const EdgeInsets.only(left: 56, right: 8),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(12),
-        color: cardColor,
-        boxShadow: isDragging
-            ? [
-                BoxShadow(
-                  color: context.colorScheme.shadow.withOpacity(0.3),
-                  blurRadius: 8,
-                  offset: const Offset(0, 4),
-                ),
-              ]
-            : null,
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(8),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              block.title,
-              style: context.textTheme.bodyMedium,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-            ),
-            if (block.height > 40) ...[
-              const SizedBox(height: 2),
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: double.infinity,
+        height: block.height,
+        margin: const EdgeInsets.only(left: 56, right: 8),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(12),
+          color: cardColor,
+          boxShadow: isDragging
+              ? [
+                  BoxShadow(
+                    color: context.colorScheme.shadow.withOpacity(0.3),
+                    blurRadius: 8,
+                    offset: const Offset(0, 4),
+                  ),
+                ]
+              : null,
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(8),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
               Text(
-                '${_formatMinute(block.startMinute)} - ${_formatMinute(block.endMinute)}',
-                style: context.textTheme.labelSmall?.copyWith(
-                  color: context.colorScheme.onSurfaceVariant,
-                ),
+                block.title,
+                style: context.textTheme.bodyMedium,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
               ),
-            ],
-            if (block.height > 60) ...[
-              const SizedBox(height: 4),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(4),
-                  color: context.colorScheme.surface.withOpacity(0.6),
+              if (block.height > 40) ...[
+                const SizedBox(height: 2),
+                Text(
+                  '${_formatMinute(block.startMinute)} - ${_formatMinute(block.endMinute)}',
+                  style: context.textTheme.labelSmall?.copyWith(
+                    color: context.colorScheme.onSurfaceVariant,
+                  ),
                 ),
-                child: Text(
-                  '${block.durationMinutes} min',
-                  style: context.textTheme.labelSmall,
+              ],
+              if (block.height > 60) ...[
+                const SizedBox(height: 4),
+                Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(4),
+                    color: context.colorScheme.surface.withOpacity(0.6),
+                  ),
+                  child: Text(
+                    '${block.durationMinutes} min',
+                    style: context.textTheme.labelSmall,
+                  ),
                 ),
-              ),
+              ],
+              if (onComplete != null && block.height > 40) ...[
+                const Spacer(),
+                Align(
+                  alignment: Alignment.bottomRight,
+                  child: GestureDetector(
+                    onTap: onComplete,
+                    child: Icon(
+                      Icons.check_circle_outline,
+                      size: 20,
+                      color: context.colorScheme.onSurfaceVariant,
+                    ),
+                  ),
+                ),
+              ],
             ],
-          ],
+          ),
         ),
       ),
     );
@@ -137,6 +159,8 @@ class DraggableTimeBlockCard extends StatelessWidget {
     super.key,
     required this.block,
     required this.cardWidth,
+    this.onTap,
+    this.onComplete,
   });
 
   /// The schedule block data for this card.
@@ -144,6 +168,12 @@ class DraggableTimeBlockCard extends StatelessWidget {
 
   /// The width to use for the drag feedback widget.
   final double cardWidth;
+
+  /// Called when the user taps the block (navigates to source detail).
+  final VoidCallback? onTap;
+
+  /// Called when the user taps the completion checkmark.
+  final VoidCallback? onComplete;
 
   @override
   Widget build(BuildContext context) {
@@ -164,7 +194,7 @@ class DraggableTimeBlockCard extends StatelessWidget {
         opacity: 0.3,
         child: TimeBlockCard(block: block, isGhost: true),
       ),
-      child: TimeBlockCard(block: block),
+      child: TimeBlockCard(block: block, onTap: onTap, onComplete: onComplete),
     );
   }
 }
