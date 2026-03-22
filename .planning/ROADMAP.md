@@ -149,12 +149,12 @@ Plans:
   3. Lottie animations play on task completion, habit check-in, and streak milestones throughout the app
   4. App is deployed as Flutter web and accessible via a public URL for portfolio demo
   5. All cross-feature navigation works (home screen links to tasks, habits, planner, boards)
-**Plans**: TBD
+**Plans**: 3 plans
 
 Plans:
-- [ ] 08-01: TBD
-- [ ] 08-02: TBD
-- [ ] 08-03: TBD
+- [ ] 08-01-PLAN.md — Cross-feature wiring: SmartInputField into task creation, real items bridge for AI planner
+- [ ] 08-02-PLAN.md — Lottie animations: celebration overlay widget, task/habit/streak animations
+- [ ] 08-03-PLAN.md — Flutter web deployment: TFLite web guard, GitHub Actions CI/CD for GitHub Pages
 
 ## Progress
 
@@ -170,4 +170,4 @@ Phase 1 first, then Phases 2-7 in parallel, then Phase 8 last.
 | 5. AI Daily Planner | 3/3 | Complete | 2026-03-22 |
 | 6. Collaborative Boards | 0/3 | Planned | - |
 | 7. Notifications & Reminders | 0/3 | Planned | - |
-| 8. Integration, Animations & Deployment | 0/0 | Not started | - |
+| 8. Integration, Animations & Deployment | 0/3 | Planned | - |
