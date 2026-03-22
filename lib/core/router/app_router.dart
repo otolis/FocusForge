@@ -9,6 +9,9 @@ import '../../features/auth/presentation/screens/forgot_password_screen.dart';
 import '../../features/onboarding/presentation/screens/onboarding_screen.dart';
 import '../../features/profile/presentation/screens/profile_screen.dart';
 import '../../features/settings/presentation/screens/settings_screen.dart';
+import '../../features/boards/presentation/screens/board_list_screen.dart';
+import '../../features/boards/presentation/screens/board_detail_screen.dart';
+import '../../features/planner/presentation/screens/planner_screen.dart';
 import '../../features/smart_input/presentation/screens/smart_input_demo_screen.dart';
 import '../../shared/widgets/app_shell.dart';
 import '../../shared/widgets/placeholder_tab.dart';
@@ -103,14 +106,26 @@ final appRouterProvider = Provider<GoRouter>((ref) {
           ),
           GoRoute(
             path: '/planner',
-            builder: (context, state) =>
-                const PlaceholderTab(title: 'Planner'),
+            builder: (context, state) => const PlannerScreen(),
+          ),
+          GoRoute(
+            path: '/boards',
+            builder: (context, state) => const BoardListScreen(),
           ),
           GoRoute(
             path: '/profile',
             builder: (context, state) => const ProfileScreen(),
           ),
         ],
+      ),
+
+      // Board detail (outside the shell — full screen Kanban view)
+      GoRoute(
+        path: '/boards/:id',
+        builder: (context, state) {
+          final boardId = state.pathParameters['id']!;
+          return BoardDetailScreen(boardId: boardId);
+        },
       ),
 
       // Settings (outside the shell — full screen)

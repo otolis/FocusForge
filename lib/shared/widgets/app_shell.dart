@@ -20,7 +20,7 @@ class AppShell extends StatefulWidget {
 
 class _AppShellState extends State<AppShell> {
   /// Maps route paths to navigation bar indices.
-  static const _routes = ['/tasks', '/habits', '/planner', '/profile'];
+  static const _routes = ['/tasks', '/habits', '/planner', '/boards', '/profile'];
 
   /// Determines the selected index from the current GoRouter location.
   int _currentIndex(BuildContext context) {
@@ -65,6 +65,11 @@ class _AppShellState extends State<AppShell> {
               icon: Icon(Icons.calendar_today_rounded),
               selectedIcon: Icon(Icons.calendar_today),
               label: 'Planner',
+            ),
+            NavigationDestination(
+              icon: Icon(Icons.dashboard_outlined),
+              selectedIcon: Icon(Icons.dashboard_rounded),
+              label: 'Boards',
             ),
             NavigationDestination(
               icon: Icon(Icons.person_outline_rounded),
