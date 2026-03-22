@@ -15,6 +15,10 @@ import '../providers/task_provider.dart';
 import '../providers/category_provider.dart';
 import '../widgets/priority_badge.dart';
 import '../widgets/recurrence_picker.dart';
+import '../../../smart_input/presentation/widgets/smart_input_field.dart';
+import '../../../smart_input/domain/parsed_task_input.dart';
+import '../../../smart_input/domain/smart_input_category.dart';
+import '../../../smart_input/presentation/providers/smart_input_provider.dart';
 
 /// Full-screen form for creating and editing tasks.
 ///
@@ -49,6 +53,13 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen> {
     super.initState();
     _titleController = TextEditingController();
     _descriptionController = TextEditingController();
+
+    if (!_isEditMode) {
+      // Initialize TFLite model for smart input in create mode.
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        ref.read(smartInputInitProvider);
+      });
+    }
 
     if (_isEditMode) {
       // Load existing task data after the first frame.
@@ -86,6 +97,52 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen> {
         _existingTask!.parentTaskId != null;
   }
 
+  /// Maps ParsedTaskInput priority string ('P1'-'P4') to [Priority] enum.
+  Priority _mapSmartPriority(String priorityStr) {
+    return switch (priorityStr.toUpperCase()) {
+      'P1' => Priority.p1,
+      'P2' => Priority.p2,
+      'P3' => Priority.p3,
+      'P4' => Priority.p4,
+      _ => Priority.p3,
+    };
+  }
+
+  /// Searches user categories for a match against the suggested category name.
+  String? _matchCategoryByName(String suggestedName, List<Category> categories) {
+    for (final cat in categories) {
+      if (cat.name.toLowerCase() == suggestedName.toLowerCase()) return cat.id;
+    }
+    for (final cat in categories) {
+      if (cat.name.toLowerCase().contains(suggestedName.toLowerCase()) ||
+          suggestedName.toLowerCase().contains(cat.name.toLowerCase())) {
+        return cat.id;
+      }
+    }
+    return null;
+  }
+
+  /// Applies NLP-parsed results to form fields (priority, deadline, category).
+  void _onSmartInputParsed(ParsedTaskInput parsed) {
+    if (!mounted) return;
+    setState(() {
+      if (parsed.suggestedPriority != null) {
+        _selectedPriority = _mapSmartPriority(parsed.suggestedPriority!);
+      }
+      if (parsed.suggestedDeadline != null) {
+        _selectedDeadline = parsed.suggestedDeadline;
+      }
+      if (parsed.suggestedCategory != null) {
+        final categories = ref.read(categoryListProvider).valueOrNull ?? [];
+        final matchedId = _matchCategoryByName(
+          parsed.suggestedCategory!.displayName,
+          categories,
+        );
+        if (matchedId != null) _selectedCategoryId = matchedId;
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -107,14 +164,22 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Title field
-              AppTextField(
-                label: 'Title',
-                controller: _titleController,
-                validator: (v) =>
-                    v?.isEmpty ?? true ? 'Title is required' : null,
-                textInputAction: TextInputAction.next,
-              ),
+              // Title field -- SmartInputField in create mode, plain field in edit mode
+              if (!_isEditMode) ...[
+                SmartInputField(
+                  controller: _titleController,
+                  hintText: 'e.g., "Buy groceries tomorrow high priority"',
+                  onParsed: _onSmartInputParsed,
+                ),
+              ] else ...[
+                AppTextField(
+                  label: 'Title',
+                  controller: _titleController,
+                  validator: (v) =>
+                      v?.isEmpty ?? true ? 'Title is required' : null,
+                  textInputAction: TextInputAction.next,
+                ),
+              ],
               const SizedBox(height: 16),
 
               // Description field

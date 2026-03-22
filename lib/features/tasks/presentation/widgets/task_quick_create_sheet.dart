@@ -8,6 +8,9 @@ import '../../../../core/utils/extensions.dart';
 import '../../domain/task_model.dart';
 import '../providers/task_provider.dart';
 import 'priority_badge.dart';
+import '../../../smart_input/presentation/widgets/smart_input_field.dart';
+import '../../../smart_input/domain/parsed_task_input.dart';
+import '../../../smart_input/presentation/providers/smart_input_provider.dart';
 
 /// A bottom sheet for quick task creation with title, priority, and deadline.
 ///
@@ -36,6 +39,14 @@ class _TaskQuickCreateSheetState extends ConsumerState<TaskQuickCreateSheet> {
   Priority _priority = Priority.p3;
   DateTime? _deadline;
   bool _titleError = false;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(smartInputInitProvider);
+    });
+  }
 
   @override
   void dispose() {
@@ -106,21 +117,40 @@ class _TaskQuickCreateSheetState extends ConsumerState<TaskQuickCreateSheet> {
           ),
           const SizedBox(height: 16),
 
-          // Title input
-          TextField(
+          // Title input with NLP smart parsing
+          SmartInputField(
             controller: _titleController,
-            autofocus: true,
-            textInputAction: TextInputAction.done,
-            onSubmitted: (_) => _submit(),
-            onChanged: (_) {
-              if (_titleError) setState(() => _titleError = false);
+            hintText: 'e.g., "Buy groceries tomorrow high priority"',
+            onParsed: (parsed) {
+              if (!mounted) return;
+              setState(() {
+                if (_titleError) _titleError = false;
+                if (parsed.suggestedPriority != null) {
+                  _priority = switch (parsed.suggestedPriority!.toUpperCase()) {
+                    'P1' => Priority.p1,
+                    'P2' => Priority.p2,
+                    'P3' => Priority.p3,
+                    'P4' => Priority.p4,
+                    _ => Priority.p3,
+                  };
+                }
+                if (parsed.suggestedDeadline != null) {
+                  _deadline = parsed.suggestedDeadline;
+                }
+              });
             },
-            decoration: InputDecoration(
-              hintText: 'What do you need to do?',
-              errorText: _titleError ? 'Title cannot be empty' : null,
-              border: const OutlineInputBorder(),
-            ),
           ),
+          if (_titleError)
+            Padding(
+              padding: const EdgeInsets.only(top: 4),
+              child: Text(
+                'Title cannot be empty',
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.error,
+                  fontSize: 12,
+                ),
+              ),
+            ),
           const SizedBox(height: 12),
 
           // Priority selector
