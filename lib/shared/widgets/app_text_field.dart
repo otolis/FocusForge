@@ -17,6 +17,7 @@ class AppTextField extends StatelessWidget {
     this.prefixIcon,
     this.suffixIcon,
     this.errorText,
+    this.maxLines = 1,
   });
 
   /// Label text displayed inside the input decoration.
@@ -49,6 +50,9 @@ class AppTextField extends StatelessWidget {
   /// Optional error text displayed below the field.
   final String? errorText;
 
+  /// Maximum number of lines for the text field.
+  final int maxLines;
+
   @override
   Widget build(BuildContext context) {
     return TextFormField(
@@ -58,6 +62,7 @@ class AppTextField extends StatelessWidget {
       keyboardType: keyboardType,
       textInputAction: textInputAction,
       onFieldSubmitted: onFieldSubmitted,
+      maxLines: maxLines,
       decoration: InputDecoration(
         labelText: label,
         prefixIcon: prefixIcon,
