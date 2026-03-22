@@ -3,8 +3,8 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Completed 05-02-PLAN.md
-last_updated: "2026-03-22T11:56:09.314Z"
+stopped_at: Completed 04-02-PLAN.md
+last_updated: "2026-03-22T11:56:25.553Z"
 last_activity: 2026-03-22 -- Completed Plan 05-02 (Planner UI with timeline and AI generation flow)
 progress:
   total_phases: 8
@@ -99,6 +99,9 @@ Recent decisions affecting current work:
 - [Phase 05]: ShimmerTimeline uses AnimationController.repeat for smooth pulse effect (0.3-0.7 opacity)
 - [Phase 05]: TimeBlockCard includes isDragging/isGhost states for future drag-and-drop
 - [Phase 05]: PlannerScreen uses didChangeDependencies for initial cache load to safely access ref
+- [Phase 04]: CheckInButton uses SingleTickerProviderStateMixin with 200ms elasticOut for scale bounce animation
+- [Phase 04]: Habit sub-routes placed outside ShellRoute for full-screen navigation without bottom bar
+- [Phase 04]: HabitFormScreen uses ConsumerStatefulWidget for form controllers and mutable state
 
 ### Pending Todos
 
@@ -112,6 +115,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-22T11:55:48.463Z
-Stopped at: Completed 05-02-PLAN.md
+Last session: 2026-03-22T11:56:25.550Z
+Stopped at: Completed 04-02-PLAN.md
 Resume file: None

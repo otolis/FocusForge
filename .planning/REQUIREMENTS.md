@@ -26,10 +26,10 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Habit Tracking
 
-- [ ] **HABIT-01**: User can create, edit, and delete habits with daily/weekly/custom frequency and target counts
+- [x] **HABIT-01**: User can create, edit, and delete habits with daily/weekly/custom frequency and target counts
 - [ ] **HABIT-02**: User can see visual streak tracking with consecutive-day counter and chain display
 - [ ] **HABIT-03**: User can view habit analytics with completion rate charts (weekly/monthly/yearly) via fl_chart
-- [ ] **HABIT-04**: User can check in habits with one-tap completion and satisfying feedback animations
+- [x] **HABIT-04**: User can check in habits with one-tap completion and satisfying feedback animations
 
 ### AI Daily Planner
 
@@ -110,10 +110,10 @@ Which phases cover which requirements. Updated during roadmap creation.
 | TASK-04 | Phase 2: Task Management | Complete |
 | TASK-05 | Phase 2: Task Management | Complete |
 | TASK-06 | Phase 3: Smart Task Input | Complete |
-| HABIT-01 | Phase 4: Habit Tracking | Pending |
+| HABIT-01 | Phase 4: Habit Tracking | Complete |
 | HABIT-02 | Phase 4: Habit Tracking | Pending |
 | HABIT-03 | Phase 4: Habit Tracking | Pending |
-| HABIT-04 | Phase 4: Habit Tracking | Pending |
+| HABIT-04 | Phase 4: Habit Tracking | Complete |
 | PLAN-01 | Phase 5: AI Daily Planner | Complete |
 | PLAN-02 | Phase 5: AI Daily Planner | Complete |
 | PLAN-03 | Phase 5: AI Daily Planner | Pending |
