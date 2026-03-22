@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -19,7 +20,12 @@ import '../../features/planner/presentation/screens/planner_screen.dart';
 import '../../features/smart_input/presentation/screens/smart_input_demo_screen.dart';
 import '../../shared/widgets/app_shell.dart';
 import '../../features/tasks/presentation/screens/task_list_screen.dart';
-import '../../shared/widgets/placeholder_tab.dart';
+import '../../features/tasks/presentation/screens/task_form_screen.dart';
+import '../../features/tasks/presentation/screens/category_management_screen.dart';
+
+/// Navigator key for the root navigator, used to push screens over the
+/// ShellRoute (no bottom nav visible on form screens).
+final _rootNavigatorKey = GlobalKey<NavigatorState>();
 
 /// Tracks whether onboarding has been completed so the redirect guard
 /// can check synchronously.
@@ -49,6 +55,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
   final authNotifier = ref.read(authNotifierProvider);
 
   return GoRouter(
+    navigatorKey: _rootNavigatorKey,
     refreshListenable: authNotifier,
     initialLocation: '/login',
     redirect: (context, state) {
@@ -102,6 +109,27 @@ final appRouterProvider = Provider<GoRouter>((ref) {
           GoRoute(
             path: '/tasks',
             builder: (context, state) => const TaskListScreen(),
+            routes: [
+              GoRoute(
+                path: 'create',
+                parentNavigatorKey: _rootNavigatorKey,
+                builder: (context, state) => const TaskFormScreen(),
+              ),
+              GoRoute(
+                path: 'categories',
+                parentNavigatorKey: _rootNavigatorKey,
+                builder: (context, state) =>
+                    const CategoryManagementScreen(),
+              ),
+              GoRoute(
+                path: ':id',
+                parentNavigatorKey: _rootNavigatorKey,
+                builder: (context, state) {
+                  final taskId = state.pathParameters['id']!;
+                  return TaskFormScreen(taskId: taskId);
+                },
+              ),
+            ],
           ),
           GoRoute(
             path: '/habits',
