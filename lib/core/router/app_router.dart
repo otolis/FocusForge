@@ -17,6 +17,7 @@ import '../../features/habits/presentation/screens/habit_list_screen.dart';
 import '../../features/habits/presentation/screens/habit_detail_screen.dart';
 import '../../features/habits/presentation/screens/habit_form_screen.dart';
 import '../../features/planner/presentation/screens/planner_screen.dart';
+import '../../features/notifications/presentation/screens/notification_settings_screen.dart';
 import '../../features/smart_input/presentation/screens/smart_input_demo_screen.dart';
 import '../../shared/widgets/app_shell.dart';
 import '../../features/tasks/presentation/screens/task_list_screen.dart';
@@ -196,6 +197,12 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/settings',
         builder: (context, state) => const SettingsScreen(),
+      ),
+
+      // Notification settings (outside the shell -- full screen)
+      GoRoute(
+        path: '/settings/notifications',
+        builder: (context, state) => const NotificationSettingsScreen(),
       ),
 
       // Smart input demo (outside the shell -- dev/demo screen)

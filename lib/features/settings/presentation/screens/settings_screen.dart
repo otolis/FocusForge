@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../../core/utils/extensions.dart';
 import '../providers/theme_provider.dart';
@@ -62,6 +63,21 @@ class SettingsScreen extends ConsumerWidget {
                   ),
                 ],
               ),
+            ),
+          ),
+          const SizedBox(height: 16),
+
+          // Notifications section
+          Card(
+            child: ListTile(
+              leading: Icon(
+                Icons.notifications_outlined,
+                color: context.colorScheme.primary,
+              ),
+              title: const Text('Notifications'),
+              subtitle: const Text('Reminders, quiet hours, and preferences'),
+              trailing: const Icon(Icons.chevron_right_rounded),
+              onTap: () => context.push('/settings/notifications'),
             ),
           ),
           const SizedBox(height: 16),
