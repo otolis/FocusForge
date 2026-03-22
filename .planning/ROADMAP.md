@@ -18,11 +18,11 @@ Decimal phases appear between their surrounding integers in numeric order.
 - Phase 8 depends on all feature phases completing
 
 - [x] **Phase 1: Foundation & Auth** - Supabase setup, auth flows, user profile, dark mode, onboarding
-- [ ] **Phase 2: Task Management** - Task CRUD, categories, filters, search, recurring tasks
-- [ ] **Phase 3: Smart Task Input** - Natural language parsing and on-device TFLite classification
-- [ ] **Phase 4: Habit Tracking** - Habit CRUD, streaks, check-in, analytics charts
+- [x] **Phase 2: Task Management** - Task CRUD, categories, filters, search, recurring tasks (completed 2026-03-22)
+- [x] **Phase 3: Smart Task Input** - Natural language parsing and on-device TFLite classification (completed 2026-03-22)
+- [x] **Phase 4: Habit Tracking** - Habit CRUD, streaks, check-in, analytics charts (completed 2026-03-22)
 - [x] **Phase 5: AI Daily Planner** - Edge Function with Groq API, timeline view, drag-to-reschedule
-- [ ] **Phase 6: Collaborative Boards** - Kanban UI, realtime sync, member invites, live presence
+- [x] **Phase 6: Collaborative Boards** - Kanban UI, realtime sync, member invites, live presence (completed 2026-03-22)
 - [x] **Phase 7: Notifications & Reminders** - FCM push notifications, adaptive reminder timing (completed 2026-03-22)
 - [ ] **Phase 8: Integration, Animations & Deployment** - Cross-feature wiring, Lottie animations, Flutter web deploy
 
