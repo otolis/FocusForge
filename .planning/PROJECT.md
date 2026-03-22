@@ -12,7 +12,9 @@ Users can capture tasks naturally (voice or text), get an AI-optimized daily sch
 
 ### Validated
 
-(None yet — ship to validate)
+- ✓ AI daily planner via Supabase Edge Function calling Groq API (Llama 3) — Phase 5
+- ✓ Daily timeline view with drag-to-reschedule — Phase 5
+- ✓ Energy pattern settings that influence AI schedule optimization — Phase 5
 
 ### Active
 
@@ -25,9 +27,7 @@ Users can capture tasks naturally (voice or text), get an AI-optimized daily sch
 - [ ] Habit CRUD with daily/weekly/custom frequency and target counts
 - [ ] Habit streak calculation and visual streaks via `fl_chart`
 - [ ] Habit analytics screen with progress charts
-- [ ] AI daily planner via Supabase Edge Function calling Groq API (Llama 3)
-- [ ] Daily timeline view with drag-to-reschedule
-- [ ] Energy pattern settings that influence AI schedule optimization
+- [ ] AI daily planner schedule cache and reload on return to planner tab
 - [ ] Collaborative project boards with Kanban UI and drag-and-drop
 - [ ] Board member invite and role management
 - [ ] Supabase Realtime subscriptions for live board updates
@@ -78,4 +78,4 @@ Users can capture tasks naturally (voice or text), get an AI-optimized daily sch
 | Email + Google auth only | Apple requires Mac for testing, defer to post-v1 | — Pending |
 
 ---
-*Last updated: 2026-03-16 after initialization*
+*Last updated: 2026-03-22 after Phase 5*
