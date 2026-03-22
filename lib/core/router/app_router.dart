@@ -17,6 +17,7 @@ import '../../features/habits/presentation/screens/habit_form_screen.dart';
 import '../../features/planner/presentation/screens/planner_screen.dart';
 import '../../features/smart_input/presentation/screens/smart_input_demo_screen.dart';
 import '../../shared/widgets/app_shell.dart';
+import '../../features/tasks/presentation/screens/task_list_screen.dart';
 import '../../shared/widgets/placeholder_tab.dart';
 
 /// Tracks whether onboarding has been completed so the redirect guard
@@ -99,8 +100,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         routes: [
           GoRoute(
             path: '/tasks',
-            builder: (context, state) =>
-                const PlaceholderTab(title: 'Tasks'),
+            builder: (context, state) => const TaskListScreen(),
           ),
           GoRoute(
             path: '/habits',
