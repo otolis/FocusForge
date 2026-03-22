@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../core/utils/date_helpers.dart';
 import '../../../../core/utils/extensions.dart';
+import '../../domain/task_filter.dart';
 import '../../domain/task_model.dart';
 import '../providers/task_filter_provider.dart';
 import '../providers/task_provider.dart';
@@ -48,9 +49,17 @@ class TaskListScreen extends ConsumerWidget {
               data: (filteredTasks) {
                 final completedTasks =
                     completedAsync.valueOrNull ?? <Task>[];
+                final filter = ref.watch(taskFilterProvider);
 
-                // Empty state
+                // Empty state — distinguish no tasks vs. no filter matches
                 if (filteredTasks.isEmpty && completedTasks.isEmpty) {
+                  if (!filter.isEmpty) {
+                    return _EmptyFilterState(
+                      onClear: () =>
+                          ref.read(taskFilterProvider.notifier).state =
+                              const TaskFilter(),
+                    );
+                  }
                   return _EmptyState();
                 }
 
@@ -121,14 +130,16 @@ class _TaskListBody extends ConsumerWidget {
                   onToggleComplete: (id) =>
                       ref.read(taskListProvider.notifier).toggleComplete(id),
                   onDelete: (id) {
+                    final deletedTask = task;
                     ref.read(taskListProvider.notifier).deleteTask(id);
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         content: const Text('Task deleted'),
                         action: SnackBarAction(
                           label: 'Undo',
-                          onPressed: () =>
-                              ref.read(taskListProvider.notifier).refresh(),
+                          onPressed: () => ref
+                              .read(taskListProvider.notifier)
+                              .addTask(deletedTask),
                         ),
                       ),
                     );
@@ -178,14 +189,16 @@ class _CompletedSection extends ConsumerWidget {
             onToggleComplete: (id) =>
                 ref.read(taskListProvider.notifier).toggleComplete(id),
             onDelete: (id) {
+              final deletedTask = task;
               ref.read(taskListProvider.notifier).deleteTask(id);
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: const Text('Task deleted'),
                   action: SnackBarAction(
                     label: 'Undo',
-                    onPressed: () =>
-                        ref.read(taskListProvider.notifier).refresh(),
+                    onPressed: () => ref
+                        .read(taskListProvider.notifier)
+                        .addTask(deletedTask),
                   ),
                 ),
               );
@@ -224,6 +237,42 @@ class _EmptyState extends StatelessWidget {
             style: context.textTheme.bodyMedium?.copyWith(
               color: context.colorScheme.onSurfaceVariant,
             ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// Empty state when filters are active but nothing matches.
+class _EmptyFilterState extends StatelessWidget {
+  const _EmptyFilterState({required this.onClear});
+
+  final VoidCallback onClear;
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            Icons.filter_list_off,
+            size: 64,
+            color:
+                context.colorScheme.onSurfaceVariant.withValues(alpha: 0.4),
+          ),
+          const SizedBox(height: 16),
+          Text(
+            'No tasks match your filters',
+            style: context.textTheme.titleLarge?.copyWith(
+              color: context.colorScheme.onSurfaceVariant,
+            ),
+          ),
+          const SizedBox(height: 8),
+          FilledButton.tonal(
+            onPressed: onClear,
+            child: const Text('Clear filters'),
           ),
         ],
       ),

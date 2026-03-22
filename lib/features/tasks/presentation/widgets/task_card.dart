@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
 import '../../../../core/utils/extensions.dart';
@@ -37,7 +38,10 @@ class TaskCard extends StatelessWidget {
         motion: const BehindMotion(),
         children: [
           SlidableAction(
-            onPressed: (_) => onToggleComplete(task.id),
+            onPressed: (_) {
+              HapticFeedback.mediumImpact();
+              onToggleComplete(task.id);
+            },
             backgroundColor: context.colorScheme.primary,
             foregroundColor: context.colorScheme.onPrimary,
             icon: Icons.check_circle,
@@ -52,7 +56,10 @@ class TaskCard extends StatelessWidget {
         ),
         children: [
           SlidableAction(
-            onPressed: (_) => onDelete(task.id),
+            onPressed: (_) {
+              HapticFeedback.mediumImpact();
+              onDelete(task.id);
+            },
             backgroundColor: context.colorScheme.error,
             foregroundColor: context.colorScheme.onError,
             icon: Icons.delete,
@@ -62,13 +69,10 @@ class TaskCard extends StatelessWidget {
       ),
       child: Card(
         elevation: 0,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
         color: context.colorScheme.surfaceContainerLow,
         child: InkWell(
           onTap: onTap,
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(16),
           child: Padding(
             padding: const EdgeInsets.all(12),
             child: Row(
