@@ -11,6 +11,7 @@ import '../../features/profile/presentation/screens/profile_screen.dart';
 import '../../features/settings/presentation/screens/settings_screen.dart';
 import '../../features/boards/presentation/screens/board_list_screen.dart';
 import '../../features/boards/presentation/screens/board_detail_screen.dart';
+import '../../features/boards/presentation/screens/board_settings_screen.dart';
 import '../../features/planner/presentation/screens/planner_screen.dart';
 import '../../features/smart_input/presentation/screens/smart_input_demo_screen.dart';
 import '../../shared/widgets/app_shell.dart';
@@ -117,6 +118,15 @@ final appRouterProvider = Provider<GoRouter>((ref) {
             builder: (context, state) => const ProfileScreen(),
           ),
         ],
+      ),
+
+      // Board settings (outside the shell — full screen)
+      GoRoute(
+        path: '/boards/:id/settings',
+        builder: (context, state) {
+          final boardId = state.pathParameters['id']!;
+          return BoardSettingsScreen(boardId: boardId);
+        },
       ),
 
       // Board detail (outside the shell — full screen Kanban view)
