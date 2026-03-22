@@ -221,7 +221,22 @@ class _BoardSettingsScreenState extends ConsumerState<BoardSettingsScreen> {
     if (state.error != null) {
       return Scaffold(
         appBar: AppBar(title: const Text('Board Settings')),
-        body: Center(child: Text('Could not load board settings.')),
+        body: Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text('Could not load board settings.'),
+              const SizedBox(height: 16),
+              FilledButton.icon(
+                onPressed: () => ref
+                    .read(boardDetailProvider(widget.boardId).notifier)
+                    .refresh(),
+                icon: const Icon(Icons.refresh),
+                label: const Text('Retry'),
+              ),
+            ],
+          ),
+        ),
       );
     }
 

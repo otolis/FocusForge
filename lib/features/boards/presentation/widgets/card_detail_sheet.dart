@@ -76,6 +76,17 @@ class _CardDetailContentState extends ConsumerState<_CardDetailContent> {
     super.dispose();
   }
 
+  /// Resolves the assignee ID to a display name from the board's member list.
+  String? _resolveAssigneeName() {
+    final assigneeId = widget.card.assigneeId;
+    if (assigneeId == null) return null;
+    final state = ref.read(boardDetailProvider(widget.boardId));
+    final member = state.members
+        .where((m) => m.userId == assigneeId)
+        .firstOrNull;
+    return member?.displayName ?? 'Unknown member';
+  }
+
   @override
   Widget build(BuildContext context) {
     return DraggableScrollableSheet(
@@ -103,7 +114,7 @@ class _CardDetailContentState extends ConsumerState<_CardDetailContent> {
                     ),
                   ),
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 16),
 
                 // Title field
                 TextFormField(
@@ -203,7 +214,7 @@ class _CardDetailContentState extends ConsumerState<_CardDetailContent> {
                     color: context.colorScheme.onSurfaceVariant,
                   ),
                   title: Text(
-                    widget.card.assigneeId ?? 'Assign member',
+                    _resolveAssigneeName() ?? 'Assign member',
                     style: context.textTheme.bodyMedium?.copyWith(
                       color: widget.card.assigneeId != null
                           ? null

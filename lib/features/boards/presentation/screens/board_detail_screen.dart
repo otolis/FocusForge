@@ -1,6 +1,7 @@
 import 'package:appflowy_board/appflowy_board.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../../core/utils/extensions.dart';
 import '../../../../shared/widgets/app_text_field.dart';
@@ -165,9 +166,8 @@ class _BoardDetailScreenState extends ConsumerState<BoardDetailScreen> {
           IconButton(
             icon: const Icon(Icons.settings_outlined),
             tooltip: 'Board settings',
-            onPressed: () {
-              // Will be wired in Plan 03
-            },
+            onPressed: () =>
+                context.push('/boards/${widget.boardId}/settings'),
           ),
         ],
       ),

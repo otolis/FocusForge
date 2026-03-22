@@ -70,7 +70,7 @@ class KanbanCardWidget extends StatelessWidget {
 
             // Due date row
             if (card.dueDate != null) ...[
-              const SizedBox(height: 6),
+              const SizedBox(height: 8),
               Row(
                 children: [
                   Icon(
@@ -91,7 +91,7 @@ class KanbanCardWidget extends StatelessWidget {
 
             // Assignee avatar
             if (card.assigneeId != null) ...[
-              const SizedBox(height: 6),
+              const SizedBox(height: 8),
               Align(
                 alignment: Alignment.centerRight,
                 child: CircleAvatar(
