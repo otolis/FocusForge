@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Completed 05-03-PLAN.md
-last_updated: "2026-03-22T13:01:33.466Z"
-last_activity: 2026-03-22 -- Completed Plan 05-03 (Drag-to-reschedule for daily planner timeline)
+stopped_at: Completed 07-02-PLAN.md
+last_updated: "2026-03-22T13:03:10Z"
+last_activity: 2026-03-22 -- Completed Plan 07-02 (Server-side notification delivery with adaptive timing)
 progress:
   total_phases: 8
   completed_phases: 6
   total_plans: 21
-  completed_plans: 18
+  completed_plans: 19
   percent: 86
 ---
 
@@ -21,16 +21,16 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-16)
 
 **Core value:** Users can capture tasks naturally, get an AI-optimized daily schedule, and track habits with visual streaks -- a productivity system that feels intelligent, not just a CRUD app.
-**Current focus:** Phase 5: AI Daily Planner (complete)
+**Current focus:** Phase 7: Notifications & Reminders
 
 ## Current Position
 
-Phase: 5 of 8 (AI Daily Planner) -- COMPLETE
-Plan: 3 of 3 in current phase (complete)
-Status: Phase 05 complete
-Last activity: 2026-03-22 -- Completed Plan 05-03 (Drag-to-reschedule for daily planner timeline)
+Phase: 7 of 8 (Notifications & Reminders) -- IN PROGRESS
+Plan: 2 of 3 in current phase (complete)
+Status: Executing phase 07
+Last activity: 2026-03-22 -- Completed Plan 07-02 (Server-side notification delivery with adaptive timing)
 
-Progress: [█████████░] 86%
+Progress: [█████████░] 90%
 
 ## Performance Metrics
 
@@ -64,6 +64,7 @@ Progress: [█████████░] 86%
 | Phase 04 P03 | 5min | 2 tasks | 8 files |
 | Phase 02 P03 | 5min | 3 tasks | 6 files |
 | Phase 05 P03 | 1min | 2 tasks | 3 files |
+| Phase 07 P02 | 4min | 2 tasks | 5 files |
 
 ## Accumulated Context
 
@@ -123,6 +124,10 @@ Recent decisions affecting current work:
 - [Phase 05]: Default 500ms long-press delay preserved to avoid scroll-drag conflicts
 - [Phase 05]: DragTarget wraps entire timeline Stack for global coordinate conversion via globalToLocal + scroll offset
 - [Phase 05]: Save debounced at 2 seconds to avoid excessive Supabase writes during rapid dragging
+- [Phase 07]: Data-only FCM messages (no notification field) for Flutter control over display with action buttons
+- [Phase 07]: Vault secrets for pg_cron HTTP auth -- project_url and anon_key stored in Supabase Vault
+- [Phase 07]: Adaptive insight limited to task_deadline reminders only (not habits/planner)
+- [Phase 07]: Stale FCM token cleanup on UNREGISTERED/NOT_FOUND errors from FCM API
 
 ### Pending Todos
 
@@ -136,6 +141,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-22T13:01:33.460Z
-Stopped at: Completed 05-03-PLAN.md
+Last session: 2026-03-22T13:03:10Z
+Stopped at: Completed 07-02-PLAN.md
 Resume file: None

@@ -36,7 +36,7 @@ Requirements for initial release. Each maps to roadmap phases.
 - [x] **PLAN-01**: User can generate an AI-optimized daily schedule from their tasks, habits, and energy preferences via Supabase Edge Function calling Groq API
 - [x] **PLAN-02**: User can view daily schedule as a visual time-blocked timeline
 - [x] **PLAN-03**: User can drag tasks to different time slots on the timeline (snap to 15-minute increments)
-- [ ] **PLAN-04**: User receives adaptive reminders that learn from their completion patterns and adjust timing
+- [x] **PLAN-04**: User receives adaptive reminders that learn from their completion patterns and adjust timing
 
 ### Collaborative Boards
 
@@ -117,7 +117,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | PLAN-01 | Phase 5: AI Daily Planner | Complete |
 | PLAN-02 | Phase 5: AI Daily Planner | Complete |
 | PLAN-03 | Phase 5: AI Daily Planner | Complete |
-| PLAN-04 | Phase 7: Notifications & Reminders | Pending |
+| PLAN-04 | Phase 7: Notifications & Reminders | Complete |
 | BOARD-01 | Phase 6: Collaborative Boards | Complete |
 | BOARD-02 | Phase 6: Collaborative Boards | Complete |
 | BOARD-03 | Phase 6: Collaborative Boards | Complete |
