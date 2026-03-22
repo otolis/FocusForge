@@ -35,6 +35,7 @@ class _HabitDetailScreenState extends ConsumerState<HabitDetailScreen> {
   Habit? _habit;
   List<HabitLog> _logs = [];
   bool _isLoading = true;
+  String? _errorMessage;
 
   // Computed stats
   int _currentStreak = 0;
@@ -113,10 +114,10 @@ class _HabitDetailScreenState extends ConsumerState<HabitDetailScreen> {
       }
     } catch (e) {
       if (mounted) {
-        setState(() => _isLoading = false);
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Could not load habit details. Please try again.')),
-        );
+        setState(() {
+          _isLoading = false;
+          _errorMessage = 'Could not load habit details. Please try again.';
+        });
       }
     }
   }
@@ -257,7 +258,7 @@ class _HabitDetailScreenState extends ConsumerState<HabitDetailScreen> {
   Widget build(BuildContext context) {
     if (_isLoading) {
       return Scaffold(
-        appBar: AppBar(title: const Text('Habit Detail')),
+        appBar: AppBar(title: Text(_habit?.name ?? 'Loading...')),
         body: const Center(child: CircularProgressIndicator()),
       );
     }
@@ -265,8 +266,27 @@ class _HabitDetailScreenState extends ConsumerState<HabitDetailScreen> {
     final habit = _habit;
     if (habit == null) {
       return Scaffold(
-        appBar: AppBar(title: const Text('Habit Detail')),
-        body: const Center(child: Text('Habit not found')),
+        appBar: AppBar(title: const Text('Habit')),
+        body: Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                _errorMessage ?? 'Habit not found',
+                style: context.textTheme.bodyMedium,
+                textAlign: TextAlign.center,
+              ),
+              if (_errorMessage != null) ...[
+                const SizedBox(height: 16),
+                FilledButton.icon(
+                  onPressed: _loadData,
+                  icon: const Icon(Icons.refresh),
+                  label: const Text('Retry'),
+                ),
+              ],
+            ],
+          ),
+        ),
       );
     }
 

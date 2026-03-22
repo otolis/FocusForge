@@ -6,6 +6,23 @@ import '../../domain/habit_model.dart';
 import '../../domain/habit_frequency.dart';
 import 'check_in_button.dart';
 
+/// Maps habit icon string keys to their [IconData] counterparts.
+///
+/// These keys match the `_iconOptions` map in [HabitFormScreen].
+IconData iconDataFromString(String key) {
+  return switch (key) {
+    'fitness_center' => Icons.fitness_center,
+    'menu_book' => Icons.menu_book,
+    'water_drop' => Icons.water_drop,
+    'self_improvement' => Icons.self_improvement,
+    'directions_run' => Icons.directions_run,
+    'code' => Icons.code,
+    'music_note' => Icons.music_note,
+    'brush' => Icons.brush,
+    _ => Icons.circle,
+  };
+}
+
 /// A card widget displaying a single habit with check-in circle, streak badge,
 /// and frequency chip.
 ///
@@ -119,7 +136,7 @@ class HabitCard extends StatelessWidget {
               // Trailing icon
               if (habit.icon != null)
                 Icon(
-                  Icons.circle,
+                  iconDataFromString(habit.icon!),
                   size: 24,
                   color: context.colorScheme.onSurfaceVariant,
                 ),

@@ -35,7 +35,7 @@ class HabitBarChart extends StatelessWidget {
     if (data.isEmpty) {
       return const AspectRatio(
         aspectRatio: 1.7,
-        child: Center(child: Text('No data available')),
+        child: Center(child: Text('Check in to see your progress')),
       );
     }
 

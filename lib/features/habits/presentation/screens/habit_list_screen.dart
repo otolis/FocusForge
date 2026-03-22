@@ -171,10 +171,20 @@ class HabitListScreen extends ConsumerWidget {
         return HabitCard(
           habit: habit,
           onCheckIn: () async {
-            await ref
-                .read(habitListProvider.notifier)
-                .checkIn(habit.id, count: 1);
-            _checkMilestoneHaptic(ref, habit.id);
+            try {
+              await ref
+                  .read(habitListProvider.notifier)
+                  .checkIn(habit.id, count: 1);
+              _checkMilestoneHaptic(ref, habit.id);
+            } catch (e) {
+              if (context.mounted) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Could not check in. Please try again.'),
+                  ),
+                );
+              }
+            }
           },
           onLongPress: () => _showCustomCountDialog(context, ref, habit),
           onTap: () => context.push('/habits/${habit.id}'),

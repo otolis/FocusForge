@@ -100,8 +100,7 @@ class _CheckInButtonState extends State<CheckInButton>
             child: isCountBased
                 ? Text(
                     '${widget.progress}/${widget.target}',
-                    style: TextStyle(
-                      fontSize: 10,
+                    style: Theme.of(context).textTheme.labelSmall?.copyWith(
                       fontWeight: FontWeight.bold,
                       color: widget.isCompleted
                           ? colorScheme.onPrimary
