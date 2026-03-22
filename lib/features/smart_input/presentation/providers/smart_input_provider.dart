@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../data/nlp_parser_service.dart';
@@ -39,10 +40,15 @@ final smartInputServiceProvider = Provider<SmartInputService>(
 
 /// Initializes the TFLite model. Call once during app startup or feature entry.
 ///
+/// On web, TFLite is not supported (FFI bindings unavailable). The provider
+/// returns immediately, and the smart input pipeline falls back to regex-only
+/// parsing which works without TFLite.
+///
 /// This is a [FutureProvider] so the UI can show a loading indicator while
 /// the model loads. The model loading is non-blocking -- regex parsing
 /// works immediately even before this completes.
 final smartInputInitProvider = FutureProvider<void>((ref) async {
+  if (kIsWeb) return; // TFLite not supported on web; regex parser still works
   final service = ref.read(smartInputServiceProvider);
   await service.initialize();
 });
