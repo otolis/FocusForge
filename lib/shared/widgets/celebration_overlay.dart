@@ -24,6 +24,12 @@ class CelebrationOverlay {
     required String animationAsset,
     double size = 200,
   }) {
+    // Respect system reduce-motion accessibility setting
+    final mediaQuery = MediaQuery.maybeOf(context);
+    if (mediaQuery != null && mediaQuery.disableAnimations) {
+      return; // Skip animation when reduce-motion is enabled
+    }
+
     final overlay = Overlay.of(context);
     late OverlayEntry entry;
 
