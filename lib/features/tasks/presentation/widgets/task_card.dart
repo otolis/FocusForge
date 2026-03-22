@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
 import '../../../../core/utils/extensions.dart';
+import '../../../../shared/widgets/celebration_overlay.dart';
 import '../../domain/task_model.dart';
 import 'category_chip.dart';
 import 'deadline_chip.dart';
@@ -40,6 +41,12 @@ class TaskCard extends StatelessWidget {
           SlidableAction(
             onPressed: (_) {
               HapticFeedback.mediumImpact();
+              if (!task.isCompleted) {
+                CelebrationOverlay.show(
+                  context,
+                  animationAsset: CelebrationAssets.taskComplete,
+                );
+              }
               onToggleComplete(task.id);
             },
             backgroundColor: context.colorScheme.primary,

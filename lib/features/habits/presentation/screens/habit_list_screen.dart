@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../core/utils/extensions.dart';
 import '../../../../shared/widgets/app_button.dart';
+import '../../../../shared/widgets/celebration_overlay.dart';
 import '../../domain/habit_model.dart';
 import '../providers/habit_provider.dart';
 import '../widgets/habit_card.dart';
@@ -61,12 +62,13 @@ class HabitListScreen extends ConsumerWidget {
 
     if (result != null) {
       await ref.read(habitListProvider.notifier).checkIn(habit.id, count: result);
-      _checkMilestoneHaptic(ref, habit.id);
+      _checkMilestoneHaptic(context, ref, habit.id);
     }
   }
 
-  /// Checks if the habit just hit a streak milestone and fires medium haptic.
-  void _checkMilestoneHaptic(WidgetRef ref, String habitId) {
+  /// Checks if the habit just hit a streak milestone and fires medium haptic
+  /// with a confetti celebration overlay.
+  void _checkMilestoneHaptic(BuildContext context, WidgetRef ref, String habitId) {
     // Read the updated state to check the streak after check-in
     final habitsAsync = ref.read(habitListProvider);
     habitsAsync.whenData((habits) {
@@ -75,6 +77,11 @@ class HabitListScreen extends ConsumerWidget {
         final streak = updated.currentStreak;
         if (streak == 7 || streak == 30 || streak == 100) {
           HapticFeedback.mediumImpact();
+          CelebrationOverlay.show(
+            context,
+            animationAsset: CelebrationAssets.streakMilestone,
+            size: 250,
+          );
         }
       }
     });
@@ -175,7 +182,7 @@ class HabitListScreen extends ConsumerWidget {
               await ref
                   .read(habitListProvider.notifier)
                   .checkIn(habit.id, count: 1);
-              _checkMilestoneHaptic(ref, habit.id);
+              _checkMilestoneHaptic(context, ref, habit.id);
             } catch (e) {
               if (context.mounted) {
                 ScaffoldMessenger.of(context).showSnackBar(

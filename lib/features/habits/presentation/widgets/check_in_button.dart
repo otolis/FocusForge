@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../../../../shared/widgets/celebration_overlay.dart';
+
 /// An animated circular check-in button for habit completion.
 ///
 /// For binary habits (target == 1), displays a check icon when completed.
@@ -68,6 +70,14 @@ class _CheckInButtonState extends State<CheckInButton>
     _controller.forward().then((_) => _controller.reverse());
     HapticFeedback.lightImpact();
     widget.onTap();
+    // Show celebration animation on check-in
+    if (mounted) {
+      CelebrationOverlay.show(
+        context,
+        animationAsset: CelebrationAssets.habitCheckin,
+        size: 120,
+      );
+    }
   }
 
   @override
