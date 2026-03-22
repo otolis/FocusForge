@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Completed 02-03-PLAN.md
-last_updated: "2026-03-22T12:15:37.437Z"
-last_activity: 2026-03-22 -- Completed Plan 05-02 (Planner UI with timeline and AI generation flow)
+stopped_at: Completed 05-03-PLAN.md
+last_updated: "2026-03-22T13:01:33.466Z"
+last_activity: 2026-03-22 -- Completed Plan 05-03 (Drag-to-reschedule for daily planner timeline)
 progress:
   total_phases: 8
-  completed_phases: 5
+  completed_phases: 6
   total_plans: 21
-  completed_plans: 17
-  percent: 48
+  completed_plans: 18
+  percent: 86
 ---
 
 # Project State
@@ -21,16 +21,16 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-16)
 
 **Core value:** Users can capture tasks naturally, get an AI-optimized daily schedule, and track habits with visual streaks -- a productivity system that feels intelligent, not just a CRUD app.
-**Current focus:** Phase 5: AI Daily Planner
+**Current focus:** Phase 5: AI Daily Planner (complete)
 
 ## Current Position
 
-Phase: 5 of 8 (AI Daily Planner) -- IN PROGRESS
-Plan: 2 of 3 in current phase (complete)
-Status: Executing phase 05
-Last activity: 2026-03-22 -- Completed Plan 05-02 (Planner UI with timeline and AI generation flow)
+Phase: 5 of 8 (AI Daily Planner) -- COMPLETE
+Plan: 3 of 3 in current phase (complete)
+Status: Phase 05 complete
+Last activity: 2026-03-22 -- Completed Plan 05-03 (Drag-to-reschedule for daily planner timeline)
 
-Progress: [█████░░░░░] 48%
+Progress: [█████████░] 86%
 
 ## Performance Metrics
 
@@ -63,6 +63,7 @@ Progress: [█████░░░░░] 48%
 | Phase 02 P02 | 4min | 3 tasks | 11 files |
 | Phase 04 P03 | 5min | 2 tasks | 8 files |
 | Phase 02 P03 | 5min | 3 tasks | 6 files |
+| Phase 05 P03 | 1min | 2 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -119,6 +120,9 @@ Recent decisions affecting current work:
 - [Phase 02]: Task sub-routes use parentNavigatorKey to push over ShellRoute (form screens have no bottom nav)
 - [Phase 02]: PlaceholderTab import removed from router (no routes reference it anymore)
 - [Phase 02]: RecurrenceConfig helper class co-located in recurrence_picker.dart (presentation concern)
+- [Phase 05]: Default 500ms long-press delay preserved to avoid scroll-drag conflicts
+- [Phase 05]: DragTarget wraps entire timeline Stack for global coordinate conversion via globalToLocal + scroll offset
+- [Phase 05]: Save debounced at 2 seconds to avoid excessive Supabase writes during rapid dragging
 
 ### Pending Todos
 
@@ -132,6 +136,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-22T12:11:05.057Z
-Stopped at: Completed 02-03-PLAN.md
+Last session: 2026-03-22T13:01:33.460Z
+Stopped at: Completed 05-03-PLAN.md
 Resume file: None

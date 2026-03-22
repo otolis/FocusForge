@@ -21,7 +21,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [ ] **Phase 2: Task Management** - Task CRUD, categories, filters, search, recurring tasks
 - [ ] **Phase 3: Smart Task Input** - Natural language parsing and on-device TFLite classification
 - [ ] **Phase 4: Habit Tracking** - Habit CRUD, streaks, check-in, analytics charts
-- [ ] **Phase 5: AI Daily Planner** - Edge Function with Groq API, timeline view, drag-to-reschedule
+- [x] **Phase 5: AI Daily Planner** - Edge Function with Groq API, timeline view, drag-to-reschedule
 - [ ] **Phase 6: Collaborative Boards** - Kanban UI, realtime sync, member invites, live presence
 - [ ] **Phase 7: Notifications & Reminders** - FCM push notifications, adaptive reminder timing
 - [ ] **Phase 8: Integration, Animations & Deployment** - Cross-feature wiring, Lottie animations, Flutter web deploy
@@ -104,9 +104,9 @@ Plans:
 **Plans**: 3 plans
 
 Plans:
-- [ ] 05-01-PLAN.md — Data foundation: DB migration, domain models, Edge Function with Groq API, repository, Riverpod providers
-- [ ] 05-02-PLAN.md — Timeline UI: planner screen, timeline widget, time block cards, energy zones, add-item sheet, shimmer loading, router wiring
-- [ ] 05-03-PLAN.md — Drag-to-reschedule: LongPressDraggable blocks, 15-minute snap, push-down displacement, auto-save
+- [x] 05-01-PLAN.md — Data foundation: DB migration, domain models, Edge Function with Groq API, repository, Riverpod providers
+- [x] 05-02-PLAN.md — Timeline UI: planner screen, timeline widget, time block cards, energy zones, add-item sheet, shimmer loading, router wiring
+- [x] 05-03-PLAN.md — Drag-to-reschedule: LongPressDraggable blocks, 15-minute snap, push-down displacement, auto-save
 
 ### Phase 6: Collaborative Boards
 **Goal**: Users can collaborate on Kanban boards with realtime sync, role-based access, and live presence
@@ -167,7 +167,7 @@ Phase 1 first, then Phases 2-7 in parallel, then Phase 8 last.
 | 2. Task Management | 1/3 | In Progress | - |
 | 3. Smart Task Input | 0/3 | Planned | - |
 | 4. Habit Tracking | 0/3 | Planned | - |
-| 5. AI Daily Planner | 0/3 | Planned | - |
+| 5. AI Daily Planner | 3/3 | Complete | 2026-03-22 |
 | 6. Collaborative Boards | 0/3 | Planned | - |
 | 7. Notifications & Reminders | 0/3 | Planned | - |
 | 8. Integration, Animations & Deployment | 0/0 | Not started | - |
