@@ -50,7 +50,7 @@ Requirements for initial release. Each maps to roadmap phases.
 - [x] **UX-01**: User can toggle dark mode with Material 3 theme (light/dark/system default)
 - [x] **UX-02**: User sees Lottie animations on task completion, habit check-in, and streak milestones
 - [x] **UX-03**: User receives FCM push notifications for deadline reminders with configurable timing
-- [ ] **UX-04**: App is deployed as Flutter web for live portfolio demo accessible via URL
+- [x] **UX-04**: App is deployed as Flutter web for live portfolio demo accessible via URL
 
 ## v2 Requirements
 
@@ -125,7 +125,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | UX-01 | Phase 1: Foundation & Auth | Complete |
 | UX-02 | Phase 8: Integration, Animations & Deployment | Complete |
 | UX-03 | Phase 7: Notifications & Reminders | Complete |
-| UX-04 | Phase 8: Integration, Animations & Deployment | Pending |
+| UX-04 | Phase 8: Integration, Animations & Deployment | Complete |
 
 **Coverage:**
 - v1 requirements: 27 total
