@@ -23,7 +23,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [ ] **Phase 4: Habit Tracking** - Habit CRUD, streaks, check-in, analytics charts
 - [x] **Phase 5: AI Daily Planner** - Edge Function with Groq API, timeline view, drag-to-reschedule
 - [ ] **Phase 6: Collaborative Boards** - Kanban UI, realtime sync, member invites, live presence
-- [ ] **Phase 7: Notifications & Reminders** - FCM push notifications, adaptive reminder timing
+- [x] **Phase 7: Notifications & Reminders** - FCM push notifications, adaptive reminder timing (completed 2026-03-22)
 - [ ] **Phase 8: Integration, Animations & Deployment** - Cross-feature wiring, Lottie animations, Flutter web deploy
 
 ## Phase Details
@@ -169,5 +169,5 @@ Phase 1 first, then Phases 2-7 in parallel, then Phase 8 last.
 | 4. Habit Tracking | 0/3 | Planned | - |
 | 5. AI Daily Planner | 3/3 | Complete | 2026-03-22 |
 | 6. Collaborative Boards | 0/3 | Planned | - |
-| 7. Notifications & Reminders | 0/3 | Planned | - |
+| 7. Notifications & Reminders | 3/3 | Complete   | 2026-03-22 |
 | 8. Integration, Animations & Deployment | 0/3 | Planned | - |
