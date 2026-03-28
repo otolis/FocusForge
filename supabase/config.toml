@@ -1,0 +1,14 @@
+# Supabase Edge Function configuration
+# See: https://supabase.com/docs/guides/functions/function-configuration
+
+# The generate-schedule function generates AI-powered daily schedules.
+# JWT verification ensures only authenticated users can invoke it.
+# The supabase_flutter SDK automatically includes the user's session JWT.
+[functions.generate-schedule]
+verify_jwt = true
+
+# The rewrite-title function rewrites task titles via the Groq API.
+# JWT verification ensures only authenticated users can invoke it.
+# The supabase_flutter SDK automatically includes the user's session JWT.
+[functions.rewrite-title]
+verify_jwt = true
