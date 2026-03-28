@@ -109,14 +109,30 @@ class PlannerRepository {
       );
     }
 
-    final data = response.data;
+    var data = response.data;
     debugPrint('[PlannerRepo] Response status: ${response.status}, '
         'data type: ${data.runtimeType}');
+
+    // The SDK decodes JSON responses automatically, but if the response
+    // Content-Type is missing or unexpected, data arrives as a raw String.
+    // Attempt manual JSON decoding as a fallback.
+    if (data is String) {
+      debugPrint('[PlannerRepo] Got String response, attempting JSON decode');
+      final raw = data;
+      try {
+        data = jsonDecode(raw);
+      } catch (_) {
+        throw Exception(
+          'Unexpected string response (not JSON). '
+          'Preview: ${raw.length > 200 ? raw.substring(0, 200) : raw}',
+        );
+      }
+    }
 
     if (data is! Map<String, dynamic>) {
       throw Exception(
         'Unexpected response type: ${data.runtimeType}. '
-        'Response preview: ${data.toString().length > 200 ? data.toString().substring(0, 200) : data}',
+        'Preview: ${data.toString().length > 200 ? data.toString().substring(0, 200) : data}',
       );
     }
 

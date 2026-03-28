@@ -32,7 +32,10 @@ class TaskQuickCreateSheet extends ConsumerStatefulWidget {
     showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
-      showDragHandle: true,
+      useSafeArea: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
       builder: (_) => TaskQuickCreateSheet(parentContext: context),
     );
   }
@@ -121,13 +124,26 @@ class _TaskQuickCreateSheetState extends ConsumerState<TaskQuickCreateSheet> {
       padding: EdgeInsets.only(
         left: 24,
         right: 24,
-        top: 8,
+        top: 16,
         bottom: MediaQuery.of(context).viewInsets.bottom + 24,
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // Drag handle
+          Center(
+            child: Container(
+              width: 32,
+              height: 4,
+              decoration: BoxDecoration(
+                color: context.colorScheme.onSurfaceVariant.withValues(alpha: 0.3),
+                borderRadius: BorderRadius.circular(2),
+              ),
+            ),
+          ),
+          const SizedBox(height: 16),
+
           // Title
           Text(
             'Quick Add Task',
