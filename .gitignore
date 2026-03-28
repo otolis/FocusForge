@@ -48,3 +48,16 @@ lib/core/constants/supabase_constants.dart
 # Environment files
 .env
 .env.*
+
+# AI planning artifacts
+.planning/
+
+# AI prompt files
+google-stitch-prompt.md
+
+# Flutter metadata
+.metadata
+
+# Supabase temp/generated
+supabase/.temp/
+supabase/all_migrations.sql
