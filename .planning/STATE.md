@@ -2,16 +2,15 @@
 gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Security & Hardening
-status: active
-stopped_at: Roadmap created, ready to plan phases
-last_updated: "2026-03-28T14:00:00.000Z"
-last_activity: "2026-03-28 — Roadmap created for v1.1 (phases 10-12)"
+status: executing
+stopped_at: Completed 09-01-PLAN.md
+last_updated: "2026-03-28T01:45:52.503Z"
+last_activity: "2026-03-28 -- Completed 09-01: Domain models, migration, repositories for table view"
 progress:
-  total_phases: 3
+  total_phases: 4
   completed_phases: 0
-  total_plans: 0
-  completed_plans: 0
-  percent: 0
+  total_plans: 5
+  completed_plans: 1
 ---
 
 # Project State
@@ -25,12 +24,12 @@ See: .planning/PROJECT.md (updated 2026-03-28)
 
 ## Current Position
 
-Phase: 10-12 ready to plan (3 parallel phases)
-Plan: --
-Status: Ready to plan
-Last activity: 2026-03-28 -- Completed quick task 260328-4yd: Add AI title rewrite button to all title fields
+Phase: 09-redesign-boards-ui-monday-layout (Plan 1/4 complete)
+Plan: 09-02 next
+Status: Executing phase 9
+Last activity: 2026-03-28 -- Completed 09-01: Domain models, migration, repositories for table view
 
-Progress: [░░░░░░░░░░░░░░░░░░░░] 0/? plans (0%)
+Progress (Phase 9): [=====_______________] 1/4 plans (25%)
 
 ## Performance Metrics
 
@@ -59,6 +58,9 @@ Progress: [░░░░░░░░░░░░░░░░░░░░] 0/? pla
 Decisions are logged in PROJECT.md Key Decisions table.
 Recent decisions affecting current work:
 
+- [09-01]: Groups stored in boards.metadata JSONB, not a separate table -- simpler schema, fewer joins
+- [09-01]: BoardMetadata provides sensible defaults when null/empty for backward compat
+- [09-01]: ColumnType uses snake_case serialization for due_date to match DB convention
 - [v1.1]: Three parallel phases (10-12) touching independent subsystems: SQL migrations, notification service, auth/planner/lifecycle
 - [v1.1]: Phase numbering starts at 10 (phases 1-8 = v1.0, phase 9 = boards redesign)
 - [v1.0]: Parallel phase execution proven successful (phases 2-7 ran concurrently)
@@ -89,6 +91,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-28T01:41:30Z
-Stopped at: Completed quick task 260328-4yd
-Resume file: .planning/quick/260328-4yd-add-ai-title-rewrite-button-to-all-title/260328-4yd-SUMMARY.md
+Last session: 2026-03-28T01:45:52.500Z
+Stopped at: Completed 09-01-PLAN.md
+Resume file: None
