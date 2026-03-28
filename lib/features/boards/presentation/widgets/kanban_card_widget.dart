@@ -34,10 +34,10 @@ class KanbanCardWidget extends StatelessWidget {
         margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: context.colorScheme.surface,
+          color: context.colorScheme.surfaceContainerHigh,
           borderRadius: BorderRadius.circular(8),
           border: Border.all(
-            color: context.colorScheme.outlineVariant.withValues(alpha: 0.3),
+            color: context.colorScheme.outlineVariant.withValues(alpha: 0.12),
           ),
         ),
         child: Column(

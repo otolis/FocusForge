@@ -91,6 +91,11 @@ class BoardDetailNotifier extends StateNotifier<BoardDetailState> {
   final Ref _ref;
   final String _boardId;
 
+  /// Card IDs currently being updated by the local user.
+  /// Realtime events for these cards are skipped to prevent
+  /// self-echo from overwriting optimistic state mid-flight.
+  final Set<String> _inFlightCardIds = {};
+
   /// Loads all board data in parallel.
   Future<void> _load() async {
     try {
@@ -391,11 +396,21 @@ class BoardDetailNotifier extends StateNotifier<BoardDetailState> {
     );
   }
 
-  /// Called by the realtime service when a card change arrives from
-  /// another user.
+  /// Called by the realtime service when a card change arrives.
   ///
   /// Applies INSERT, UPDATE, or DELETE changes to the local state.
+  /// Skips UPDATE events for cards that have in-flight local updates
+  /// to prevent self-echo from overwriting optimistic state.
   void onRemoteCardChange(BoardCard card, String eventType) {
+    // Skip UPDATE events for cards we're currently updating locally.
+    // The optimistic state is already correct; the realtime echo would
+    // overwrite it with potentially stale data (e.g. a partial update
+    // where only some fields have been committed so far).
+    if (eventType.toUpperCase() == 'UPDATE' &&
+        _inFlightCardIds.contains(card.id)) {
+      return;
+    }
+
     final updatedCardsByColumn = Map<String, List<BoardCard>>.from(
       state.cardsByColumn
           .map((k, v) => MapEntry(k, List<BoardCard>.from(v))),
@@ -495,6 +510,7 @@ class BoardDetailNotifier extends StateNotifier<BoardDetailState> {
   Future<void> updateCardField(
       String cardId, String field, dynamic value) async {
     final oldState = state;
+    _inFlightCardIds.add(cardId);
     // Optimistic update
     _updateCardInState(cardId, field, value);
     try {
@@ -530,19 +546,109 @@ class BoardDetailNotifier extends StateNotifier<BoardDetailState> {
       }
     } catch (e) {
       state = oldState; // Rollback
+    } finally {
+      _inFlightCardIds.remove(cardId);
+    }
+  }
+
+  /// Updates multiple fields on a card in a single optimistic + persist cycle.
+  ///
+  /// Unlike calling [updateCardField] multiple times, this method applies all
+  /// field changes atomically: one optimistic update, one HTTP request, and one
+  /// rollback target. This prevents race conditions when updating related fields
+  /// (e.g. status_label + status_color) that must stay in sync.
+  Future<void> updateCardFields(
+      String cardId, Map<String, dynamic> fields) async {
+    final oldState = state;
+    _inFlightCardIds.add(cardId);
+    // Optimistic update -- apply all fields at once
+    for (final entry in fields.entries) {
+      _updateCardInState(cardId, entry.key, entry.value);
+    }
+    try {
+      final cardRepo = _ref.read(boardCardRepositoryProvider);
+      // Build a single updateCard call with all supplied fields
+      String? statusLabel;
+      String? statusColor;
+      int? priority;
+      String? assigneeId;
+      DateTime? dueDate;
+      DateTime? startDate;
+      String? title;
+      String? description;
+      String? groupId;
+      Map<String, dynamic>? customFields;
+
+      final customEntries = <String, dynamic>{};
+      for (final entry in fields.entries) {
+        switch (entry.key) {
+          case 'status_label':
+            statusLabel = entry.value as String?;
+          case 'status_color':
+            statusColor = entry.value as String?;
+          case 'priority':
+            priority = entry.value as int?;
+          case 'assignee_id':
+            assigneeId = entry.value as String?;
+          case 'due_date':
+            dueDate = entry.value as DateTime?;
+          case 'start_date':
+            startDate = entry.value as DateTime?;
+          case 'title':
+            title = entry.value as String?;
+          case 'description':
+            description = entry.value as String?;
+          case 'group_id':
+            groupId = entry.value as String?;
+          default:
+            customEntries[entry.key] = entry.value;
+        }
+      }
+
+      // Merge custom fields if any non-standard keys were provided
+      if (customEntries.isNotEmpty) {
+        final card = _findCard(cardId);
+        if (card != null) {
+          customFields = Map<String, dynamic>.from(card.customFields);
+          customFields.addAll(customEntries);
+        }
+      }
+
+      await cardRepo.updateCard(
+        cardId,
+        statusLabel: statusLabel,
+        statusColor: statusColor,
+        priority: priority,
+        assigneeId: assigneeId,
+        dueDate: dueDate,
+        startDate: startDate,
+        title: title,
+        description: description,
+        groupId: groupId,
+        customFields: customFields,
+      );
+    } catch (e) {
+      state = oldState; // Rollback all fields at once
+    } finally {
+      _inFlightCardIds.remove(cardId);
     }
   }
 
   /// Adds a new card to a specific group via the table view's AddItemRow.
   ///
   /// Places the card in the first Kanban column with the given [groupId].
+  /// Throws if no columns exist or if the database insert fails.
   Future<void> addCardToGroup({
     required String groupId,
     required String title,
   }) async {
-    final firstColumn =
-        state.columns.isNotEmpty ? state.columns.first : null;
-    if (firstColumn == null) return;
+    if (state.columns.isEmpty) {
+      throw StateError(
+        'Cannot add card: board has no columns. '
+        'Ensure the board was created with default columns.',
+      );
+    }
+    final firstColumn = state.columns.first;
 
     final cardRepo = _ref.read(boardCardRepositoryProvider);
     final allCards =

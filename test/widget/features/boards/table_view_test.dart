@@ -497,8 +497,9 @@ void main() {
     testWidgets('renders group footer with item count', (tester) async {
       await _pumpAndSuppress(tester);
 
-      // GroupFooterWidget shows "{count} items" for 3 cards
-      expect(find.byType(GroupFooterWidget), findsOneWidget);
+      // GroupFooterWidget is split into fixed (item count) and scrollable
+      // (status bar + date range) sections — expect 2 instances per group
+      expect(find.byType(GroupFooterWidget), findsNWidgets(2));
       expect(find.text('3 items'), findsAtLeastNWidgets(1));
     });
 

@@ -40,6 +40,12 @@ Requirements for the Security & Hardening milestone. Each maps to roadmap phases
 - [x] **LIFE-01**: FCM `onTokenRefresh` subscription stored and cancelled on sign-out to prevent accumulation across auth cycles
 - [x] **LIFE-02**: Board member profile RLS policy allows board co-members to read each other's profiles (or use a service-role approach)
 
+### Onboarding & UX
+
+- [x] **ONBOARD-01**: Direct navigation to any app route when onboarding incomplete redirects to onboarding screen
+- [x] **RECTASK-01**: Editing a recurring task pre-populates recurrence picker, upserts rule on save, regenerates instances with updated pattern
+- [x] **FILTER-01**: Date range filter end date is inclusive (tasks on the end date at any time appear in results)
+
 ## v2 Requirements
 
 Deferred to future release. Tracked but not in current roadmap.
@@ -86,10 +92,13 @@ Which phases cover which requirements. Updated during roadmap creation.
 | PLAN-02 | Phase 12 | Complete |
 | LIFE-01 | Phase 12 | Complete |
 | LIFE-02 | Phase 12 | Complete |
+| ONBOARD-01 | Phase 13 | Complete |
+| RECTASK-01 | Phase 13 | Complete |
+| FILTER-01 | Phase 13 | Complete |
 
 **Coverage:**
-- v1.1 requirements: 14 total
-- Mapped to phases: 14
+- v1.1 requirements: 17 total
+- Mapped to phases: 17
 - Unmapped: 0
 
 ---

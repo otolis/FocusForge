@@ -4,6 +4,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+import '../../../../core/services/notification_service.dart';
+import '../../../notifications/data/notification_repository.dart';
 import '../../data/auth_repository.dart';
 import '../../domain/auth_state.dart';
 
@@ -92,6 +94,7 @@ class AuthStateNotifier extends Notifier<AppAuthState> {
         status: AuthStatus.authenticated,
         user: response.user,
       );
+      _registerFcmToken(response.user?.id);
     } catch (e) {
       state = state.copyWith(
         status: AuthStatus.error,
@@ -115,6 +118,7 @@ class AuthStateNotifier extends Notifier<AppAuthState> {
         status: AuthStatus.authenticated,
         user: response.user,
       );
+      _registerFcmToken(response.user?.id);
     } catch (e) {
       state = state.copyWith(
         status: AuthStatus.error,
@@ -132,6 +136,7 @@ class AuthStateNotifier extends Notifier<AppAuthState> {
         status: AuthStatus.authenticated,
         user: response.user,
       );
+      _registerFcmToken(response.user?.id);
     } catch (e) {
       state = state.copyWith(
         status: AuthStatus.error,
@@ -144,6 +149,16 @@ class AuthStateNotifier extends Notifier<AppAuthState> {
   Future<void> signOut() async {
     state = state.copyWith(status: AuthStatus.loading, errorMessage: null);
     try {
+      // Clear FCM token before signing out so push notifications stop.
+      final userId = _repository.currentUser?.id;
+      if (userId != null) {
+        try {
+          await NotificationService()
+              .clearToken(userId, NotificationRepository());
+        } catch (_) {
+          // Non-fatal: Firebase may be unavailable.
+        }
+      }
       await _repository.signOut();
       state = const AppAuthState(status: AuthStatus.unauthenticated);
     } catch (e) {
@@ -152,6 +167,17 @@ class AuthStateNotifier extends Notifier<AppAuthState> {
         errorMessage: _mapError(e),
       );
     }
+  }
+
+  /// Registers the FCM token for push notification delivery.
+  ///
+  /// Called after successful authentication. Failures are non-fatal (e.g.
+  /// Firebase may not be initialized).
+  void _registerFcmToken(String? userId) {
+    if (userId == null) return;
+    NotificationService()
+        .manageFcmToken(userId, NotificationRepository())
+        .catchError((_) {/* Firebase may be unavailable */});
   }
 
   /// Sends a password reset email. Returns `true` on success.

@@ -183,6 +183,20 @@ class BoardTableNotifier extends StateNotifier<BoardTableState> {
         .updateCardField(cardId, fieldKey, value);
   }
 
+  /// Delegates batch field updates to [BoardDetailNotifier.updateCardFields].
+  ///
+  /// Use this when multiple related fields must be updated atomically
+  /// (e.g. status_label + status_color) to avoid race conditions.
+  Future<void> updateCardFields(
+    String boardId,
+    String cardId,
+    Map<String, dynamic> fields,
+  ) async {
+    await _ref
+        .read(boardDetailProvider(boardId).notifier)
+        .updateCardFields(cardId, fields);
+  }
+
   // ---------------------------------------------------------------
   // Row reorder within a group
   // ---------------------------------------------------------------

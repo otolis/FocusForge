@@ -63,7 +63,7 @@ Each task was committed atomically:
 1. **Task 1: Load existing recurrence rule when editing a recurring task** - `1b38d3e` (feat)
 2. **Task 2: Upsert recurrence rule and regenerate instances on "all future" save** - `bf5e0a9` (feat)
 
-**Plan metadata:** TBD (docs: complete plan)
+**Plan metadata:** `d1bf4fb` (docs: complete plan)
 
 ## Files Created/Modified
 - `lib/features/tasks/presentation/screens/task_form_screen.dart` - Added _loadRecurrenceRule method, ValueKey on RecurrencePicker, recurrence rule upsert and instance cleanup in _saveRecurringTask

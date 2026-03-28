@@ -6,23 +6,20 @@ import '../../domain/board_model.dart';
 import 'board_detail_provider.dart';
 import 'board_presence_provider.dart';
 
-/// Provides a [BoardRealtimeService] instance backed by the global
-/// Supabase client.
-final boardRealtimeServiceProvider = Provider<BoardRealtimeService>((ref) {
-  return BoardRealtimeService(Supabase.instance.client);
-});
-
 /// Manages the Realtime subscription lifecycle for a board.
 ///
-/// Family provider keyed by board ID. On first read, subscribes to
+/// AutoDispose family provider keyed by board ID. On first read, subscribes to
 /// Postgres Changes on `board_cards` and `board_columns`, plus Presence.
-/// On dispose (when the widget tree no longer references this provider),
-/// unsubscribes to prevent channel leaks.
+/// On dispose (when the board screen is popped and no widgets reference this
+/// provider), unsubscribes to prevent channel leaks.
+///
+/// Each board gets its own [BoardRealtimeService] instance so channels
+/// don't overwrite each other when multiple boards are visited.
 ///
 /// Usage in a widget: `ref.watch(boardRealtimeProvider(boardId));`
 final boardRealtimeProvider =
-    Provider.family<void, String>((ref, boardId) {
-  final service = ref.read(boardRealtimeServiceProvider);
+    Provider.autoDispose.family<void, String>((ref, boardId) {
+  final service = BoardRealtimeService(Supabase.instance.client);
   final client = Supabase.instance.client;
   final user = client.auth.currentUser!;
   final detailNotifier = ref.read(boardDetailProvider(boardId).notifier);

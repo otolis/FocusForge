@@ -3,12 +3,34 @@ import 'package:intl/intl.dart';
 
 import '../../../domain/board_table_column.dart';
 
+/// Which section of the split footer to render.
+///
+/// The table view has a fixed (sticky) name column on the left and a
+/// horizontally scrollable data section on the right. Each section
+/// renders its own footer content to avoid cross-boundary overflow.
+enum FooterSection {
+  /// Render for the fixed (sticky) 200 px name column.
+  /// Shows only the item count text.
+  fixed,
+
+  /// Render for the scrollable data columns.
+  /// Shows the status distribution bar and date range.
+  scrollable,
+}
+
 /// Summary footer displayed below each group's rows.
 ///
-/// Shows item count, a colored status distribution bar, and the date range
-/// spanned by items in the group.
+/// When [section] is [FooterSection.fixed], renders a compact item
+/// count that fits inside the 200 px sticky column.
+///
+/// When [section] is [FooterSection.scrollable], renders the colored
+/// status distribution bar and date range across the full scrollable
+/// width.
 class GroupFooterWidget extends StatelessWidget {
   final int itemCount;
+
+  /// Which half of the split table to render for.
+  final FooterSection section;
 
   /// Maps status label name to count of items with that status.
   final Map<String, int> statusCounts;
@@ -22,6 +44,7 @@ class GroupFooterWidget extends StatelessWidget {
   const GroupFooterWidget({
     super.key,
     required this.itemCount,
+    required this.section,
     required this.statusCounts,
     required this.statusLabels,
     this.earliestDate,
@@ -32,52 +55,55 @@ class GroupFooterWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
 
-    return Container(
-      height: 32,
-      decoration: BoxDecoration(
-        color: colorScheme.surface,
-        border: Border(
-          top: BorderSide(
-            color: colorScheme.outlineVariant.withValues(alpha: 0.2),
-            width: 1,
-          ),
+    final decoration = BoxDecoration(
+      color: colorScheme.surface,
+      border: Border(
+        top: BorderSide(
+          color: colorScheme.outlineVariant.withValues(alpha: 0.2),
+          width: 1,
         ),
       ),
-      padding: const EdgeInsets.symmetric(horizontal: 16),
+    );
+
+    if (section == FooterSection.fixed) {
+      return Container(
+        height: 32,
+        decoration: decoration,
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        alignment: Alignment.centerLeft,
+        child: Text(
+          '$itemCount items',
+          style: TextStyle(
+            fontSize: 12,
+            fontWeight: FontWeight.w400,
+            color: colorScheme.onSurfaceVariant,
+          ),
+          overflow: TextOverflow.ellipsis,
+        ),
+      );
+    }
+
+    // FooterSection.scrollable
+    return Container(
+      height: 32,
+      decoration: decoration,
+      padding: const EdgeInsets.symmetric(horizontal: 12),
       child: Row(
         children: [
-          // Item count label
-          SizedBox(
-            width: 80,
-            child: Text(
-              '$itemCount items',
-              style: TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.w400,
-                color: colorScheme.onSurfaceVariant,
-              ),
-            ),
-          ),
-          const SizedBox(width: 8),
-
           // Status distribution bar
           Expanded(child: _buildStatusBar(colorScheme)),
 
-          const SizedBox(width: 8),
+          const SizedBox(width: 12),
 
           // Date range span
-          SizedBox(
-            width: 120,
-            child: Text(
-              _formatDateRange(),
-              style: TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.w400,
-                color: colorScheme.onSurfaceVariant,
-              ),
-              textAlign: TextAlign.end,
-              overflow: TextOverflow.ellipsis,
+          Text(
+            _formatDateRange(),
+            style: TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.w400,
+              color: colorScheme.onSurfaceVariant,
             ),
+            overflow: TextOverflow.ellipsis,
           ),
         ],
       ),

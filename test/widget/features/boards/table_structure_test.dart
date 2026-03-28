@@ -172,10 +172,11 @@ void main() {
   // ──────────────────────────────────────────────
 
   group('GroupFooterWidget', () {
-    testWidgets('renders item count', (tester) async {
+    testWidgets('fixed section renders item count', (tester) async {
       await tester.pumpWidget(wrapInApp(
         const GroupFooterWidget(
           itemCount: 12,
+          section: FooterSection.fixed,
           statusCounts: {'Working on it': 5, 'Done': 7},
           statusLabels: testStatusLabels,
         ),
@@ -184,10 +185,12 @@ void main() {
       expect(find.text('12 items'), findsOneWidget);
     });
 
-    testWidgets('renders status bar segments', (tester) async {
+    testWidgets('scrollable section renders status bar segments',
+        (tester) async {
       await tester.pumpWidget(wrapInApp(
         const GroupFooterWidget(
           itemCount: 8,
+          section: FooterSection.scrollable,
           statusCounts: {'Working on it': 3, 'Done': 5},
           statusLabels: testStatusLabels,
         ),
@@ -199,10 +202,12 @@ void main() {
       expect(find.byType(Flexible), findsNWidgets(2));
     });
 
-    testWidgets('renders em dash when no dates set', (tester) async {
+    testWidgets('scrollable section renders em dash when no dates set',
+        (tester) async {
       await tester.pumpWidget(wrapInApp(
         const GroupFooterWidget(
           itemCount: 4,
+          section: FooterSection.scrollable,
           statusCounts: {},
           statusLabels: testStatusLabels,
         ),
@@ -211,10 +216,12 @@ void main() {
       expect(find.text('\u2014'), findsOneWidget);
     });
 
-    testWidgets('renders date range when dates provided', (tester) async {
+    testWidgets('scrollable section renders date range when dates provided',
+        (tester) async {
       await tester.pumpWidget(wrapInApp(
         GroupFooterWidget(
           itemCount: 3,
+          section: FooterSection.scrollable,
           statusCounts: const {},
           statusLabels: testStatusLabels,
           earliestDate: DateTime(2026, 3, 1),
@@ -223,6 +230,25 @@ void main() {
       ));
 
       expect(find.text('Mar 1 - Mar 28'), findsOneWidget);
+    });
+
+    testWidgets('fixed section fits within 200px without overflow',
+        (tester) async {
+      await tester.pumpWidget(wrapInApp(
+        SizedBox(
+          width: 200,
+          child: const GroupFooterWidget(
+            itemCount: 99,
+            section: FooterSection.fixed,
+            statusCounts: {'Working on it': 5, 'Done': 7},
+            statusLabels: testStatusLabels,
+          ),
+        ),
+      ));
+
+      // No overflow error means the widget fits within 200px
+      expect(tester.takeException(), isNull);
+      expect(find.text('99 items'), findsOneWidget);
     });
   });
 

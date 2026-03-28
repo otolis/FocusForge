@@ -117,6 +117,12 @@ None - no external service configuration required.
 - Phase 09 completion depends on human visual verification of the board UI (Task 2 of this plan)
 - The GroupFooterWidget overflow in the fixed column should be addressed in a future bugfix plan
 
+## Self-Check: PASSED
+
+- FOUND: test/widget/features/boards/table_view_test.dart
+- FOUND: .planning/phases/09-redesign-boards-ui-monday-layout/09-05-SUMMARY.md
+- FOUND: commit 8f62877
+
 ---
 *Phase: 09-redesign-boards-ui-monday-layout*
 *Completed: 2026-03-28 (Task 1 only; Task 2 pending human checkpoint)*
