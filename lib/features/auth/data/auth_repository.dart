@@ -18,6 +18,11 @@ class AuthRepository {
   static const String webClientId =
       'YOUR_WEB_CLIENT_ID.apps.googleusercontent.com';
 
+  /// Whether a real Google client ID is configured (not the placeholder).
+  static bool get isGoogleSignInConfigured =>
+      webClientId.isNotEmpty &&
+      !webClientId.startsWith('YOUR_WEB_CLIENT_ID');
+
   bool _googleInitialized = false;
 
   /// Ensures the Google Sign-In platform is initialized exactly once.

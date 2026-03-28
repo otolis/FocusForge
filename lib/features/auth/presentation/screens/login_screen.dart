@@ -7,6 +7,7 @@ import '../../../../shared/widgets/app_button.dart';
 import '../../../../shared/widgets/app_text_field.dart';
 import '../../domain/auth_state.dart';
 import '../providers/auth_provider.dart';
+import '../../data/auth_repository.dart';
 import '../widgets/social_sign_in_button.dart';
 
 /// Login screen with email/password and Google Sign-In.
@@ -149,29 +150,31 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     isLoading: state.status == AuthStatus.loading &&
                         !_googleLoading,
                   ),
-                  const SizedBox(height: 16),
-                  // "or" divider.
-                  Row(
-                    children: [
-                      const Expanded(child: Divider()),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
-                        child: Text(
-                          'or',
-                          style: context.textTheme.bodyMedium?.copyWith(
-                            color: context.colorScheme.onSurfaceVariant,
+                  if (AuthRepository.isGoogleSignInConfigured) ...[
+                    const SizedBox(height: 16),
+                    // "or" divider.
+                    Row(
+                      children: [
+                        const Expanded(child: Divider()),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          child: Text(
+                            'or',
+                            style: context.textTheme.bodyMedium?.copyWith(
+                              color: context.colorScheme.onSurfaceVariant,
+                            ),
                           ),
                         ),
-                      ),
-                      const Expanded(child: Divider()),
-                    ],
-                  ),
-                  const SizedBox(height: 16),
-                  // Google Sign-In button.
-                  SocialSignInButton(
-                    onPressed: _signInWithGoogle,
-                    isLoading: _googleLoading,
-                  ),
+                        const Expanded(child: Divider()),
+                      ],
+                    ),
+                    const SizedBox(height: 16),
+                    // Google Sign-In button.
+                    SocialSignInButton(
+                      onPressed: _signInWithGoogle,
+                      isLoading: _googleLoading,
+                    ),
+                  ],
                   const SizedBox(height: 24),
                   // Navigate to register.
                   TextButton(
