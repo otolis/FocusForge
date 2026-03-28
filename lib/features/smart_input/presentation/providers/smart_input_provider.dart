@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../data/nlp_parser_service.dart';
-import '../../data/tflite_classifier_service.dart';
+import '../../data/tflite_classifier.dart';
 import '../../domain/parsed_task_input.dart';
 import '../../domain/smart_input_service.dart';
 

@@ -1,5 +1,5 @@
 import '../data/nlp_parser_service.dart';
-import '../data/tflite_classifier_service.dart';
+import '../data/tflite_classifier.dart';
 import 'parsed_task_input.dart';
 import 'smart_input_category.dart';
 
