@@ -27,9 +27,11 @@ final filteredTaskListProvider = Provider<AsyncValue<List<Task>>>((ref) {
           .where((t) => t.deadline != null && !t.deadline!.isBefore(filter.dateFrom!))
           .toList();
     }
+    // FILTER-01: Add 1 day to make end date inclusive of all times on that day
     if (filter.dateTo != null) {
+      final inclusiveEnd = filter.dateTo!.add(const Duration(days: 1));
       filtered = filtered
-          .where((t) => t.deadline != null && !t.deadline!.isAfter(filter.dateTo!))
+          .where((t) => t.deadline != null && t.deadline!.isBefore(inclusiveEnd))
           .toList();
     }
     if (filter.searchQuery != null && filter.searchQuery!.isNotEmpty) {

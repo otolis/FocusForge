@@ -20,8 +20,10 @@ class TaskRepository {
       if (filter.dateFrom != null) {
         query = query.gte('deadline', filter.dateFrom!.toIso8601String());
       }
+      // FILTER-01: Add 1 day to make end date inclusive of all times on that day
       if (filter.dateTo != null) {
-        query = query.lte('deadline', filter.dateTo!.toIso8601String());
+        final inclusiveEnd = filter.dateTo!.add(const Duration(days: 1));
+        query = query.lt('deadline', inclusiveEnd.toIso8601String());
       }
     }
 
