@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Security & Hardening
 status: executing
-stopped_at: Completed 09-01-PLAN.md
-last_updated: "2026-03-28T01:45:52.503Z"
-last_activity: "2026-03-28 -- Completed 09-01: Domain models, migration, repositories for table view"
+stopped_at: Completed 09-02-PLAN.md
+last_updated: "2026-03-28T03:50:00.000Z"
+last_activity: "2026-03-28 -- Completed 09-02: Cell widgets for Monday.com-style table view"
 progress:
   total_phases: 4
   completed_phases: 0
   total_plans: 5
-  completed_plans: 1
+  completed_plans: 2
 ---
 
 # Project State
@@ -24,12 +24,12 @@ See: .planning/PROJECT.md (updated 2026-03-28)
 
 ## Current Position
 
-Phase: 09-redesign-boards-ui-monday-layout (Plan 1/4 complete)
-Plan: 09-02 next
+Phase: 09-redesign-boards-ui-monday-layout (Plan 2/4 complete)
+Plan: 09-03 next
 Status: Executing phase 9
-Last activity: 2026-03-28 -- Completed 09-01: Domain models, migration, repositories for table view
+Last activity: 2026-03-28 -- Completed 09-02: Cell widgets for Monday.com-style table view
 
-Progress (Phase 9): [=====_______________] 1/4 plans (25%)
+Progress (Phase 9): [==========__________] 2/4 plans (50%)
 
 ## Performance Metrics
 
@@ -58,6 +58,9 @@ Progress (Phase 9): [=====_______________] 1/4 plans (25%)
 Decisions are logged in PROJECT.md Key Decisions table.
 Recent decisions affecting current work:
 
+- [09-02]: contrastTextColor uses luminance threshold 0.4 for WCAG AA compliance on colored pills
+- [09-02]: TextCell uses InputDecoration.collapsed for borderless inline editing
+- [09-02]: CheckboxCell always interactive with optimistic toggle (no edit mode)
 - [09-01]: Groups stored in boards.metadata JSONB, not a separate table -- simpler schema, fewer joins
 - [09-01]: BoardMetadata provides sensible defaults when null/empty for backward compat
 - [09-01]: ColumnType uses snake_case serialization for due_date to match DB convention
@@ -91,6 +94,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-28T01:45:52.500Z
-Stopped at: Completed 09-01-PLAN.md
+Last session: 2026-03-28T03:50:00.000Z
+Stopped at: Completed 09-02-PLAN.md
 Resume file: None
