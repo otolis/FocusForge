@@ -46,6 +46,9 @@ class NotificationPreferences {
   /// Duration in minutes for the snooze action on notifications.
   final int snoozeDuration;
 
+  /// IANA timezone identifier (e.g., 'Europe/Athens'). Null means UTC fallback.
+  final String? timezone;
+
   final DateTime createdAt;
   final DateTime updatedAt;
 
@@ -64,6 +67,7 @@ class NotificationPreferences {
     this.quietStart = '22:00',
     this.quietEnd = '07:00',
     this.snoozeDuration = 15,
+    this.timezone,
     required this.createdAt,
     required this.updatedAt,
   });
@@ -103,6 +107,7 @@ class NotificationPreferences {
       quietStart: json['quiet_start'] as String? ?? '22:00',
       quietEnd: json['quiet_end'] as String? ?? '07:00',
       snoozeDuration: json['snooze_duration'] as int? ?? 15,
+      timezone: json['timezone'] as String?,
       createdAt: DateTime.parse(json['created_at'] as String),
       updatedAt: DateTime.parse(json['updated_at'] as String),
     );
@@ -125,6 +130,7 @@ class NotificationPreferences {
         'quiet_start': quietStart,
         'quiet_end': quietEnd,
         'snooze_duration': snoozeDuration,
+        'timezone': timezone,
         'updated_at': DateTime.now().toIso8601String(),
       };
 
@@ -141,6 +147,8 @@ class NotificationPreferences {
     String? quietStart,
     String? quietEnd,
     int? snoozeDuration,
+    String? timezone,
+    bool clearTimezone = false,
   }) {
     return NotificationPreferences(
       id: id,
@@ -161,6 +169,7 @@ class NotificationPreferences {
       quietStart: quietStart ?? this.quietStart,
       quietEnd: quietEnd ?? this.quietEnd,
       snoozeDuration: snoozeDuration ?? this.snoozeDuration,
+      timezone: clearTimezone ? null : (timezone ?? this.timezone),
       createdAt: createdAt,
       updatedAt: DateTime.now(),
     );
