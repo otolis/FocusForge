@@ -3,7 +3,7 @@
 ## Milestones
 
 - ✅ **v1.0 MVP** -- Phases 1-8 (shipped 2026-03-22)
-- 🚧 **v1.1 Security & Hardening** -- Phases 10-12 (in progress)
+- 🚧 **v1.1 Security & Hardening** -- Phases 10-13 (in progress)
 - 📋 **Phase 9: Boards Redesign** -- (planned, independent of v1.1)
 
 ## Phases
@@ -26,11 +26,12 @@
 
 **Milestone Goal:** Lock down security vulnerabilities in SECURITY DEFINER RPCs, fix notification logic gaps, and harden auth/planner/lifecycle subsystems discovered during post-v1.0 audit.
 
-**Parallel execution:** Phases 10, 11, and 12 touch independent subsystems (SQL migrations, notification Dart service, auth/planner/boards Dart code) and CAN run in parallel across separate terminals.
+**Parallel execution:** Phases 10, 11, 12, and 13 touch independent subsystems (SQL/Edge Functions, notification Dart service, auth/planner/boards Dart code, onboarding/task forms) and CAN run in parallel across separate terminals.
 
-- [ ] **Phase 10: RPC Security Hardening** - Lock down SECURITY DEFINER functions to derive identity from auth.uid()
-- [ ] **Phase 11: Notification Logic Fixes** - Fix cold-start routing, action handlers, snooze, and adaptive timing
+- [ ] **Phase 10: RPC & Edge Function Security** - Lock down SECURITY DEFINER RPCs + enable JWT verification on Edge Functions
+- [ ] **Phase 11: Notification Logic Fixes** - Fix cold-start routing, action handlers, snooze, reminder scheduling, and preference honoring
 - [ ] **Phase 12: Auth, Planner & Lifecycle Cleanup** - Hide placeholder Google sign-in, make planner import idempotent, fix FCM lifecycle and board RLS
+- [ ] **Phase 13: Onboarding, Recurring Tasks & Filter Fixes** - Fix onboarding bypass, recurring task editing, and date-range filter off-by-one
 
 ### Phase 9 (Independent)
 
@@ -38,31 +39,35 @@
 
 ## Phase Details
 
-### Phase 10: RPC Security Hardening
-**Goal**: All SECURITY DEFINER database functions derive caller identity from auth.uid() and cannot be exploited by passing arbitrary user IDs from the client
-**Depends on**: Nothing (SQL-only, independent of other phases)
-**Requirements**: SEC-01, SEC-02, SEC-03, SEC-04
+### Phase 10: RPC & Edge Function Security
+**Goal**: All SECURITY DEFINER database functions derive caller identity from auth.uid(), and Edge Functions require valid JWT tokens — preventing cost abuse and unauthorized data access
+**Depends on**: Nothing (SQL migrations + Edge Function config, independent of other phases)
+**Requirements**: SEC-01, SEC-02, SEC-03, SEC-04, SEC-05, SEC-06
 **Success Criteria** (what must be TRUE):
   1. Calling `search_tasks` or `generate_recurring_instances` with a forged user ID returns only the caller's own data (auth.uid() enforced server-side)
   2. Calling `create_board_with_defaults` or `invite_board_member` with a forged owner/inviter ID is rejected or overridden by auth.uid()
   3. Direct client invocation of privileged RPCs is blocked via REVOKE/GRANT EXECUTE restrictions
   4. Existing app functionality (task search, recurring tasks, board creation, invites) continues working with auth.uid()-derived identity
-**Plans**: TBD
+  5. Edge Functions (`generate-schedule`, `rewrite-title`) require a valid JWT — unauthenticated calls with only the anon key are rejected
+  6. Client code in `planner_repository.dart` and `ai_rewrite_button.dart` passes the user's auth token (not just anon key) when invoking Edge Functions
+**Plans**: 2 plans
 
 Plans:
-- [ ] 10-01: TBD
-- [ ] 10-02: TBD
+- [ ] 10-01-PLAN.md -- SQL migration hardening RPCs with auth.uid() + Edge Function JWT config
+- [ ] 10-02-PLAN.md -- Client-side Dart fixes: RPC signature updates + remove manual auth headers
 
 ### Phase 11: Notification Logic Fixes
-**Goal**: Notification actions execute correct domain logic, deep links work on cold start, and user preferences are respected
-**Depends on**: Nothing (notification Dart service, independent of other phases)
-**Requirements**: NOTIF-01, NOTIF-02, NOTIF-03, NOTIF-04, NOTIF-05
+**Goal**: Notification actions execute correct domain logic, deep links work on cold start, user preferences are respected, and reminders are actually scheduled for initial delivery
+**Depends on**: Nothing (notification Dart service + Edge Function, independent of other phases)
+**Requirements**: NOTIF-01, NOTIF-02, NOTIF-03, NOTIF-04, NOTIF-05, NOTIF-06, NOTIF-07
 **Success Criteria** (what must be TRUE):
   1. Tapping a notification when the app is terminated (cold start) navigates to the correct screen after the app finishes initializing
   2. Completing a task via notification action sets both `is_completed` and `completed_at` fields, matching what happens when completing from the task list UI
   3. Completing a habit via notification action uses same-day upsert/increment logic, producing identical results to tapping the check-in button on the habit screen
   4. Snoozing a notification reschedules it by the user's configured snooze duration (from settings), not a hardcoded 15 minutes
   5. Adaptive notification timing receives real completion data via `recordCompletion` so it learns from actual user behavior
+  6. Creating a task with a deadline, a habit, or a planner time block inserts initial rows into `scheduled_reminders` so `send-reminders` can deliver them (not just snooze re-inserts)
+  7. Quiet hours are evaluated using the user's timezone (stored with the preference), not the Edge Function server's local time
 **Plans**: TBD
 
 Plans:
@@ -85,6 +90,21 @@ Plans:
 - [ ] 12-01: TBD
 - [ ] 12-02: TBD
 
+### Phase 13: Onboarding, Recurring Tasks & Filter Fixes
+**Goal**: Fix onboarding bypass allowing direct navigation to app routes, complete recurring task editing lifecycle, and fix date-range filter off-by-one exclusion
+**Depends on**: Nothing (touches onboarding/router, task form, task filter — all independent of phases 10-12)
+**Requirements**: ONBOARD-01, RECTASK-01, FILTER-01
+**Success Criteria** (what must be TRUE):
+  1. Navigating directly to any app route (e.g., `/tasks`, `/habits`) when onboarding is incomplete redirects to the onboarding screen — not just auth routes and `/`
+  2. Opening the edit form for a recurring task pre-populates the recurrence picker with the existing rule, and saving updates both the parent task and the recurrence rule
+  3. Editing recurrence on "all future instances" regenerates instances using the updated rule, not the old one
+  4. Selecting a date range filter with start=Mar 1 and end=Mar 31 includes tasks with deadlines on Mar 31 at any time of day (end date is inclusive)
+**Plans**: TBD
+
+Plans:
+- [ ] 13-01: TBD
+- [ ] 13-02: TBD
+
 ### Phase 9: Boards UI Redesign
 **Goal**: Replace current Kanban-only board view with a Monday.com-style spreadsheet/table layout featuring customizable columns for priorities, timelines, deadlines, status, and assignees. Inline editing, timeline bars, priority badges, deadline indicators, and column reordering.
 **Depends on**: Phase 6 (Collaborative Boards)
@@ -101,7 +121,7 @@ Plans:
 ## Progress
 
 **Execution Order:**
-Phases 10, 11, 12 are parallel (no dependencies between them). Phase 9 is independent.
+Phases 10, 11, 12, 13 are parallel (no dependencies between them). Phase 9 is independent.
 
 | Phase | Milestone | Plans Complete | Status | Completed |
 |-------|-----------|----------------|--------|-----------|
@@ -113,7 +133,8 @@ Phases 10, 11, 12 are parallel (no dependencies between them). Phase 9 is indepe
 | 6. Collaborative Boards | v1.0 | 3/3 | Complete | 2026-03-22 |
 | 7. Notifications & Reminders | v1.0 | 3/3 | Complete | 2026-03-22 |
 | 8. Integration & Deployment | v1.0 | 4/4 | Complete | 2026-03-22 |
-| 10. RPC Security Hardening | v1.1 | 0/? | Not started | - |
+| 10. RPC & Edge Function Security | v1.1 | 0/2 | Not started | - |
 | 11. Notification Logic Fixes | v1.1 | 0/? | Not started | - |
 | 12. Auth, Planner & Lifecycle | v1.1 | 0/? | Not started | - |
+| 13. Onboarding, Recurring & Filter | v1.1 | 0/? | Not started | - |
 | 9. Boards UI Redesign | -- | 3/5 | In progress | - |

@@ -54,9 +54,8 @@ class TaskRepository {
     await _client.from('tasks').delete().eq('id', taskId);
   }
 
-  Future<List<Task>> searchTasks(String userId, String query) async {
+  Future<List<Task>> searchTasks(String query) async {
     final data = await _client.rpc('search_tasks', params: {
-      'p_user_id': userId,
       'p_query': query,
     });
     return (data as List).map((json) => Task.fromJson(json as Map<String, dynamic>)).toList();

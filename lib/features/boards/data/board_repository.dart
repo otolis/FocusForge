@@ -22,11 +22,9 @@ class BoardRepository {
   ///
   /// Throws a descriptive error if the migration hasn't been applied.
   Future<String> createBoard(String name) async {
-    final userId = _client.auth.currentUser!.id;
     try {
       final result = await _client.rpc('create_board_with_defaults', params: {
         'board_name': name,
-        'creator_id': userId,
       });
       return result as String;
     } on PostgrestException catch (e) {
