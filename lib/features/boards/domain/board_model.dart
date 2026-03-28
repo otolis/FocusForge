@@ -1,16 +1,23 @@
 import 'board_role.dart';
+import 'board_table_column.dart';
 
-/// A collaborative Kanban board.
+/// A collaborative board (Kanban + Table view).
 ///
 /// Stored in the `public.boards` Supabase table. Created via the
 /// `create_board_with_defaults` RPC which atomically inserts the board,
 /// owner membership, and 3 default columns.
+///
+/// The [metadata] field stores table-view configuration (column definitions,
+/// status labels, groups) as JSONB. Boards created before the table-view
+/// migration will have null metadata in the DB, which [fromJson] handles
+/// by providing sensible defaults.
 class Board {
   final String id;
   final String name;
   final String createdBy;
   final DateTime createdAt;
   final DateTime updatedAt;
+  final BoardMetadata metadata;
 
   const Board({
     required this.id,
@@ -18,6 +25,7 @@ class Board {
     required this.createdBy,
     required this.createdAt,
     required this.updatedAt,
+    required this.metadata,
   });
 
   factory Board.fromJson(Map<String, dynamic> json) {
@@ -31,6 +39,8 @@ class Board {
       updatedAt: json['updated_at'] != null
           ? DateTime.parse(json['updated_at'] as String)
           : DateTime.now(),
+      metadata: BoardMetadata.fromJson(
+          json['metadata'] as Map<String, dynamic>?),
     );
   }
 
@@ -39,15 +49,60 @@ class Board {
   Map<String, dynamic> toJson() => {
         'name': name,
         'created_by': createdBy,
+        'metadata': metadata.toJson(),
       };
 
-  Board copyWith({String? name}) {
+  Board copyWith({String? name, BoardMetadata? metadata}) {
     return Board(
       id: id,
       name: name ?? this.name,
       createdBy: createdBy,
       createdAt: createdAt,
       updatedAt: DateTime.now(),
+      metadata: metadata ?? this.metadata,
+    );
+  }
+}
+
+/// A named group within a board's table view.
+///
+/// Groups are stored inside [BoardMetadata.groups] (JSONB on the boards table).
+/// Each card references a group via [BoardCard.groupId].
+class BoardGroup {
+  final String id;
+  final String name;
+  final String color;
+  final int position;
+
+  const BoardGroup({
+    required this.id,
+    required this.name,
+    required this.color,
+    required this.position,
+  });
+
+  factory BoardGroup.fromJson(Map<String, dynamic> json) {
+    return BoardGroup(
+      id: json['id'] as String,
+      name: json['name'] as String,
+      color: json['color'] as String,
+      position: json['position'] as int,
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'name': name,
+        'color': color,
+        'position': position,
+      };
+
+  BoardGroup copyWith({String? name, String? color, int? position}) {
+    return BoardGroup(
+      id: id,
+      name: name ?? this.name,
+      color: color ?? this.color,
+      position: position ?? this.position,
     );
   }
 }
@@ -101,10 +156,14 @@ class BoardColumn {
   }
 }
 
-/// A card (task item) within a Kanban column.
+/// A card (task item) within a board.
 ///
 /// Stored in the `public.board_cards` table. Cards belong to a board
-/// and a column, and are ordered by `position` within their column.
+/// and a Kanban column, and are ordered by `position` within their column.
+///
+/// Extended for table view with [startDate], [statusLabel], [statusColor],
+/// [groupId], and [customFields]. All new fields are nullable/defaulted
+/// for backward compatibility with existing Kanban data.
 class BoardCard {
   final String id;
   final String boardId;
@@ -119,6 +178,13 @@ class BoardCard {
   final DateTime createdAt;
   final DateTime updatedAt;
 
+  // ─── Table-view fields ─────────────────────────
+  final DateTime? startDate;
+  final String? statusLabel;
+  final String? statusColor;
+  final String? groupId;
+  final Map<String, dynamic> customFields;
+
   const BoardCard({
     required this.id,
     required this.boardId,
@@ -132,6 +198,12 @@ class BoardCard {
     required this.createdBy,
     required this.createdAt,
     required this.updatedAt,
+    // Table-view fields (all optional for backward compat)
+    this.startDate,
+    this.statusLabel,
+    this.statusColor,
+    this.groupId,
+    this.customFields = const {},
   });
 
   factory BoardCard.fromJson(Map<String, dynamic> json) {
@@ -154,6 +226,15 @@ class BoardCard {
       updatedAt: json['updated_at'] != null
           ? DateTime.parse(json['updated_at'] as String)
           : DateTime.now(),
+      // Table-view fields (gracefully handle missing keys)
+      startDate: json['start_date'] != null
+          ? DateTime.parse(json['start_date'] as String)
+          : null,
+      statusLabel: json['status_label'] as String?,
+      statusColor: json['status_color'] as String?,
+      groupId: json['group_id'] as String?,
+      customFields:
+          (json['custom_fields'] as Map<String, dynamic>?) ?? const {},
     );
   }
 
@@ -170,6 +251,12 @@ class BoardCard {
         'position': position,
         'created_by': createdBy,
         'updated_at': DateTime.now().toIso8601String(),
+        // Table-view fields
+        'start_date': startDate?.toIso8601String(),
+        'status_label': statusLabel,
+        'status_color': statusColor,
+        'group_id': groupId,
+        'custom_fields': customFields,
       };
 
   BoardCard copyWith({
@@ -180,6 +267,12 @@ class BoardCard {
     int? priority,
     DateTime? dueDate,
     int? position,
+    // Table-view fields
+    DateTime? startDate,
+    String? statusLabel,
+    String? statusColor,
+    String? groupId,
+    Map<String, dynamic>? customFields,
   }) {
     return BoardCard(
       id: id,
@@ -194,6 +287,12 @@ class BoardCard {
       createdBy: createdBy,
       createdAt: createdAt,
       updatedAt: DateTime.now(),
+      // Table-view fields
+      startDate: startDate ?? this.startDate,
+      statusLabel: statusLabel ?? this.statusLabel,
+      statusColor: statusColor ?? this.statusColor,
+      groupId: groupId ?? this.groupId,
+      customFields: customFields ?? this.customFields,
     );
   }
 }
