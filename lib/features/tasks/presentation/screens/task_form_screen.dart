@@ -17,6 +17,7 @@ import '../widgets/recurrence_picker.dart';
 import '../../../smart_input/presentation/widgets/smart_input_field.dart';
 import '../../../smart_input/domain/parsed_task_input.dart';
 import '../../../smart_input/presentation/providers/smart_input_provider.dart';
+import '../../../../shared/widgets/ai_rewrite_button.dart';
 
 /// Full-screen form for creating and editing tasks.
 ///
@@ -207,15 +208,24 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen> {
             children: [
               // Title field -- SmartInputField in create mode, plain field in edit mode
               if (!_isEditMode) ...[
-                SmartInputField(
-                  controller: _titleController,
-                  hintText: 'e.g., "Buy groceries tomorrow high priority"',
-                  onParsed: _onSmartInputParsed,
+                Row(
+                  children: [
+                    Expanded(
+                      child: SmartInputField(
+                        controller: _titleController,
+                        hintText: 'e.g., "Buy groceries tomorrow high priority"',
+                        onParsed: _onSmartInputParsed,
+                      ),
+                    ),
+                    const SizedBox(width: 4),
+                    AiRewriteButton(controller: _titleController),
+                  ],
                 ),
               ] else ...[
                 AppTextField(
                   label: 'Title',
                   controller: _titleController,
+                  suffixIcon: AiRewriteButton(controller: _titleController),
                   validator: (v) =>
                       v?.isEmpty ?? true ? 'Title is required' : null,
                   textInputAction: TextInputAction.next,

@@ -9,6 +9,7 @@ import '../../../../shared/widgets/app_text_field.dart';
 import '../../domain/habit_frequency.dart';
 import '../../domain/habit_model.dart';
 import '../providers/habit_provider.dart';
+import '../../../../shared/widgets/ai_rewrite_button.dart';
 
 /// A form screen for creating or editing habits.
 ///
@@ -217,6 +218,7 @@ class _HabitFormScreenState extends ConsumerState<HabitFormScreen> {
                     AppTextField(
                       label: 'Habit Name',
                       controller: _nameController,
+                      suffixIcon: AiRewriteButton(controller: _nameController),
                       textInputAction: TextInputAction.next,
                       validator: (value) {
                         if (value == null || value.trim().isEmpty) {

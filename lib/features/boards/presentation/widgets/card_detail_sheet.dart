@@ -7,6 +7,7 @@ import '../../../../core/utils/priority_color.dart' as pc;
 import '../../../../shared/widgets/app_button.dart';
 import '../../domain/board_model.dart';
 import '../providers/board_detail_provider.dart';
+import '../../../../shared/widgets/ai_rewrite_button.dart';
 
 /// Shows a modal bottom sheet for viewing and editing a board card's
 /// details, including title, description, priority, due date, and
@@ -120,9 +121,10 @@ class _CardDetailContentState extends ConsumerState<_CardDetailContent> {
                 TextFormField(
                   controller: _titleController,
                   style: context.textTheme.titleMedium,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     border: InputBorder.none,
                     hintText: 'Card title',
+                    suffixIcon: AiRewriteButton(controller: _titleController),
                   ),
                 ),
                 const SizedBox(height: 8),

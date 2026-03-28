@@ -10,6 +10,7 @@ import '../providers/task_provider.dart';
 import 'priority_badge.dart';
 import '../../../smart_input/presentation/widgets/smart_input_field.dart';
 import '../../../smart_input/presentation/providers/smart_input_provider.dart';
+import '../../../../shared/widgets/ai_rewrite_button.dart';
 
 /// A bottom sheet for quick task creation with title, priority, and deadline.
 ///
@@ -154,27 +155,35 @@ class _TaskQuickCreateSheetState extends ConsumerState<TaskQuickCreateSheet> {
           const SizedBox(height: 16),
 
           // Title input with NLP smart parsing
-          SmartInputField(
-            controller: _titleController,
-            hintText: 'e.g., "Buy groceries tomorrow high priority"',
-            onParsed: (parsed) {
-              if (!mounted) return;
-              setState(() {
-                if (_titleError) _titleError = false;
-                if (parsed.suggestedPriority != null) {
-                  _priority = switch (parsed.suggestedPriority!.toUpperCase()) {
-                    'P1' => Priority.p1,
-                    'P2' => Priority.p2,
-                    'P3' => Priority.p3,
-                    'P4' => Priority.p4,
-                    _ => Priority.p3,
-                  };
-                }
-                if (parsed.suggestedDeadline != null) {
-                  _deadline = parsed.suggestedDeadline;
-                }
-              });
-            },
+          Row(
+            children: [
+              Expanded(
+                child: SmartInputField(
+                  controller: _titleController,
+                  hintText: 'e.g., "Buy groceries tomorrow high priority"',
+                  onParsed: (parsed) {
+                    if (!mounted) return;
+                    setState(() {
+                      if (_titleError) _titleError = false;
+                      if (parsed.suggestedPriority != null) {
+                        _priority = switch (parsed.suggestedPriority!.toUpperCase()) {
+                          'P1' => Priority.p1,
+                          'P2' => Priority.p2,
+                          'P3' => Priority.p3,
+                          'P4' => Priority.p4,
+                          _ => Priority.p3,
+                        };
+                      }
+                      if (parsed.suggestedDeadline != null) {
+                        _deadline = parsed.suggestedDeadline;
+                      }
+                    });
+                  },
+                ),
+              ),
+              const SizedBox(width: 4),
+              AiRewriteButton(controller: _titleController),
+            ],
           ),
           if (_titleError)
             Padding(
@@ -253,6 +262,9 @@ class _TaskQuickCreateSheetState extends ConsumerState<TaskQuickCreateSheet> {
               const Spacer(),
               FilledButton(
                 onPressed: _submit,
+                style: FilledButton.styleFrom(
+                  minimumSize: const Size(0, 48),
+                ),
                 child: const Text('Add'),
               ),
             ],

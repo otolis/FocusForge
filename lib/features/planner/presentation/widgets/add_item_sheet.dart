@@ -7,6 +7,7 @@ import '../../../smart_input/domain/parsed_task_input.dart';
 import '../../../smart_input/presentation/widgets/smart_input_field.dart';
 import '../../domain/plannable_item_model.dart';
 import '../providers/plannable_items_provider.dart';
+import '../../../../shared/widgets/ai_rewrite_button.dart';
 
 /// Bottom sheet for adding a new plannable item.
 ///
@@ -71,10 +72,18 @@ class _AddItemSheetState extends ConsumerState<AddItemSheet> {
             const SizedBox(height: 16),
 
             // Title input with NLP parsing
-            SmartInputField(
-              controller: _titleController,
-              hintText: 'e.g., "Review slides 45min high energy"',
-              onParsed: _onSmartInputParsed,
+            Row(
+              children: [
+                Expanded(
+                  child: SmartInputField(
+                    controller: _titleController,
+                    hintText: 'e.g., "Review slides 45min high energy"',
+                    onParsed: _onSmartInputParsed,
+                  ),
+                ),
+                const SizedBox(width: 4),
+                AiRewriteButton(controller: _titleController),
+              ],
             ),
             const SizedBox(height: 20),
 

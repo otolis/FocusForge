@@ -13,6 +13,7 @@ import '../widgets/card_detail_sheet.dart';
 import '../widgets/column_header_widget.dart';
 import '../widgets/empty_column_placeholder.dart';
 import '../widgets/kanban_card_widget.dart';
+import '../../../../shared/widgets/ai_rewrite_button.dart';
 
 /// Custom item class that extends [AppFlowyGroupItem] to bridge
 /// [BoardCard] domain objects with the appflowy_board widget.
@@ -252,6 +253,7 @@ class _BoardDetailScreenState extends ConsumerState<BoardDetailScreen> {
           content: AppTextField(
             label: 'Card title',
             controller: titleController,
+            suffixIcon: AiRewriteButton(controller: titleController),
             textInputAction: TextInputAction.done,
             onFieldSubmitted: (_) {
               _createCard(dialogContext, columnId, titleController);
