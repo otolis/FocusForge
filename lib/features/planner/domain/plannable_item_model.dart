@@ -17,6 +17,8 @@ class PlannableItem {
   final EnergyLevel energyLevel;
   final DateTime planDate;
   final DateTime createdAt;
+  final String? sourceType;
+  final String? sourceId;
 
   const PlannableItem({
     required this.id,
@@ -26,6 +28,8 @@ class PlannableItem {
     required this.energyLevel,
     required this.planDate,
     required this.createdAt,
+    this.sourceType,
+    this.sourceId,
   });
 
   /// Parses a row returned from `supabase.from('plannable_items').select()`.
@@ -38,6 +42,8 @@ class PlannableItem {
       energyLevel: EnergyLevel.values.byName(json['energy_level'] as String),
       planDate: DateTime.parse(json['plan_date'] as String),
       createdAt: DateTime.parse(json['created_at'] as String),
+      sourceType: json['source_type'] as String?,
+      sourceId: json['source_id'] as String?,
     );
   }
 
@@ -49,6 +55,8 @@ class PlannableItem {
         'duration_minutes': durationMinutes,
         'energy_level': energyLevel.name,
         'plan_date': planDate.toIso8601String().split('T').first,
+        if (sourceType != null) 'source_type': sourceType,
+        if (sourceId != null) 'source_id': sourceId,
       };
 
   /// Produces a compact map for sending to the generate-schedule Edge Function.
@@ -66,6 +74,8 @@ class PlannableItem {
     int? durationMinutes,
     EnergyLevel? energyLevel,
     DateTime? planDate,
+    String? sourceType,
+    String? sourceId,
   }) {
     return PlannableItem(
       id: id,
@@ -75,6 +85,8 @@ class PlannableItem {
       energyLevel: energyLevel ?? this.energyLevel,
       planDate: planDate ?? this.planDate,
       createdAt: createdAt,
+      sourceType: sourceType ?? this.sourceType,
+      sourceId: sourceId ?? this.sourceId,
     );
   }
 }

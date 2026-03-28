@@ -31,12 +31,17 @@ class PlannerRepository {
   }
 
   /// Adds a new plannable item and returns the created item.
+  ///
+  /// Optional [sourceType] and [sourceId] enable idempotent import by
+  /// linking the item back to its origin ('task' or 'habit') and UUID.
   Future<PlannableItem> addItem({
     required String userId,
     required String title,
     required int durationMinutes,
     required EnergyLevel energyLevel,
     required DateTime planDate,
+    String? sourceType,
+    String? sourceId,
   }) async {
     final data = await _client
         .from('plannable_items')
@@ -46,6 +51,8 @@ class PlannerRepository {
           'duration_minutes': durationMinutes,
           'energy_level': energyLevel.name,
           'plan_date': planDate.toIso8601String().split('T').first,
+          if (sourceType != null) 'source_type': sourceType,
+          if (sourceId != null) 'source_id': sourceId,
         })
         .select()
         .single();
