@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
+import '../../../../core/router/app_router.dart';
 import '../../../../core/utils/extensions.dart';
 import '../../../../shared/widgets/app_button.dart';
 import '../../../auth/presentation/providers/auth_provider.dart';
@@ -52,6 +53,9 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
     // Store locally
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool('onboarding_completed', true);
+
+    // Update module-level variable so router redirect does not loop back
+    setOnboardingCompleted(true);
 
     // Update Supabase profile
     final userId = ref.read(authStateProvider).user?.id;

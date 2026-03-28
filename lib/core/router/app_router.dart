@@ -40,6 +40,13 @@ Future<void> loadOnboardingStatus() async {
   _onboardingCompleted = prefs.getBool('onboarding_completed') ?? false;
 }
 
+/// Allows external code (e.g., OnboardingScreen) to update the
+/// module-level onboarding flag after the user completes onboarding,
+/// so the router redirect does not loop back.
+void setOnboardingCompleted(bool value) {
+  _onboardingCompleted = value;
+}
+
 /// Provides the [GoRouter] instance configured with auth-based and
 /// onboarding-based redirects.
 ///
@@ -80,6 +87,12 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       if (isAuth) {
         final pendingRoute = NotificationService.consumePendingDeepLink();
         if (pendingRoute != null) return pendingRoute;
+      }
+
+      // ONBOARD-01: Redirect to onboarding for ANY authenticated route
+      // if onboarding is not completed (except /onboarding itself to prevent loop)
+      if (isAuth && !_onboardingCompleted && location != '/onboarding') {
+        return '/onboarding';
       }
 
       return null; // No redirect needed.

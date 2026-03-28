@@ -100,11 +100,11 @@ Plans:
   2. Opening the edit form for a recurring task pre-populates the recurrence picker with the existing rule, and saving updates both the parent task and the recurrence rule
   3. Editing recurrence on "all future instances" regenerates instances using the updated rule, not the old one
   4. Selecting a date range filter with start=Mar 1 and end=Mar 31 includes tasks with deadlines on Mar 31 at any time of day (end date is inclusive)
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 13-01: TBD
-- [ ] 13-02: TBD
+- [ ] 13-01-PLAN.md -- Onboarding redirect guard for all routes + date-range filter end-date inclusive fix
+- [ ] 13-02-PLAN.md -- Recurring task editing: load existing rule, upsert on save, regenerate with updated pattern
 
 ### Phase 9: Boards UI Redesign
 **Goal**: Replace current Kanban-only board view with a Monday.com-style spreadsheet/table layout featuring customizable columns for priorities, timelines, deadlines, status, and assignees. Inline editing, timeline bars, priority badges, deadline indicators, and column reordering.
@@ -136,6 +136,6 @@ Phases 10, 11, 12, 13 are parallel (no dependencies between them). Phase 9 is in
 | 8. Integration & Deployment | v1.0 | 4/4 | Complete | 2026-03-22 |
 | 10. RPC & Edge Function Security | 2/2 | Complete    | 2026-03-28 | - |
 | 11. Notification Logic Fixes | 3/3 | Complete    | 2026-03-28 | - |
-| 12. Auth, Planner & Lifecycle | 2/2 | Complete   | 2026-03-28 | - |
-| 13. Onboarding, Recurring & Filter | v1.1 | 0/? | Not started | - |
+| 12. Auth, Planner & Lifecycle | 2/2 | Complete    | 2026-03-28 | - |
+| 13. Onboarding, Recurring & Filter | v1.1 | 0/2 | Not started | - |
 | 9. Boards UI Redesign | -- | 3/5 | In progress | - |
