@@ -1,11 +1,23 @@
 import { createClient } from 'npm:@supabase/supabase-js@2'
 import { JWT } from 'npm:google-auth-library@9'
-import serviceAccount from '../service-account.json' with { type: 'json' }
 
 const supabase = createClient(
   Deno.env.get('SUPABASE_URL')!,
   Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
 )
+
+/**
+ * Read and parse Firebase service account credentials from the
+ * FIREBASE_SERVICE_ACCOUNT Edge Function secret at runtime.
+ * Lazy: only called when the function is actually invoked.
+ */
+function getServiceAccount(): { client_email: string; private_key: string; project_id: string } {
+  const raw = Deno.env.get('FIREBASE_SERVICE_ACCOUNT')
+  if (!raw) {
+    throw new Error('FIREBASE_SERVICE_ACCOUNT is not set in Edge Function secrets')
+  }
+  return JSON.parse(raw)
+}
 
 // --- Helper Functions ---
 
@@ -155,6 +167,8 @@ const getAccessToken = ({
 
 Deno.serve(async (_req: Request) => {
   try {
+    const serviceAccount = getServiceAccount()
+
     // Step 1: Query pending reminders (unsent, with valid FCM token, notifications enabled)
     const now = new Date()
     const { data: pendingReminders, error } = await supabase
