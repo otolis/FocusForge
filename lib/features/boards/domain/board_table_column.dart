@@ -175,13 +175,13 @@ class BoardMetadata {
 
   // ─── Defaults ────────────────────────────────────
 
-  factory BoardMetadata._defaults() => BoardMetadata(
+  factory BoardMetadata._defaults() => const BoardMetadata(
         columnDefs: _defaultColumnDefs,
         statusLabels: _defaultStatusLabels,
         groups: _defaultGroups,
       );
 
-  static final List<TableColumnDef> _defaultColumnDefs = const [
+  static const List<TableColumnDef> _defaultColumnDefs = [
     TableColumnDef(
         id: 'col_status',
         type: ColumnType.status,
@@ -220,7 +220,7 @@ class BoardMetadata {
         position: 6000),
   ];
 
-  static final List<StatusLabelDef> _defaultStatusLabels = const [
+  static const List<StatusLabelDef> _defaultStatusLabels = [
     StatusLabelDef(
         id: 'default_working', name: 'Working on it', color: '#FF9800'),
     StatusLabelDef(id: 'default_done', name: 'Done', color: '#4CAF50'),
@@ -229,7 +229,7 @@ class BoardMetadata {
         id: 'default_not_started', name: 'Not Started', color: '#9E9E9E'),
   ];
 
-  static final List<BoardGroup> _defaultGroups = const [
+  static const List<BoardGroup> _defaultGroups = [
     BoardGroup(
         id: 'default_group',
         name: 'Group 1',

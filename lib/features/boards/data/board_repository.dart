@@ -102,6 +102,21 @@ class BoardRepository {
         .eq('id', boardId);
   }
 
+  /// Updates the board's table-view metadata (column definitions, status
+  /// labels, groups).
+  ///
+  /// Expects a fully-formed metadata map (from [BoardMetadata.toJson()]).
+  Future<void> updateMetadata(
+      String boardId, Map<String, dynamic> metadata) async {
+    await _client
+        .from('boards')
+        .update({
+          'metadata': metadata,
+          'updated_at': DateTime.now().toIso8601String(),
+        })
+        .eq('id', boardId);
+  }
+
   /// Deletes a board (owner only, enforced by RLS).
   Future<void> deleteBoard(String boardId) async {
     await _client.from('boards').delete().eq('id', boardId);
