@@ -30,7 +30,7 @@
 
 - [x] **Phase 10: RPC & Edge Function Security** - Lock down SECURITY DEFINER RPCs + enable JWT verification on Edge Functions (completed 2026-03-28)
 - [x] **Phase 11: Notification Logic Fixes** - Fix cold-start routing, action handlers, snooze, reminder scheduling, and preference honoring (completed 2026-03-28)
-- [ ] **Phase 12: Auth, Planner & Lifecycle Cleanup** - Hide placeholder Google sign-in, make planner import idempotent, fix FCM lifecycle and board RLS
+- [x] **Phase 12: Auth, Planner & Lifecycle Cleanup** - Hide placeholder Google sign-in, make planner import idempotent, fix FCM lifecycle and board RLS (completed 2026-03-28)
 - [ ] **Phase 13: Onboarding, Recurring Tasks & Filter Fixes** - Fix onboarding bypass, recurring task editing, and date-range filter off-by-one
 
 ### Phase 9 (Independent)
@@ -136,6 +136,6 @@ Phases 10, 11, 12, 13 are parallel (no dependencies between them). Phase 9 is in
 | 8. Integration & Deployment | v1.0 | 4/4 | Complete | 2026-03-22 |
 | 10. RPC & Edge Function Security | 2/2 | Complete    | 2026-03-28 | - |
 | 11. Notification Logic Fixes | 3/3 | Complete    | 2026-03-28 | - |
-| 12. Auth, Planner & Lifecycle | v1.1 | 0/2 | Not started | - |
+| 12. Auth, Planner & Lifecycle | 2/2 | Complete   | 2026-03-28 | - |
 | 13. Onboarding, Recurring & Filter | v1.1 | 0/? | Not started | - |
 | 9. Boards UI Redesign | -- | 3/5 | In progress | - |

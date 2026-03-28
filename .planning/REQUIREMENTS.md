@@ -23,20 +23,22 @@ Requirements for the Security & Hardening milestone. Each maps to roadmap phases
 - [x] **NOTIF-03**: Notification habit-complete action uses same-day upsert/increment logic from `habit_repository`
 - [x] **NOTIF-04**: Snooze action handlers respect user's configured `snoozeDuration` preference instead of hardcoding 15 minutes
 - [x] **NOTIF-05**: `recordCompletion` in notification_repository is called by production code so adaptive timing learns from real data
+- [x] **NOTIF-06**: Creating tasks/habits/planner blocks inserts initial `scheduled_reminders` rows so `send-reminders` can deliver them
+- [x] **NOTIF-07**: Quiet hours evaluated using user's timezone (stored in `notification_preferences`), not Edge Function server time
 
 ### Auth
 
-- [ ] **AUTH-01**: Google sign-in buttons hidden in login/register screens while `YOUR_WEB_CLIENT_ID` placeholder is committed
+- [x] **AUTH-01**: Google sign-in buttons hidden in login/register screens while `YOUR_WEB_CLIENT_ID` placeholder is committed
 
 ### Planner
 
-- [ ] **PLAN-01**: Planner import is idempotent (tracks source linkage to prevent duplicate imports)
-- [ ] **PLAN-02**: `_importRealItems()` awaits each `addItem()` call to prevent race conditions
+- [x] **PLAN-01**: Planner import is idempotent (tracks source linkage to prevent duplicate imports)
+- [x] **PLAN-02**: `_importRealItems()` awaits each `addItem()` call to prevent race conditions
 
 ### Lifecycle & Data
 
-- [ ] **LIFE-01**: FCM `onTokenRefresh` subscription stored and cancelled on sign-out to prevent accumulation across auth cycles
-- [ ] **LIFE-02**: Board member profile RLS policy allows board co-members to read each other's profiles (or use a service-role approach)
+- [x] **LIFE-01**: FCM `onTokenRefresh` subscription stored and cancelled on sign-out to prevent accumulation across auth cycles
+- [x] **LIFE-02**: Board member profile RLS policy allows board co-members to read each other's profiles (or use a service-role approach)
 
 ## v2 Requirements
 
@@ -77,11 +79,13 @@ Which phases cover which requirements. Updated during roadmap creation.
 | NOTIF-03 | Phase 11 | Complete |
 | NOTIF-04 | Phase 11 | Complete |
 | NOTIF-05 | Phase 11 | Complete |
-| AUTH-01 | Phase 12 | Pending |
-| PLAN-01 | Phase 12 | Pending |
-| PLAN-02 | Phase 12 | Pending |
-| LIFE-01 | Phase 12 | Pending |
-| LIFE-02 | Phase 12 | Pending |
+| NOTIF-06 | Phase 11 | Complete |
+| NOTIF-07 | Phase 11 | Complete |
+| AUTH-01 | Phase 12 | Complete |
+| PLAN-01 | Phase 12 | Complete |
+| PLAN-02 | Phase 12 | Complete |
+| LIFE-01 | Phase 12 | Complete |
+| LIFE-02 | Phase 12 | Complete |
 
 **Coverage:**
 - v1.1 requirements: 14 total
