@@ -147,6 +147,9 @@ begin
   select * into v_rule from recurrence_rules where task_id = p_task_id;
   if v_rule is null then return; end if;
 
+  -- Skip generation if the anchor task has no deadline (cannot compute next dates).
+  if v_task.deadline is null then return; end if;
+
   select max(deadline::date) into v_last_instance
   from tasks where parent_task_id = p_task_id;
 

@@ -360,34 +360,62 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen> {
         ? '${_selectedDeadline!.day}/${_selectedDeadline!.month}/${_selectedDeadline!.year}'
         : 'No deadline';
 
-    return ListTile(
-      contentPadding: EdgeInsets.zero,
-      leading: const Icon(Icons.calendar_today),
-      title: Text(formatted),
-      trailing: _selectedDeadline != null
-          ? IconButton(
-              icon: const Icon(Icons.clear),
-              onPressed: () {
-                setState(() => _selectedDeadline = null);
-              },
-            )
-          : null,
-      onTap: () async {
-        final now = DateTime.now();
-        final picked = await showDatePicker(
-          context: context,
-          initialDate: _selectedDeadline ?? now,
-          firstDate: now,
-          lastDate: now.add(const Duration(days: 365)),
-        );
-        if (picked != null) {
-          setState(() => _selectedDeadline = picked);
-        }
-      },
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        ListTile(
+          contentPadding: EdgeInsets.zero,
+          leading: const Icon(Icons.calendar_today),
+          title: Text(formatted),
+          trailing: _selectedDeadline != null
+              ? IconButton(
+                  icon: const Icon(Icons.clear),
+                  onPressed: () {
+                    setState(() => _selectedDeadline = null);
+                  },
+                )
+              : null,
+          onTap: () async {
+            final now = DateTime.now();
+            final picked = await showDatePicker(
+              context: context,
+              initialDate: _selectedDeadline ?? now,
+              firstDate: now,
+              lastDate: now.add(const Duration(days: 365)),
+            );
+            if (picked != null) {
+              setState(() => _selectedDeadline = picked);
+            }
+          },
+        ),
+        if (_recurrenceConfig != null && _selectedDeadline == null)
+          Padding(
+            padding: const EdgeInsets.only(left: 16, top: 4),
+            child: Text(
+              'Required for recurring tasks',
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.error,
+                fontSize: 12,
+              ),
+            ),
+          ),
+      ],
     );
   }
 
   Future<void> _handleSave() async {
+    // Require deadline when recurrence is configured.
+    if (_recurrenceConfig != null && _selectedDeadline == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('A deadline is required for recurring tasks.'),
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+      return;
+    }
+
     if (!_formKey.currentState!.validate()) return;
 
     // Recurring task edit dialog.
