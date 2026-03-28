@@ -113,9 +113,12 @@ class _PlannerScreenState extends ConsumerState<PlannerScreen> {
 
           // Regenerate bar (only when blocks exist)
           if (plannerState.blocks.isNotEmpty)
-            RegenerateBar(
-              userId: userId,
-              onRegenerate: () => _generate(userId),
+            SafeArea(
+              top: false,
+              child: RegenerateBar(
+                userId: userId,
+                onRegenerate: () => _generate(userId),
+              ),
             ),
         ],
       ),
