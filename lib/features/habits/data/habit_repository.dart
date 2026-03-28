@@ -39,6 +39,7 @@ class HabitRepository {
   /// Creates a new habit from the given [habit] model.
   Future<void> createHabit(Habit habit) async {
     await _client.from('habits').insert(habit.toJson());
+    await _scheduleHabitReminder(habit);
   }
 
   /// Updates an existing habit matching [habit.id].
@@ -51,6 +52,14 @@ class HabitRepository {
 
   /// Deletes the habit with the given [habitId].
   Future<void> deleteHabit(String habitId) async {
+    // Clean up any unsent reminders for this habit
+    try {
+      await _client
+          .from('scheduled_reminders')
+          .delete()
+          .eq('item_id', habitId)
+          .eq('sent', false);
+    } catch (_) {}
     await _client.from('habits').delete().eq('id', habitId);
   }
 
@@ -131,5 +140,50 @@ class HabitRepository {
       return data['count'] as int;
     }
     return 0;
+  }
+
+  /// Inserts an initial habit reminder for daily check-in.
+  ///
+  /// Reads the user's habit_daily_summary_time from notification_preferences
+  /// and inserts a single reminder for today (or tomorrow if past). The
+  /// send-reminders Edge Function handles recurring delivery by re-inserting
+  /// after each send.
+  Future<void> _scheduleHabitReminder(Habit habit) async {
+    try {
+      final userId = _client.auth.currentUser?.id;
+      if (userId == null) return;
+
+      // Read user's preferred reminder time
+      final prefsData = await _client
+          .from('notification_preferences')
+          .select('habit_daily_summary_time')
+          .eq('user_id', userId)
+          .maybeSingle();
+
+      final summaryTime =
+          prefsData?['habit_daily_summary_time'] as String? ?? '08:00';
+      final parts = summaryTime.split(':');
+      final hour = int.parse(parts[0]);
+      final minute = int.parse(parts[1]);
+
+      // Schedule for today at the user's preferred time, or tomorrow if past
+      final now = DateTime.now();
+      var remindAt = DateTime(now.year, now.month, now.day, hour, minute);
+      if (remindAt.isBefore(now)) {
+        remindAt = remindAt.add(const Duration(days: 1));
+      }
+
+      await _client.from('scheduled_reminders').insert({
+        'user_id': userId,
+        'reminder_type': 'habit_reminder',
+        'item_id': habit.id,
+        'remind_at': remindAt.toUtc().toIso8601String(),
+        'title': 'Habit reminder',
+        'body': habit.name,
+        'deep_link_route': '/habits/${habit.id}',
+      });
+    } catch (e) {
+      // Non-critical: don't fail habit creation if scheduling fails
+    }
   }
 }

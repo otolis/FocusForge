@@ -171,6 +171,63 @@ class PlannerRepository {
       },
       onConflict: 'user_id,plan_date',
     );
+
+    // Schedule reminders for each time block (NOTIF-06)
+    try {
+      // Read user's planner block offset preference
+      final prefsData = await _client
+          .from('notification_preferences')
+          .select('planner_block_offset, planner_block_reminders_enabled')
+          .eq('user_id', userId)
+          .maybeSingle();
+
+      final blockRemindersEnabled =
+          prefsData?['planner_block_reminders_enabled'] as bool? ?? true;
+      if (!blockRemindersEnabled) return;
+
+      final blockOffset = prefsData?['planner_block_offset'] as int? ?? 15;
+      final dateStr = planDate.toIso8601String().split('T').first;
+
+      // Delete existing unsent planner reminders for this date
+      final startOfDay = DateTime.parse('${dateStr}T00:00:00Z');
+      final endOfDay = DateTime.parse('${dateStr}T23:59:59Z');
+      await _client
+          .from('scheduled_reminders')
+          .delete()
+          .eq('user_id', userId)
+          .eq('reminder_type', 'planner_block')
+          .eq('sent', false)
+          .gte('remind_at', startOfDay.toIso8601String())
+          .lte('remind_at', endOfDay.toIso8601String());
+
+      final now = DateTime.now();
+      for (final block in blocks) {
+        // Convert startMinute to a DateTime on planDate
+        final blockStart = DateTime(
+          planDate.year,
+          planDate.month,
+          planDate.day,
+          block.startMinute ~/ 60,
+          block.startMinute % 60,
+        );
+        final remindAt = blockStart.subtract(Duration(minutes: blockOffset));
+
+        if (remindAt.isAfter(now)) {
+          await _client.from('scheduled_reminders').insert({
+            'user_id': userId,
+            'reminder_type': 'planner_block',
+            'item_id': block.itemId,
+            'remind_at': remindAt.toUtc().toIso8601String(),
+            'title': 'Time block starting soon',
+            'body': block.title,
+            'deep_link_route': '/planner',
+          });
+        }
+      }
+    } catch (e) {
+      // Non-critical: don't fail schedule save if reminder scheduling fails
+      debugPrint('Planner reminder scheduling error: $e');
+    }
   }
 
   /// Loads a previously cached schedule for the given [userId] and [date].
