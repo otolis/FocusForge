@@ -76,6 +76,7 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen> {
     final memTask = tasks.where((t) => t.id == widget.taskId).firstOrNull;
     if (memTask != null) {
       _populateForm(memTask);
+      await _loadRecurrenceRule(memTask);
       return;
     }
 
@@ -88,6 +89,7 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen> {
         setState(() => _fetchError = 'Task not found');
       } else {
         _populateForm(task);
+        await _loadRecurrenceRule(task);
       }
     } catch (_) {
       if (!mounted) return;
@@ -106,6 +108,32 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen> {
       _selectedCategoryId = task.categoryId;
       _selectedDeadline = task.deadline;
     });
+  }
+
+  /// Loads the existing recurrence rule from Supabase and populates
+  /// [_recurrenceConfig] so the [RecurrencePicker] shows the current pattern.
+  Future<void> _loadRecurrenceRule(Task task) async {
+    if (task.recurrenceRuleId == null) return;
+    try {
+      final ruleData = await Supabase.instance.client
+          .from('recurrence_rules')
+          .select()
+          .eq('id', task.recurrenceRuleId!)
+          .maybeSingle();
+      if (ruleData != null && mounted) {
+        final rule = RecurrenceRule.fromJson(ruleData);
+        setState(() {
+          _recurrenceConfig = RecurrenceConfig(
+            type: rule.type,
+            intervalDays: rule.intervalDays,
+            daysOfWeek: rule.daysOfWeek,
+            dayOfMonth: rule.dayOfMonth,
+          );
+        });
+      }
+    } catch (_) {
+      // Non-critical: picker will default to None if rule fetch fails
+    }
   }
 
   @override
@@ -256,6 +284,7 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen> {
 
               // Recurrence picker
               RecurrencePicker(
+                key: ValueKey('recurrence_${_recurrenceConfig?.type?.name ?? "none"}'),
                 initialType: _recurrenceConfig?.type,
                 initialIntervalDays: _recurrenceConfig?.intervalDays,
                 initialDaysOfWeek: _recurrenceConfig?.daysOfWeek,
@@ -288,7 +317,9 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen> {
       children: [
         Text('Priority', style: context.textTheme.titleSmall),
         const SizedBox(height: 8),
-        Row(
+        Wrap(
+          spacing: 8,
+          runSpacing: 8,
           children: Priority.values.map((priority) {
             final isSelected = _selectedPriority == priority;
             final color = PriorityBadge.colorFor(priority, context.colorScheme);
@@ -298,21 +329,18 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen> {
               Priority.p3 => 'P3 Normal',
               Priority.p4 => 'P4 Low',
             };
-            return Padding(
-              padding: const EdgeInsets.only(right: 8),
-              child: ChoiceChip(
-                label: Text(label),
-                selected: isSelected,
-                selectedColor: color.withValues(alpha: 0.25),
-                avatar: isSelected
-                    ? Icon(Icons.check, size: 18, color: color)
-                    : null,
-                onSelected: (selected) {
-                  if (selected) {
-                    setState(() => _selectedPriority = priority);
-                  }
-                },
-              ),
+            return ChoiceChip(
+              label: Text(label),
+              selected: isSelected,
+              selectedColor: color.withValues(alpha: 0.25),
+              avatar: isSelected
+                  ? Icon(Icons.check, size: 18, color: color)
+                  : null,
+              onSelected: (selected) {
+                if (selected) {
+                  setState(() => _selectedPriority = priority);
+                }
+              },
             );
           }).toList(),
         ),
