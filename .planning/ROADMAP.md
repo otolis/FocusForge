@@ -68,11 +68,12 @@ Plans:
   5. Adaptive notification timing receives real completion data via `recordCompletion` so it learns from actual user behavior
   6. Creating a task with a deadline, a habit, or a planner time block inserts initial rows into `scheduled_reminders` so `send-reminders` can deliver them (not just snooze re-inserts)
   7. Quiet hours are evaluated using the user's timezone (stored with the preference), not the Edge Function server's local time
-**Plans**: TBD
+**Plans**: 3 plans
 
 Plans:
-- [ ] 11-01: TBD
-- [ ] 11-02: TBD
+- [ ] 11-01-PLAN.md -- Notification service action handler rewrites + cold-start deep link + snooze prefs + adaptive timing wiring
+- [ ] 11-02-PLAN.md -- Initial reminder scheduling in task, habit, and planner repositories
+- [ ] 11-03-PLAN.md -- Timezone-aware quiet hours (migration + Dart model + Edge Function)
 
 ### Phase 12: Auth, Planner & Lifecycle Cleanup
 **Goal**: Remove user-facing rough edges in auth flow, prevent planner import duplication, and fix resource lifecycle issues in FCM and board member visibility
@@ -133,8 +134,8 @@ Phases 10, 11, 12, 13 are parallel (no dependencies between them). Phase 9 is in
 | 6. Collaborative Boards | v1.0 | 3/3 | Complete | 2026-03-22 |
 | 7. Notifications & Reminders | v1.0 | 3/3 | Complete | 2026-03-22 |
 | 8. Integration & Deployment | v1.0 | 4/4 | Complete | 2026-03-22 |
-| 10. RPC & Edge Function Security | 2/2 | Complete   | 2026-03-28 | - |
-| 11. Notification Logic Fixes | v1.1 | 0/? | Not started | - |
+| 10. RPC & Edge Function Security | 2/2 | Complete    | 2026-03-28 | - |
+| 11. Notification Logic Fixes | v1.1 | 0/3 | Planned | - |
 | 12. Auth, Planner & Lifecycle | v1.1 | 0/? | Not started | - |
 | 13. Onboarding, Recurring & Filter | v1.1 | 0/? | Not started | - |
 | 9. Boards UI Redesign | -- | 3/5 | In progress | - |
