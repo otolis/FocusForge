@@ -93,8 +93,8 @@ Plans:
 
 Plans:
 - [x] 09-01-PLAN.md -- Domain models, migration, and repository extensions
-- [ ] 09-02-PLAN.md -- Cell widgets (Status, Priority, Person, Timeline, DueDate, Text, Number, Checkbox, Link)
-- [ ] 09-03-PLAN.md -- Table structure widgets (group header/footer, table header/data rows, add item row)
+- [x] 09-02-PLAN.md -- Cell widgets (Status, Priority, Person, Timeline, DueDate, Text, Number, Checkbox, Link)
+- [x] 09-03-PLAN.md -- Table structure widgets (group header/footer, table header/data rows, add item row)
 - [ ] 09-04-PLAN.md -- Table provider, config sheets, BoardTableWidget, ViewSwitcher, board detail refactor
 - [ ] 09-05-PLAN.md -- Integration tests and visual verification checkpoint
 
@@ -116,4 +116,4 @@ Phases 10, 11, 12 are parallel (no dependencies between them). Phase 9 is indepe
 | 10. RPC Security Hardening | v1.1 | 0/? | Not started | - |
 | 11. Notification Logic Fixes | v1.1 | 0/? | Not started | - |
 | 12. Auth, Planner & Lifecycle | v1.1 | 0/? | Not started | - |
-| 9. Boards UI Redesign | -- | 1/5 | In progress | - |
+| 9. Boards UI Redesign | -- | 3/5 | In progress | - |

@@ -27,7 +27,7 @@ See: .planning/PROJECT.md (updated 2026-03-28)
 Phase: 09-redesign-boards-ui-monday-layout (Plan 3/4 complete)
 Plan: 09-04 next
 Status: Executing phase 9
-Last activity: 2026-03-28 -- Completed 09-03: Table structural widgets for Monday.com-style board
+Last activity: 2026-03-28 - Completed quick task 260328-jqu: Fix bottom overflow by 2.0 pixels on planner time block card
 
 Progress (Phase 9): [===============_____] 3/4 plans (75%)
 
@@ -58,6 +58,9 @@ Progress (Phase 9): [===============_____] 3/4 plans (75%)
 Decisions are logged in PROJECT.md Key Decisions table.
 Recent decisions affecting current work:
 
+- [09-03]: TableHeaderRow uses LongPressDraggable/DragTarget for column reorder with visual drop zone indicator
+- [09-03]: TableDataRow uses Dart switch expression on ColumnType for type-safe cell dispatch to all 9 types
+- [09-03]: Zebra striping uses hardcoded hex colors toggled by theme brightness
 - [09-02]: contrastTextColor uses luminance threshold 0.4 for WCAG AA compliance on colored pills
 - [09-02]: TextCell uses InputDecoration.collapsed for borderless inline editing
 - [09-02]: CheckboxCell always interactive with optimistic toggle (no edit mode)
@@ -95,6 +98,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-28T03:50:00.000Z
-Stopped at: Completed 09-02-PLAN.md
+Last session: 2026-03-28T12:00:00.000Z
+Stopped at: Completed 09-03-PLAN.md
 Resume file: None

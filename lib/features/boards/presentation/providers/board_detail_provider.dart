@@ -4,6 +4,7 @@ import '../../data/board_card_repository.dart';
 import '../../data/board_member_repository.dart';
 import '../../domain/board_model.dart';
 import '../../domain/board_role.dart';
+import '../../domain/board_table_column.dart';
 import 'board_list_provider.dart';
 
 /// Provides a [BoardColumnRepository] instance to the widget tree.
@@ -143,7 +144,9 @@ class BoardDetailNotifier extends StateNotifier<BoardDetailState> {
   /// Optimistic card move between columns.
   ///
   /// Updates local state immediately, then persists to Supabase.
-  /// Rolls back on failure.
+  /// After inserting the moved card, re-normalizes positions in the
+  /// destination column (1000, 2000, 3000...) to prevent duplicate
+  /// position values. Rolls back on failure.
   Future<void> moveCard({
     required String cardId,
     required String fromColumnId,
@@ -178,17 +181,24 @@ class BoardDetailNotifier extends StateNotifier<BoardDetailState> {
     if (insertIndex == -1) insertIndex = toCards.length;
     toCards.insert(insertIndex, movedCard);
 
+    // Re-normalize positions in destination column to prevent duplicates
+    for (int i = 0; i < toCards.length; i++) {
+      toCards[i] = toCards[i].copyWith(position: (i + 1) * 1000);
+    }
+
     updatedCardsByColumn[fromColumnId] = fromCards;
     updatedCardsByColumn[toColumnId] = toCards;
     state = state.copyWith(cardsByColumn: updatedCardsByColumn);
 
-    // Persist
+    // Persist all destination column cards with normalized positions
     try {
       final cardRepo = _ref.read(boardCardRepositoryProvider);
-      await cardRepo.updateCard(
-        cardId,
-        columnId: toColumnId,
-        position: newPosition,
+      await Future.wait(
+        toCards.map((c) => cardRepo.updateCard(
+              c.id,
+              columnId: toColumnId,
+              position: c.position,
+            )),
       );
     } catch (e) {
       // Rollback
@@ -462,6 +472,169 @@ class BoardDetailNotifier extends StateNotifier<BoardDetailState> {
         );
         break;
     }
+  }
+
+  // ─── Table-view helpers ─────────────────────────────
+
+  /// Directly sets the cards-by-column map. Used by [BoardTableNotifier]
+  /// for optimistic row reorder updates and rollbacks.
+  void setCardsByColumn(Map<String, List<BoardCard>> cardsByColumn) {
+    state = state.copyWith(cardsByColumn: cardsByColumn);
+  }
+
+  /// Directly sets the board object. Used by [BoardTableNotifier]
+  /// for optimistic column reorder metadata updates and rollbacks.
+  void setBoard(Board board) {
+    state = state.copyWith(board: board);
+  }
+
+  /// Updates a single field on a card. Used by table view inline editing.
+  ///
+  /// Optimistically updates local state, then persists to Supabase.
+  /// Rolls back on failure.
+  Future<void> updateCardField(
+      String cardId, String field, dynamic value) async {
+    final oldState = state;
+    // Optimistic update
+    _updateCardInState(cardId, field, value);
+    try {
+      final cardRepo = _ref.read(boardCardRepositoryProvider);
+      switch (field) {
+        case 'status_label':
+          await cardRepo.updateCard(cardId, statusLabel: value as String?);
+        case 'status_color':
+          await cardRepo.updateCard(cardId, statusColor: value as String?);
+        case 'priority':
+          await cardRepo.updateCard(cardId, priority: value as int?);
+        case 'assignee_id':
+          await cardRepo.updateCard(cardId, assigneeId: value as String?);
+        case 'due_date':
+          await cardRepo.updateCard(cardId, dueDate: value as DateTime?);
+        case 'start_date':
+          await cardRepo.updateCard(cardId, startDate: value as DateTime?);
+        case 'title':
+          await cardRepo.updateCard(cardId, title: value as String?);
+        case 'description':
+          await cardRepo.updateCard(cardId, description: value as String?);
+        case 'group_id':
+          await cardRepo.updateCard(cardId, groupId: value as String?);
+        default:
+          // Custom field -- update customFields JSONB
+          final card = _findCard(cardId);
+          if (card != null) {
+            final updatedCustom =
+                Map<String, dynamic>.from(card.customFields);
+            updatedCustom[field] = value;
+            await cardRepo.updateCard(cardId, customFields: updatedCustom);
+          }
+      }
+    } catch (e) {
+      state = oldState; // Rollback
+    }
+  }
+
+  /// Adds a new card to a specific group via the table view's AddItemRow.
+  ///
+  /// Places the card in the first Kanban column with the given [groupId].
+  Future<void> addCardToGroup({
+    required String groupId,
+    required String title,
+  }) async {
+    final firstColumn =
+        state.columns.isNotEmpty ? state.columns.first : null;
+    if (firstColumn == null) return;
+
+    final cardRepo = _ref.read(boardCardRepositoryProvider);
+    final allCards =
+        state.cardsByColumn.values.expand((c) => c).toList();
+    final groupCards =
+        allCards.where((c) => c.groupId == groupId).toList();
+    final lastPos = groupCards.isEmpty
+        ? 0
+        : groupCards
+            .map((c) => c.position)
+            .reduce((a, b) => a > b ? a : b);
+
+    final card = await cardRepo.createCard(
+      boardId: _boardId,
+      columnId: firstColumn.id,
+      title: title,
+      position: lastPos + 1000,
+      groupId: groupId,
+    );
+
+    final updatedCardsByColumn = Map<String, List<BoardCard>>.from(
+      state.cardsByColumn
+          .map((k, v) => MapEntry(k, List<BoardCard>.from(v))),
+    );
+    updatedCardsByColumn.putIfAbsent(firstColumn.id, () => []);
+    updatedCardsByColumn[firstColumn.id]!.add(card);
+    state = state.copyWith(cardsByColumn: updatedCardsByColumn);
+  }
+
+  /// Updates the board's table-view metadata and persists to Supabase.
+  Future<void> updateBoardMetadata(BoardMetadata metadata) async {
+    final boardRepo = _ref.read(boardRepositoryProvider);
+    await boardRepo.updateMetadata(_boardId, metadata.toJson());
+    state = state.copyWith(board: state.board?.copyWith(metadata: metadata));
+  }
+
+  // ─── Private helpers ──────────────────────────────
+
+  /// Finds a card by ID across all columns.
+  BoardCard? _findCard(String cardId) {
+    for (final cards in state.cardsByColumn.values) {
+      for (final card in cards) {
+        if (card.id == cardId) return card;
+      }
+    }
+    return null;
+  }
+
+  /// Updates a single field on a card in local state.
+  void _updateCardInState(String cardId, String field, dynamic value) {
+    final updatedCardsByColumn = Map<String, List<BoardCard>>.from(
+      state.cardsByColumn
+          .map((k, v) => MapEntry(k, List<BoardCard>.from(v))),
+    );
+
+    for (final entry in updatedCardsByColumn.entries) {
+      final idx = entry.value.indexWhere((c) => c.id == cardId);
+      if (idx != -1) {
+        final card = entry.value[idx];
+        BoardCard updated;
+        switch (field) {
+          case 'status_label':
+            updated = card.copyWith(statusLabel: value as String?);
+          case 'status_color':
+            updated = card.copyWith(statusColor: value as String?);
+          case 'priority':
+            updated = card.copyWith(priority: value as int?);
+          case 'assignee_id':
+            updated = card.copyWith(assigneeId: value as String?);
+          case 'due_date':
+            updated = card.copyWith(dueDate: value as DateTime?);
+          case 'start_date':
+            updated = card.copyWith(startDate: value as DateTime?);
+          case 'title':
+            updated = card.copyWith(title: value as String?);
+          case 'description':
+            updated = card.copyWith(description: value as String?);
+          case 'group_id':
+            updated = card.copyWith(groupId: value as String?);
+          default:
+            // Custom field
+            final customFields =
+                Map<String, dynamic>.from(card.customFields);
+            customFields[field] = value;
+            updated = card.copyWith(customFields: customFields);
+        }
+        entry.value[idx] = updated;
+        break;
+      }
+    }
+
+    state = state.copyWith(cardsByColumn: updatedCardsByColumn);
   }
 
   /// Refreshes all data from the server.
