@@ -58,6 +58,7 @@ class TimeBlockCard extends StatelessWidget {
         width: double.infinity,
         height: block.height,
         margin: const EdgeInsets.only(left: 56, right: 8),
+        clipBehavior: Clip.hardEdge,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12),
           color: cardColor,
@@ -82,7 +83,7 @@ class TimeBlockCard extends StatelessWidget {
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),
-              if (block.height > 40) ...[
+              if (block.height >= 56) ...[
                 const SizedBox(height: 2),
                 Text(
                   '${_formatMinute(block.startMinute)} - ${_formatMinute(block.endMinute)}',
@@ -91,7 +92,7 @@ class TimeBlockCard extends StatelessWidget {
                   ),
                 ),
               ],
-              if (block.height > 60) ...[
+              if (block.height >= 72) ...[
                 const SizedBox(height: 4),
                 Container(
                   padding:
@@ -106,7 +107,7 @@ class TimeBlockCard extends StatelessWidget {
                   ),
                 ),
               ],
-              if (onComplete != null && block.height > 40) ...[
+              if (onComplete != null && block.height >= 88) ...[
                 const Spacer(),
                 Align(
                   alignment: Alignment.bottomRight,
