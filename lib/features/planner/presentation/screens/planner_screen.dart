@@ -12,6 +12,7 @@ import '../../../profile/domain/profile_model.dart';
 import '../../../profile/presentation/providers/profile_provider.dart';
 import '../../../tasks/presentation/providers/task_provider.dart';
 import '../../domain/plannable_item_model.dart';
+import '../../domain/schedule_block_model.dart';
 import '../providers/plannable_items_provider.dart';
 import '../providers/planner_provider.dart';
 import '../providers/real_items_bridge_provider.dart';
@@ -98,7 +99,7 @@ class _PlannerScreenState extends ConsumerState<PlannerScreen> {
       body: Column(
         children: [
           // Plannable items panel (visible cards for each item)
-          _buildItemsPanel(itemsAsync, userId),
+          _buildItemsPanel(itemsAsync, userId, plannerState.blocks),
 
           // Main content area
           Expanded(
@@ -129,12 +130,18 @@ class _PlannerScreenState extends ConsumerState<PlannerScreen> {
   Widget _buildItemsPanel(
     AsyncValue<List<PlannableItem>> itemsAsync,
     String userId,
+    List<ScheduleBlock> scheduledBlocks,
   ) {
     return itemsAsync.when(
       data: (items) {
         if (items.isEmpty) return const SizedBox.shrink();
+        // Filter out items that have already been scheduled into time blocks
+        final scheduledIds = scheduledBlocks.map((b) => b.itemId).toSet();
+        final unscheduledItems =
+            items.where((item) => !scheduledIds.contains(item.id)).toList();
+        if (unscheduledItems.isEmpty) return const SizedBox.shrink();
         return PlannableItemsPanel(
-          items: items,
+          items: unscheduledItems,
           onDelete: (itemId) => _deleteItem(userId, itemId),
           onAddItem: () => _showAddItemSheet(userId),
         );
@@ -289,11 +296,12 @@ class _PlannerScreenState extends ConsumerState<PlannerScreen> {
       );
     }
 
-    // Show small add FAB when blocks exist (so user can add more items)
+    // Show "Regenerate" FAB when blocks exist so user can re-plan easily
     if (plannerState.blocks.isNotEmpty) {
-      return FloatingActionButton.small(
-        onPressed: () => _showAddItemSheet(userId),
-        child: const Icon(Icons.add_rounded),
+      return FloatingActionButton.extended(
+        icon: const Icon(Icons.refresh_rounded),
+        label: const Text('Regenerate'),
+        onPressed: () => _generate(userId),
       );
     }
 
