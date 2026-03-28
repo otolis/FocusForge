@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Security & Hardening
 status: completed
-stopped_at: Completed 12-01-PLAN.md
-last_updated: "2026-03-28T14:37:39.721Z"
-last_activity: "2026-03-28 - Completed 12-02: Planner source linkage for idempotent import"
+stopped_at: Completed 13-02-PLAN.md
+last_updated: "2026-03-28T14:56:08Z"
+last_activity: "2026-03-28 - Completed 13-02: Recurring task edit lifecycle (load, upsert, regenerate)"
 progress:
   total_phases: 5
-  completed_phases: 4
-  total_plans: 12
-  completed_plans: 12
+  completed_phases: 5
+  total_plans: 14
+  completed_plans: 14
 ---
 
 # Project State
@@ -24,12 +24,12 @@ See: .planning/PROJECT.md (updated 2026-03-28)
 
 ## Current Position
 
-Phase: 12-auth-planner-lifecycle-cleanup (Plan 2/2 complete)
-Plan: 12-02 complete
-Status: Phase 12 complete
-Last activity: 2026-03-28 - Completed 12-02: Planner source linkage for idempotent import
+Phase: 13-onboarding-recurring-tasks-filter-fixes (Plan 2/2 complete)
+Plan: 13-02 complete
+Status: Phase 13 complete
+Last activity: 2026-03-28 - Completed 13-02: Recurring task edit lifecycle (load, upsert, regenerate)
 
-Progress (Phase 12): [====================] 2/2 plans (100%)
+Progress (Phase 13): [====================] 2/2 plans (100%)
 
 ## Performance Metrics
 
@@ -58,6 +58,8 @@ Progress (Phase 12): [====================] 2/2 plans (100%)
 | Phase 11 P01 | 2min | 2 tasks | 3 files |
 | Phase 12 P02 | 2min | 2 tasks | 6 files |
 | Phase 12 P01 | 2min | 3 tasks | 5 files |
+| Phase 13 P01 | 1min | 2 tasks | 4 files |
+| Phase 13 P02 | 2min | 2 tasks | 1 files |
 
 ## Accumulated Context
 
@@ -103,6 +105,10 @@ Recent decisions affecting current work:
 - [Phase 12]: Spread-if pattern for conditional widget lists in Column children
 - [Phase 12]: Cancel previous FCM subscription before creating new one in manageFcmToken to prevent accumulation
 - [Phase 12]: Self-join on board_members for shares_board_with() co-membership check
+- [Phase 13]: Onboarding guard placed after deep-link consumption to preserve cold-start deep links for onboarded users
+- [Phase 13]: lt(dateTo + 1 day) instead of lte(dateTo) for time-inclusive end-date filtering in both repository and provider
+- [Phase 13]: ValueKey on RecurrencePicker forces destroy+recreate when async config loads (initState only reads initial values once)
+- [Phase 13]: Delete incomplete future instances before regeneration to avoid NOT EXISTS guard blocking new pattern
 
 ### Pending Todos
 
@@ -134,6 +140,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-28T14:37:39.718Z
-Stopped at: Completed 12-01-PLAN.md
+Last session: 2026-03-28T14:56:08Z
+Stopped at: Completed 13-02-PLAN.md
 Resume file: None
