@@ -34,7 +34,7 @@ class SuggestionChips extends StatelessWidget {
 
     if (parsed.suggestedDeadline != null) {
       chips.add(
-        ActionChip(
+        InputChip(
           avatar: Icon(Icons.calendar_today,
               size: 16, color: context.colorScheme.primary),
           label: Text(_formatDate(parsed.suggestedDeadline!)),
@@ -47,7 +47,7 @@ class SuggestionChips extends StatelessWidget {
 
     if (parsed.suggestedPriority != null) {
       chips.add(
-        ActionChip(
+        InputChip(
           avatar: Icon(_priorityIcon(parsed.suggestedPriority!),
               size: 16,
               color: _priorityColor(parsed.suggestedPriority!)),
@@ -64,7 +64,7 @@ class SuggestionChips extends StatelessWidget {
           ? ' (${(parsed.categoryConfidence * 100).toStringAsFixed(0)}%)'
           : '';
       chips.add(
-        ActionChip(
+        InputChip(
           avatar: Icon(Icons.label_outline,
               size: 16, color: context.colorScheme.tertiary),
           label: Text(

@@ -1,4 +1,5 @@
 import 'package:appflowy_board/appflowy_board.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -131,26 +132,38 @@ class _BoardDetailScreenState extends ConsumerState<BoardDetailScreen> {
     }
 
     if (state.error != null) {
+      debugPrint('[BoardDetailScreen] Error: ${state.error}');
       return Scaffold(
         appBar: AppBar(title: const Text('Board')),
         body: Center(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                'Could not load board. Check your connection.',
-                style: context.textTheme.bodyMedium,
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 16),
-              FilledButton.icon(
-                onPressed: () => ref
-                    .read(boardDetailProvider(widget.boardId).notifier)
-                    .refresh(),
-                icon: const Icon(Icons.refresh),
-                label: const Text('Retry'),
-              ),
-            ],
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(
+                  Icons.error_outline,
+                  size: 48,
+                  color: context.colorScheme.error,
+                ),
+                const SizedBox(height: 16),
+                Text(
+                  kDebugMode
+                      ? 'Error loading board:\n${state.error}'
+                      : 'Could not load board. Please try again.',
+                  style: context.textTheme.bodyMedium,
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 16),
+                FilledButton.icon(
+                  onPressed: () => ref
+                      .read(boardDetailProvider(widget.boardId).notifier)
+                      .refresh(),
+                  icon: const Icon(Icons.refresh),
+                  label: const Text('Retry'),
+                ),
+              ],
+            ),
           ),
         ),
       );

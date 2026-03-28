@@ -31,13 +31,23 @@ class ScheduleBlock {
   double get height => durationMinutes * TimelineConstants.pixelsPerMinute;
 
   /// Parses a schedule block from the Groq API / Edge Function response.
+  ///
+  /// Numeric fields use `(value as num).toInt()` instead of `as int` because
+  /// Dart's [jsonDecode] produces [double] for JSON numbers that include a
+  /// decimal point (e.g. `540.0`). LLM output is non-deterministic, so the
+  /// Edge Function may occasionally return floats even though the prompt
+  /// requests integers.
+  ///
+  /// The [energyLevel] lookup is case-insensitive to tolerate LLM
+  /// capitalisation variations (e.g. "High" instead of "high").
   factory ScheduleBlock.fromJson(Map<String, dynamic> json) {
+    final rawEnergy = (json['energy_level'] as String).toLowerCase();
     return ScheduleBlock(
       itemId: json['item_id'] as String,
       title: json['title'] as String,
-      startMinute: json['start_minute'] as int,
-      durationMinutes: json['duration_minutes'] as int,
-      energyLevel: EnergyLevel.values.byName(json['energy_level'] as String),
+      startMinute: (json['start_minute'] as num).toInt(),
+      durationMinutes: (json['duration_minutes'] as num).toInt(),
+      energyLevel: EnergyLevel.values.byName(rawEnergy),
     );
   }
 

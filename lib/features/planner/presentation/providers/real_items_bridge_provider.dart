@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../tasks/presentation/providers/task_provider.dart';
 import '../../../tasks/domain/task_model.dart';
 import '../../../habits/presentation/providers/habit_provider.dart';
-import '../../../habits/domain/habit_model.dart';
 import '../../domain/plannable_item_model.dart';
 
 /// Bridges real tasks and habits into [PlannableItem] objects for the AI planner.

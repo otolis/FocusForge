@@ -12,10 +12,14 @@ class AppTheme {
 
   /// Light theme with cream surfaces and teal accents.
   static ThemeData light() {
+    final baseTextTheme = createTextTheme();
     return ThemeData(
       useMaterial3: true,
       colorScheme: lightColorScheme,
-      textTheme: createTextTheme(),
+      textTheme: baseTextTheme.apply(
+        bodyColor: lightColorScheme.onSurface,
+        displayColor: lightColorScheme.onSurface,
+      ),
       inputDecorationTheme: InputDecorationTheme(
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
@@ -60,10 +64,14 @@ class AppTheme {
 
   /// Dark theme with warm charcoal surfaces and sage green accents.
   static ThemeData dark() {
+    final baseTextTheme = createTextTheme();
     return ThemeData(
       useMaterial3: true,
       colorScheme: darkColorScheme,
-      textTheme: createTextTheme(),
+      textTheme: baseTextTheme.apply(
+        bodyColor: darkColorScheme.onSurface,
+        displayColor: darkColorScheme.onSurface,
+      ),
       inputDecorationTheme: InputDecorationTheme(
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),

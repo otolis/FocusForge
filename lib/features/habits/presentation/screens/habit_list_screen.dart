@@ -62,6 +62,7 @@ class HabitListScreen extends ConsumerWidget {
 
     if (result != null) {
       await ref.read(habitListProvider.notifier).checkIn(habit.id, count: result);
+      if (!context.mounted) return;
       _checkMilestoneHaptic(context, ref, habit.id);
     }
   }
@@ -182,6 +183,7 @@ class HabitListScreen extends ConsumerWidget {
               await ref
                   .read(habitListProvider.notifier)
                   .checkIn(habit.id, count: 1);
+              if (!context.mounted) return;
               _checkMilestoneHaptic(context, ref, habit.id);
             } catch (e) {
               if (context.mounted) {

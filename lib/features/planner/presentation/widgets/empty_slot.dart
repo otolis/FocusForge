@@ -29,7 +29,7 @@ class EmptySlot extends StatelessWidget {
         margin: const EdgeInsets.only(left: 56, right: 8),
         decoration: BoxDecoration(
           border: Border.all(
-            color: context.colorScheme.outlineVariant.withOpacity(0.3),
+            color: context.colorScheme.outlineVariant.withValues(alpha:0.3),
             width: 1,
           ),
           borderRadius: BorderRadius.circular(8),
@@ -38,7 +38,7 @@ class EmptySlot extends StatelessWidget {
           child: Icon(
             Icons.add_rounded,
             size: 20,
-            color: context.colorScheme.onSurfaceVariant.withOpacity(0.4),
+            color: context.colorScheme.onSurfaceVariant.withValues(alpha:0.4),
           ),
         ),
       ),

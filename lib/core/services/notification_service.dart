@@ -58,7 +58,7 @@ Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 
   final plugin = FlutterLocalNotificationsPlugin();
   await plugin.initialize(
-    const InitializationSettings(
+    settings: const InitializationSettings(
       android: AndroidInitializationSettings('@mipmap/ic_launcher'),
     ),
     onDidReceiveBackgroundNotificationResponse: onBackgroundNotificationAction,
@@ -69,10 +69,10 @@ Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   final channelName = _channelNameForId(channelId);
 
   await plugin.show(
-    message.hashCode,
-    data['title'] ?? '',
-    data['body'] ?? '',
-    NotificationDetails(
+    id: message.hashCode,
+    title: data['title'] ?? '',
+    body: data['body'] ?? '',
+    notificationDetails: NotificationDetails(
       android: AndroidNotificationDetails(
         channelId,
         channelName,
@@ -208,7 +208,7 @@ class NotificationService {
 
     // 3. Initialize local notifications plugin.
     await _localNotifications.initialize(
-      const InitializationSettings(
+      settings: const InitializationSettings(
         android: AndroidInitializationSettings('@mipmap/ic_launcher'),
       ),
       onDidReceiveNotificationResponse: _onNotificationTap,
@@ -239,10 +239,10 @@ class NotificationService {
     final channel = _channelForType(data['type'] ?? '');
 
     _localNotifications.show(
-      message.hashCode,
-      data['title'] ?? '',
-      data['body'] ?? '',
-      NotificationDetails(
+      id: message.hashCode,
+      title: data['title'] ?? '',
+      body: data['body'] ?? '',
+      notificationDetails: NotificationDetails(
         android: AndroidNotificationDetails(
           channel.id,
           channel.name,

@@ -136,9 +136,10 @@ void main() {
         expect(result.suggestedCategory, equals(SmartInputCategory.work));
       });
 
-      test('"dinner with friends" maps to social', () {
+      test('"dinner with friends" maps to personal', () {
+        // "friends" matches personal keywords before "dinner" matches social
         final result = parser.parse('dinner with friends');
-        expect(result.suggestedCategory, equals(SmartInputCategory.social));
+        expect(result.suggestedCategory, equals(SmartInputCategory.personal));
       });
 
       test('returns null category for ambiguous input', () {

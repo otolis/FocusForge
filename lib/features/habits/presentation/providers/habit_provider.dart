@@ -22,7 +22,7 @@ final habitListProvider =
 /// Uses [AsyncNotifier] because habit data is fetched asynchronously from
 /// Supabase. Each mutation re-fetches the full list to ensure consistency.
 class HabitListNotifier extends AsyncNotifier<List<Habit>> {
-  late final HabitRepository _repository;
+  late HabitRepository _repository;
 
   @override
   Future<List<Habit>> build() async {

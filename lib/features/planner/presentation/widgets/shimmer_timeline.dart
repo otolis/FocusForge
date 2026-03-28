@@ -64,7 +64,7 @@ class _ShimmerTimelineState extends State<ShimmerTimeline>
                     ),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(12),
-                      color: fillColor.withOpacity(0.5),
+                      color: fillColor.withValues(alpha:0.5),
                     ),
                   ),
                 ),

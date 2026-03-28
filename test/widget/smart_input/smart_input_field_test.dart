@@ -5,7 +5,7 @@ import 'package:focusforge/features/smart_input/domain/parsed_task_input.dart';
 import 'package:focusforge/features/smart_input/presentation/providers/smart_input_provider.dart';
 import 'package:focusforge/features/smart_input/presentation/widgets/smart_input_field.dart';
 
-import '../../../helpers/test_helpers.dart';
+import '../../helpers/test_helpers.dart';
 
 void main() {
   group('SmartInputField', () {

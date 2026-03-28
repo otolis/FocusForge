@@ -25,8 +25,12 @@ class Board {
       id: json['id'] as String,
       name: json['name'] as String,
       createdBy: json['created_by'] as String,
-      createdAt: DateTime.parse(json['created_at'] as String),
-      updatedAt: DateTime.parse(json['updated_at'] as String),
+      createdAt: json['created_at'] != null
+          ? DateTime.parse(json['created_at'] as String)
+          : DateTime.now(),
+      updatedAt: json['updated_at'] != null
+          ? DateTime.parse(json['updated_at'] as String)
+          : DateTime.now(),
     );
   }
 
@@ -74,7 +78,9 @@ class BoardColumn {
       boardId: json['board_id'] as String,
       name: json['name'] as String,
       position: json['position'] as int,
-      createdAt: DateTime.parse(json['created_at'] as String),
+      createdAt: json['created_at'] != null
+          ? DateTime.parse(json['created_at'] as String)
+          : DateTime.now(),
     );
   }
 
@@ -142,8 +148,12 @@ class BoardCard {
           : null,
       position: json['position'] as int,
       createdBy: json['created_by'] as String,
-      createdAt: DateTime.parse(json['created_at'] as String),
-      updatedAt: DateTime.parse(json['updated_at'] as String),
+      createdAt: json['created_at'] != null
+          ? DateTime.parse(json['created_at'] as String)
+          : DateTime.now(),
+      updatedAt: json['updated_at'] != null
+          ? DateTime.parse(json['updated_at'] as String)
+          : DateTime.now(),
     );
   }
 
@@ -191,8 +201,8 @@ class BoardCard {
 /// A member of a board with a specific role.
 ///
 /// Stored in the `public.board_members` junction table. The `displayName`
-/// and `avatarUrl` fields are populated from a join with `profiles` and
-/// are not stored in the `board_members` table itself.
+/// and `avatarUrl` fields are populated from a separate `profiles` query
+/// and are not stored in the `board_members` table itself.
 class BoardMember {
   final String id;
   final String boardId;
@@ -217,7 +227,7 @@ class BoardMember {
   });
 
   factory BoardMember.fromJson(Map<String, dynamic> json) {
-    // Handle joined profile data (from .select('*, profiles:user_id(...)'))
+    // Handle optional profile data (merged by BoardMemberRepository)
     final profileData = json['profiles'] as Map<String, dynamic>?;
 
     return BoardMember(
@@ -225,7 +235,9 @@ class BoardMember {
       boardId: json['board_id'] as String,
       userId: json['user_id'] as String,
       role: BoardRole.fromString(json['role'] as String),
-      invitedAt: DateTime.parse(json['invited_at'] as String),
+      invitedAt: json['invited_at'] != null
+          ? DateTime.parse(json['invited_at'] as String)
+          : DateTime.now(),
       displayName: profileData?['display_name'] as String?,
       avatarUrl: profileData?['avatar_url'] as String?,
     );

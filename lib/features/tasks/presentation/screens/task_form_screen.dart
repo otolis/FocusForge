@@ -10,14 +10,12 @@ import '../../../../shared/widgets/app_button.dart';
 import '../../domain/task_model.dart';
 import '../../domain/category_model.dart';
 import '../../domain/recurrence_model.dart';
-import '../../data/task_repository.dart';
 import '../providers/task_provider.dart';
 import '../providers/category_provider.dart';
 import '../widgets/priority_badge.dart';
 import '../widgets/recurrence_picker.dart';
 import '../../../smart_input/presentation/widgets/smart_input_field.dart';
 import '../../../smart_input/domain/parsed_task_input.dart';
-import '../../../smart_input/domain/smart_input_category.dart';
 import '../../../smart_input/presentation/providers/smart_input_provider.dart';
 
 /// Full-screen form for creating and editing tasks.
@@ -379,7 +377,9 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen> {
   Future<void> _createTask() async {
     final now = DateTime.now();
     final taskId = const Uuid().v4();
-    final userId = Supabase.instance.client.auth.currentUser!.id;
+    final currentUser = Supabase.instance.client.auth.currentUser;
+    if (currentUser == null) return;
+    final userId = currentUser.id;
 
     final task = Task(
       id: taskId,

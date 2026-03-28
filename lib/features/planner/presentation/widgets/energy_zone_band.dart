@@ -35,12 +35,12 @@ class EnergyZoneBand extends StatelessWidget {
     switch (zone) {
       case EnergyZone.peak:
         return isDark
-            ? const Color(0xFFFF8F00).withOpacity(0.08)
-            : const Color(0xFFFFF3E0).withOpacity(0.4);
+            ? const Color(0xFFFF8F00).withValues(alpha:0.08)
+            : const Color(0xFFFFF3E0).withValues(alpha:0.4);
       case EnergyZone.low:
         return isDark
-            ? const Color(0xFF81C784).withOpacity(0.08)
-            : const Color(0xFFE8F5E9).withOpacity(0.4);
+            ? const Color(0xFF81C784).withValues(alpha:0.08)
+            : const Color(0xFFE8F5E9).withValues(alpha:0.4);
       case EnergyZone.regular:
         return Colors.transparent;
     }

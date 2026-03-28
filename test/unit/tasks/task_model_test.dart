@@ -1,10 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:focusforge/features/tasks/domain/task_model.dart';
-import 'package:focusforge/features/tasks/domain/category_model.dart';
 
 void main() {
   group('Task', () {
-    final now = DateTime(2026, 3, 17, 10, 0);
     final json = {
       'id': 'task-1',
       'user_id': 'user-1',

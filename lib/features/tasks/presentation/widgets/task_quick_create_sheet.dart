@@ -9,15 +9,23 @@ import '../../domain/task_model.dart';
 import '../providers/task_provider.dart';
 import 'priority_badge.dart';
 import '../../../smart_input/presentation/widgets/smart_input_field.dart';
-import '../../../smart_input/domain/parsed_task_input.dart';
 import '../../../smart_input/presentation/providers/smart_input_provider.dart';
 
 /// A bottom sheet for quick task creation with title, priority, and deadline.
 ///
 /// Supports keyboard avoidance via [isScrollControlled] and [viewInsets].
 /// "More details" navigates to the full create form and closes this sheet.
+///
+/// Accepts an optional [parentContext] used for GoRouter navigation. The
+/// bottom sheet is pushed onto the shell navigator whose overlay may not
+/// inherit [InheritedGoRouter]. By capturing the caller's context we
+/// guarantee that `context.push` can locate the router.
 class TaskQuickCreateSheet extends ConsumerStatefulWidget {
-  const TaskQuickCreateSheet({super.key});
+  const TaskQuickCreateSheet({super.key, this.parentContext});
+
+  /// The context of the screen that opened this sheet, used for GoRouter
+  /// navigation (e.g. the "More details" button).
+  final BuildContext? parentContext;
 
   /// Convenience method to show the quick-create sheet as a modal.
   static void show(BuildContext context) {
@@ -25,7 +33,7 @@ class TaskQuickCreateSheet extends ConsumerStatefulWidget {
       context: context,
       isScrollControlled: true,
       showDragHandle: true,
-      builder: (context) => const TaskQuickCreateSheet(),
+      builder: (_) => TaskQuickCreateSheet(parentContext: context),
     );
   }
 
@@ -44,7 +52,13 @@ class _TaskQuickCreateSheetState extends ConsumerState<TaskQuickCreateSheet> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(smartInputInitProvider);
+      if (!mounted) return;
+      try {
+        ref.read(smartInputInitProvider);
+      } catch (_) {
+        // Non-fatal: smart input init may fail (e.g. missing TFLite model).
+        // Regex-only parsing still works without TFLite.
+      }
     });
   }
 
@@ -80,10 +94,16 @@ class _TaskQuickCreateSheetState extends ConsumerState<TaskQuickCreateSheet> {
       return;
     }
 
+    final currentUser = Supabase.instance.client.auth.currentUser;
+    if (currentUser == null) {
+      Navigator.pop(context);
+      return;
+    }
+
     final now = DateTime.now();
     final task = Task(
       id: const Uuid().v4(),
-      userId: Supabase.instance.client.auth.currentUser!.id,
+      userId: currentUser.id,
       title: title,
       priority: _priority,
       deadline: _deadline,
@@ -164,9 +184,8 @@ class _TaskQuickCreateSheetState extends ConsumerState<TaskQuickCreateSheet> {
                 onSelected: (selected) {
                   if (selected) setState(() => _priority = p);
                 },
-                selectedColor:
-                    PriorityBadge.priorityColors[p]?.withValues(alpha: 0.25),
-                checkmarkColor: PriorityBadge.priorityColors[p],
+                selectedColor: PriorityBadge.colorFor(p, context.colorScheme).withValues(alpha: 0.25),
+                checkmarkColor: PriorityBadge.colorFor(p, context.colorScheme),
               );
             }).toList(),
           ),
@@ -203,8 +222,15 @@ class _TaskQuickCreateSheetState extends ConsumerState<TaskQuickCreateSheet> {
             children: [
               TextButton(
                 onPressed: () {
+                  // Capture the navigation context before popping the sheet.
+                  // The bottom sheet's own context may not have GoRouter
+                  // in its ancestry (shell navigator overlay issue), so we
+                  // use the parent screen's context for go_router navigation.
+                  final navContext = widget.parentContext ?? context;
                   Navigator.pop(context);
-                  context.push('/tasks/create');
+                  if (navContext.mounted) {
+                    navContext.push('/tasks/create');
+                  }
                 },
                 child: const Text('More details'),
               ),

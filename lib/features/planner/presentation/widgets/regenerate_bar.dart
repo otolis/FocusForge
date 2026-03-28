@@ -48,7 +48,7 @@ class _RegenerateBarState extends ConsumerState<RegenerateBar> {
                 decoration: InputDecoration(
                   hintText: 'e.g., I have a meeting at 2 PM',
                   hintStyle: context.textTheme.bodySmall?.copyWith(
-                    color: context.colorScheme.onSurfaceVariant.withOpacity(0.6),
+                    color: context.colorScheme.onSurfaceVariant.withValues(alpha:0.6),
                   ),
                   border: InputBorder.none,
                   isDense: true,

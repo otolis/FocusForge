@@ -59,17 +59,20 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
   Widget build(BuildContext context) {
     final state = ref.watch(authStateProvider);
 
-    // Show error SnackBar when auth fails.
+    // Show SnackBar when auth fails or when email confirmation is needed.
     ref.listen<AppAuthState>(authStateProvider, (previous, next) {
-      if (next.status == AuthStatus.error && next.errorMessage != null) {
+      if (next.errorMessage != null) {
+        final isError = next.status == AuthStatus.error;
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
               next.errorMessage!,
               style: const TextStyle(color: Colors.white),
             ),
-            backgroundColor: context.colorScheme.error,
-            duration: const Duration(seconds: 4),
+            backgroundColor: isError
+                ? context.colorScheme.error
+                : context.colorScheme.primary,
+            duration: Duration(seconds: isError ? 4 : 6),
           ),
         );
       }

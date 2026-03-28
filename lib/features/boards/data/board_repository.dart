@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../domain/board_model.dart';
@@ -18,25 +19,66 @@ class BoardRepository {
   /// In Progress, Done).
   ///
   /// Returns the new board ID.
+  ///
+  /// Throws a descriptive error if the migration hasn't been applied.
   Future<String> createBoard(String name) async {
     final userId = _client.auth.currentUser!.id;
-    final result = await _client.rpc('create_board_with_defaults', params: {
-      'board_name': name,
-      'creator_id': userId,
-    });
-    return result as String;
+    try {
+      final result = await _client.rpc('create_board_with_defaults', params: {
+        'board_name': name,
+        'creator_id': userId,
+      });
+      return result as String;
+    } on PostgrestException catch (e) {
+      debugPrint('[BoardRepository] createBoard PostgrestException: '
+          'code=${e.code}, message=${e.message}, details=${e.details}');
+      final msg = e.message.toLowerCase();
+      final code = e.code ?? '';
+      if (code == '42883' || // function does not exist
+          code == '42P01' || // relation does not exist
+          msg.contains('does not exist')) {
+        throw Exception(
+          'Boards feature requires database setup. '
+          'Run migration 00003_create_boards.sql on your Supabase instance.',
+        );
+      }
+      rethrow;
+    }
   }
 
   /// Fetches all boards the current user is a member of.
   ///
   /// RLS ensures only boards where the user has a `board_members` row
-  /// are returned.
+  /// are returned. Logs every step for diagnostics.
   Future<List<Board>> getBoards() async {
-    final data = await _client
-        .from('boards')
-        .select()
-        .order('created_at', ascending: false);
-    return data.map((json) => Board.fromJson(json)).toList();
+    debugPrint('[BoardRepository] getBoards() called');
+    debugPrint('[BoardRepository] user=${_client.auth.currentUser?.id}');
+    try {
+      final data = await _client
+          .from('boards')
+          .select()
+          .order('created_at', ascending: false);
+      debugPrint('[BoardRepository] getBoards returned ${data.length} rows');
+      final boards = <Board>[];
+      for (int i = 0; i < data.length; i++) {
+        try {
+          boards.add(Board.fromJson(data[i]));
+        } catch (parseError) {
+          debugPrint('[BoardRepository] Board.fromJson failed on row $i: '
+              '$parseError  raw=${ data[i]}');
+          // Skip malformed rows instead of crashing the whole list
+        }
+      }
+      return boards;
+    } on PostgrestException catch (e) {
+      debugPrint('[BoardRepository] getBoards PostgrestException: '
+          'code=${e.code}, message=${e.message}, details=${e.details}');
+      rethrow;
+    } catch (e, stack) {
+      debugPrint('[BoardRepository] getBoards unexpected error: $e');
+      debugPrint('[BoardRepository] Stack trace: $stack');
+      rethrow;
+    }
   }
 
   /// Fetches a single board by ID.

@@ -56,7 +56,7 @@ class _AddItemSheetState extends ConsumerState<AddItemSheet> {
                 width: 32,
                 height: 4,
                 decoration: BoxDecoration(
-                  color: context.colorScheme.onSurfaceVariant.withOpacity(0.3),
+                  color: context.colorScheme.onSurfaceVariant.withValues(alpha:0.3),
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
@@ -203,6 +203,12 @@ class _AddItemSheetState extends ConsumerState<AddItemSheet> {
           energyLevel: _selectedEnergy,
         );
 
-    if (mounted) Navigator.pop(context);
+    if (mounted) {
+      // Show confirmation before closing so the user knows the item was added
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Added "$title" to your plan')),
+      );
+      Navigator.pop(context);
+    }
   }
 }

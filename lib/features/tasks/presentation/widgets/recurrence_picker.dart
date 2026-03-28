@@ -92,7 +92,7 @@ class _RecurrencePickerState extends State<RecurrencePicker> {
         Text('Repeat', style: context.textTheme.titleSmall),
         const SizedBox(height: 8),
         DropdownButtonFormField<RecurrenceType?>(
-          value: _selectedType,
+          initialValue: _selectedType,
           decoration: const InputDecoration(
             prefixIcon: Icon(Icons.repeat),
           ),
@@ -170,7 +170,7 @@ class _RecurrencePickerState extends State<RecurrencePicker> {
 
   Widget _buildMonthlySelector() {
     return DropdownButtonFormField<int>(
-      value: _selectedDayOfMonth,
+      initialValue: _selectedDayOfMonth,
       decoration: const InputDecoration(
         labelText: 'Day of month',
         prefixIcon: Icon(Icons.calendar_month),

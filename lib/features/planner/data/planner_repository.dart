@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../profile/domain/profile_model.dart';
@@ -68,32 +69,52 @@ class PlannerRepository {
 
   /// Invokes the `generate-schedule` Edge Function with the given items
   /// and energy pattern, returning the AI-generated schedule blocks.
+  ///
+  /// The Supabase SDK throws [FunctionException] for non-2xx responses,
+  /// so callers should catch that (or a general [Exception]) for error
+  /// handling. On success the SDK returns a [FunctionResponse] whose
+  /// [data] is the already-decoded JSON body.
   Future<List<ScheduleBlock>> generateSchedule({
     required List<PlannableItem> items,
     required EnergyPattern energyPattern,
     String? constraints,
   }) async {
+    final body = {
+      'items': items.map((i) => i.toEdgeFunctionJson()).toList(),
+      'energyPattern': energyPattern.toJson(),
+      'constraints': constraints,
+    };
+    debugPrint('[PlannerRepo] Invoking generate-schedule with '
+        '${items.length} items');
+
     final response = await _client.functions.invoke(
       'generate-schedule',
-      body: {
-        'items': items.map((i) => i.toEdgeFunctionJson()).toList(),
-        'energyPattern': energyPattern.toJson(),
-        'constraints': constraints,
-      },
+      body: body,
     );
 
-    if (response.status != 200) {
-      final errorData = response.data;
+    final data = response.data;
+    debugPrint('[PlannerRepo] Response status: ${response.status}, '
+        'data type: ${data.runtimeType}');
+
+    if (data is! Map<String, dynamic>) {
       throw Exception(
-        'Schedule generation failed: ${errorData is Map ? errorData['error'] : errorData}',
+        'Schedule generation returned unexpected data type: '
+        '${data.runtimeType}',
       );
     }
 
-    final data = response.data as Map<String, dynamic>;
-    final blocks = (data['blocks'] as List)
+    final blocksList = data['blocks'];
+    if (blocksList is! List) {
+      throw Exception(
+        'Schedule response missing "blocks" array. '
+        'Response keys: ${data.keys.toList()}',
+      );
+    }
+
+    debugPrint('[PlannerRepo] Parsing ${blocksList.length} blocks');
+    return blocksList
         .map((b) => ScheduleBlock.fromJson(b as Map<String, dynamic>))
         .toList();
-    return blocks;
   }
 
   /// Saves (upserts) the generated schedule blocks for the given date.

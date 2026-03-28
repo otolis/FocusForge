@@ -37,7 +37,7 @@ class HourMarker extends StatelessWidget {
             child: Divider(
               height: 1,
               thickness: 0.5,
-              color: context.colorScheme.outlineVariant.withOpacity(0.3),
+              color: context.colorScheme.outlineVariant.withValues(alpha:0.3),
             ),
           ),
         ],

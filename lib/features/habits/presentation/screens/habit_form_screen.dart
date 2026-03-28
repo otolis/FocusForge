@@ -240,7 +240,7 @@ class _HabitFormScreenState extends ConsumerState<HabitFormScreen> {
 
                     // Frequency dropdown
                     DropdownButtonFormField<HabitFrequency>(
-                      value: _frequency,
+                      initialValue: _frequency,
                       decoration: const InputDecoration(
                         labelText: 'Frequency',
                       ),

@@ -1,12 +1,40 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../../../core/utils/extensions.dart';
 import '../../../../shared/widgets/app_text_field.dart';
-import '../../domain/board_model.dart';
 import '../providers/board_list_provider.dart';
 import '../widgets/board_grid_card.dart';
+
+/// Converts a raw error into a user-readable message.
+///
+/// For [PostgrestException]s the Supabase error code / message is surfaced so
+/// the developer (or savvy user) can tell what went wrong. Network and
+/// socket errors get a generic connectivity hint.
+String _userFriendlyError(Object error) {
+  if (error is PostgrestException) {
+    final code = error.code ?? '';
+    final msg = error.message;
+    // Table / function missing => migration not applied
+    if (code == '42P01' || code == '42883' || msg.contains('does not exist')) {
+      return 'The boards database tables have not been created yet.\n\n'
+          'Run migration 00003_create_boards.sql in your Supabase SQL editor.';
+    }
+    return 'Database error ($code): $msg';
+  }
+  final s = error.toString().toLowerCase();
+  if (s.contains('socket') || s.contains('network') || s.contains('timeout')) {
+    return 'Could not reach the server. Check your connection and try again.';
+  }
+  // In debug builds show the raw error; in release keep it terse.
+  if (kDebugMode) {
+    return 'Unexpected error:\n$error';
+  }
+  return 'Something went wrong. Please try again.';
+}
 
 /// Displays the user's boards in a 2-column card grid with a FAB to
 /// create new boards.
@@ -26,24 +54,39 @@ class BoardListScreen extends ConsumerWidget {
       ),
       body: boardsAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (error, stack) => Center(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                'Could not load boards. Check your connection.',
-                style: context.textTheme.bodyMedium,
-                textAlign: TextAlign.center,
+        error: (error, stack) {
+          debugPrint('[BoardListScreen] Error loading boards: $error');
+          debugPrint('[BoardListScreen] Stack: $stack');
+          // Show actual error context so the user can act on it.
+          final message = _userFriendlyError(error);
+          return Center(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    Icons.error_outline,
+                    size: 48,
+                    color: context.colorScheme.error,
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    message,
+                    style: context.textTheme.bodyMedium,
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 16),
+                  FilledButton.icon(
+                    onPressed: () => ref.invalidate(boardListProvider),
+                    icon: const Icon(Icons.refresh),
+                    label: const Text('Retry'),
+                  ),
+                ],
               ),
-              const SizedBox(height: 16),
-              FilledButton.icon(
-                onPressed: () => ref.invalidate(boardListProvider),
-                icon: const Icon(Icons.refresh),
-                label: const Text('Retry'),
-              ),
-            ],
-          ),
-        ),
+            ),
+          );
+        },
         data: (boards) {
           if (boards.isEmpty) {
             return Center(
@@ -147,9 +190,10 @@ class BoardListScreen extends ConsumerWidget {
         parentContext.push('/boards/$boardId');
       }
     } catch (e) {
+      debugPrint('[BoardListScreen] Create board failed: $e');
       if (parentContext.mounted) {
         ScaffoldMessenger.of(parentContext).showSnackBar(
-          const SnackBar(content: Text('Could not create board. Please try again.')),
+          SnackBar(content: Text(_userFriendlyError(e))),
         );
       }
     }

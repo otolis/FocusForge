@@ -18,7 +18,7 @@ class ThemeNotifier extends Notifier<ThemeMode> {
   /// Loads the persisted theme mode from [SharedPreferences].
   Future<void> _loadTheme() async {
     final prefs = await SharedPreferences.getInstance();
-    if (!ref.mounted) return;
+    // Guard removed — Notifier lifecycle managed by Riverpod
     final themeIndex = prefs.getInt(_key) ?? 2; // default: system
     state = ThemeMode.values[themeIndex];
   }

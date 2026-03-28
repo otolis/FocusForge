@@ -16,6 +16,7 @@ import '../providers/plannable_items_provider.dart';
 import '../providers/planner_provider.dart';
 import '../providers/real_items_bridge_provider.dart';
 import '../widgets/add_item_sheet.dart';
+import '../widgets/plannable_items_panel.dart';
 import '../widgets/regenerate_bar.dart';
 import '../widgets/shimmer_timeline.dart';
 import '../widgets/timeline_widget.dart';
@@ -96,8 +97,8 @@ class _PlannerScreenState extends ConsumerState<PlannerScreen> {
       ),
       body: Column(
         children: [
-          // Items count badge
-          _buildItemsCountBar(itemsAsync),
+          // Plannable items panel (visible cards for each item)
+          _buildItemsPanel(itemsAsync, userId),
 
           // Main content area
           Expanded(
@@ -122,36 +123,28 @@ class _PlannerScreenState extends ConsumerState<PlannerScreen> {
     );
   }
 
-  Widget _buildItemsCountBar(AsyncValue<List<PlannableItem>> itemsAsync) {
+  Widget _buildItemsPanel(
+    AsyncValue<List<PlannableItem>> itemsAsync,
+    String userId,
+  ) {
     return itemsAsync.when(
       data: (items) {
         if (items.isEmpty) return const SizedBox.shrink();
-        return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-          child: Row(
-            children: [
-              Icon(
-                Icons.checklist_rounded,
-                size: 16,
-                color: Theme.of(context)
-                    .colorScheme
-                    .onSurfaceVariant
-                    .withOpacity(0.7),
-              ),
-              const SizedBox(width: 6),
-              Text(
-                '${items.length} item${items.length == 1 ? '' : 's'} to schedule',
-                style: context.textTheme.labelMedium?.copyWith(
-                  color: context.colorScheme.onSurfaceVariant,
-                ),
-              ),
-            ],
-          ),
+        return PlannableItemsPanel(
+          items: items,
+          onDelete: (itemId) => _deleteItem(userId, itemId),
+          onAddItem: () => _showAddItemSheet(userId),
         );
       },
       loading: () => const SizedBox.shrink(),
       error: (_, __) => const SizedBox.shrink(),
     );
+  }
+
+  Future<void> _deleteItem(String userId, String itemId) async {
+    await ref
+        .read(plannableItemsProvider(userId).notifier)
+        .deleteItem(itemId);
   }
 
   Widget _buildBody(
@@ -177,7 +170,7 @@ class _PlannerScreenState extends ConsumerState<PlannerScreen> {
               Icon(
                 Icons.warning_amber_rounded,
                 size: 64,
-                color: context.colorScheme.error.withOpacity(0.7),
+                color: context.colorScheme.error.withValues(alpha:0.7),
               ),
               const SizedBox(height: 16),
               Text(
@@ -211,7 +204,7 @@ class _PlannerScreenState extends ConsumerState<PlannerScreen> {
               Icon(
                 Icons.auto_awesome_rounded,
                 size: 64,
-                color: context.colorScheme.primary.withOpacity(0.5),
+                color: context.colorScheme.primary.withValues(alpha:0.5),
               ),
               const SizedBox(height: 16),
               Text(

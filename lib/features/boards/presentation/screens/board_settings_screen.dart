@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -225,7 +226,9 @@ class _BoardSettingsScreenState extends ConsumerState<BoardSettingsScreen> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Text('Could not load board settings.'),
+              Text(kDebugMode
+                  ? 'Error: ${state.error}'
+                  : 'Could not load board settings.'),
               const SizedBox(height: 16),
               FilledButton.icon(
                 onPressed: () => ref

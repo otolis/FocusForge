@@ -1,6 +1,4 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../../data/board_repository.dart';
 import '../../data/board_column_repository.dart';
 import '../../data/board_card_repository.dart';
 import '../../data/board_member_repository.dart';

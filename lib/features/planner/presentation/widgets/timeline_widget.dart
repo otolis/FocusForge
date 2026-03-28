@@ -149,7 +149,7 @@ class _TimelineWidgetState extends State<TimelineWidget> {
     final lines = <Widget>[];
     final guideOpacity = _isDragActive ? 0.4 : 0.15;
     final lineColor =
-        context.colorScheme.outlineVariant.withOpacity(guideOpacity);
+        context.colorScheme.outlineVariant.withValues(alpha:guideOpacity);
 
     for (var hour = TimelineConstants.startHour;
         hour < TimelineConstants.endHour;

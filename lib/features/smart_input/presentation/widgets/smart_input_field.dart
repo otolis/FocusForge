@@ -37,6 +37,12 @@ class _SmartInputFieldState extends ConsumerState<SmartInputField> {
   Timer? _debounceTimer;
   String _currentInput = '';
 
+  /// Tracks the last parsed result that was sent to [onParsed].
+  /// Only notify the parent when the result actually changes, preventing
+  /// an infinite rebuild loop (build -> onParsed -> parent setState ->
+  /// child rebuild -> onParsed -> ...).
+  ParsedTaskInput? _lastNotifiedParsed;
+
   @override
   void initState() {
     super.initState();
@@ -64,12 +70,18 @@ class _SmartInputFieldState extends ConsumerState<SmartInputField> {
     // Read parsed result reactively
     final parsed = _currentInput.isNotEmpty
         ? ref.watch(smartInputProvider(_currentInput))
-        : ParsedTaskInput(rawText: '', extractedTitle: '');
+        : const ParsedTaskInput(rawText: '', extractedTitle: '');
 
-    // Notify parent of parsed result
-    if (_currentInput.isNotEmpty) {
+    // Notify parent of parsed result only when it changes.
+    // Without this guard, every build schedules a postFrameCallback that
+    // calls onParsed, which triggers parent setState, which rebuilds this
+    // widget, which schedules another callback — creating an infinite loop.
+    if (_currentInput.isNotEmpty && parsed != _lastNotifiedParsed) {
+      _lastNotifiedParsed = parsed;
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        widget.onParsed?.call(parsed);
+        if (mounted) {
+          widget.onParsed?.call(parsed);
+        }
       });
     }
 

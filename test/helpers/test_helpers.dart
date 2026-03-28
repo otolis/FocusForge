@@ -21,7 +21,7 @@ Widget createTestApp(
   return ProviderScope(
     overrides: overrides.cast(),
     child: MaterialApp(
-      home: child,
+      home: Scaffold(body: child),
     ),
   );
 }

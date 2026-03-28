@@ -65,7 +65,7 @@ class HabitCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final completedTint = habit.isCompletedToday
-        ? context.colorScheme.primary.withOpacity(0.05)
+        ? context.colorScheme.primary.withValues(alpha:0.05)
         : null;
 
     return Card(

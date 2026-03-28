@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../data/board_repository.dart';
@@ -21,7 +22,15 @@ class BoardListNotifier extends AsyncNotifier<List<Board>> {
   @override
   Future<List<Board>> build() async {
     final repo = ref.read(boardRepositoryProvider);
-    return repo.getBoards();
+    try {
+      final boards = await repo.getBoards();
+      debugPrint('[BoardListNotifier] Loaded ${boards.length} boards');
+      return boards;
+    } catch (e, stack) {
+      debugPrint('[BoardListNotifier] Failed to load boards: $e');
+      debugPrint('[BoardListNotifier] Stack: $stack');
+      rethrow;
+    }
   }
 
   /// Creates a new board with default columns and owner membership.

@@ -64,7 +64,7 @@ class TimeBlockCard extends StatelessWidget {
           boxShadow: isDragging
               ? [
                   BoxShadow(
-                    color: context.colorScheme.shadow.withOpacity(0.3),
+                    color: context.colorScheme.shadow.withValues(alpha:0.3),
                     blurRadius: 8,
                     offset: const Offset(0, 4),
                   ),
@@ -98,7 +98,7 @@ class TimeBlockCard extends StatelessWidget {
                       const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(4),
-                    color: context.colorScheme.surface.withOpacity(0.6),
+                    color: context.colorScheme.surface.withValues(alpha:0.6),
                   ),
                   child: Text(
                     '${block.durationMinutes} min',
@@ -183,7 +183,7 @@ class DraggableTimeBlockCard extends StatelessWidget {
       feedback: Material(
         elevation: 8,
         borderRadius: BorderRadius.circular(12),
-        shadowColor: context.colorScheme.shadow.withOpacity(0.3),
+        shadowColor: context.colorScheme.shadow.withValues(alpha:0.3),
         child: SizedBox(
           width: cardWidth,
           height: block.height,

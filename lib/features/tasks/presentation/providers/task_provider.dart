@@ -32,13 +32,13 @@ class TaskListNotifier extends AsyncNotifier<List<Task>> {
   Future<void> addTask(Task task) async {
     final repo = ref.read(taskRepositoryProvider);
     final created = await repo.createTask(task);
-    state = AsyncData([...state.value ?? [], created]);
+    state = AsyncData(<Task>[...state.value ?? <Task>[], created]);
   }
 
   Future<void> updateTask(Task task) async {
     final repo = ref.read(taskRepositoryProvider);
     final updated = await repo.updateTask(task);
-    final tasks = [...state.value ?? []];
+    final tasks = [...state.value ?? <Task>[]];
     final index = tasks.indexWhere((t) => t.id == task.id);
     if (index != -1) {
       tasks[index] = updated;
@@ -47,7 +47,7 @@ class TaskListNotifier extends AsyncNotifier<List<Task>> {
   }
 
   Future<void> toggleComplete(String taskId) async {
-    final tasks = [...state.value ?? []];
+    final tasks = [...state.value ?? <Task>[]];
     final index = tasks.indexWhere((t) => t.id == taskId);
     if (index == -1) return;
     final previous = tasks[index];
@@ -69,7 +69,7 @@ class TaskListNotifier extends AsyncNotifier<List<Task>> {
   }
 
   Future<void> deleteTask(String taskId) async {
-    final tasks = [...state.value ?? []];
+    final tasks = [...state.value ?? <Task>[]];
     final previous = tasks.toList();
     tasks.removeWhere((t) => t.id == taskId);
     state = AsyncData(tasks);
@@ -83,6 +83,10 @@ class TaskListNotifier extends AsyncNotifier<List<Task>> {
   }
 
   String _getCurrentUserId() {
-    return Supabase.instance.client.auth.currentUser!.id;
+    final user = Supabase.instance.client.auth.currentUser;
+    if (user == null) {
+      throw StateError('No authenticated user. Cannot fetch tasks.');
+    }
+    return user.id;
   }
 }

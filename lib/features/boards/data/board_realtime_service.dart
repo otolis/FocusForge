@@ -79,10 +79,10 @@ class BoardRealtimeService {
   /// from the presence payload.
   List<Map<String, dynamic>> get onlineMembers {
     if (_channel == null) return [];
-    final state = _channel!.presenceState();
-    // presenceState() returns Map<String, List<Presence>>
-    return state.values
-        .expand((presences) => presences)
+    final presenceState = _channel!.presenceState();
+    // presenceState() returns List<SinglePresenceState>
+    return presenceState
+        .expand((s) => s.presences)
         .map((p) => p.payload)
         .toList();
   }

@@ -107,10 +107,8 @@ class _TaskFilterBarState extends ConsumerState<TaskFilterBar> {
                                 ? filter.copyWith(priority: p)
                                 : filter.copyWith(clearPriority: true);
                       },
-                      selectedColor: PriorityBadge
-                          .priorityColors[p]
-                          ?.withValues(alpha: 0.25),
-                      checkmarkColor: PriorityBadge.priorityColors[p],
+                      selectedColor: PriorityBadge.colorFor(p, context.colorScheme).withValues(alpha: 0.25),
+                      checkmarkColor: PriorityBadge.colorFor(p, context.colorScheme),
                     ),
                   );
                 }),

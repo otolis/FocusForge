@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../profile/domain/profile_model.dart';
@@ -53,12 +54,13 @@ class PlannerNotifier extends StateNotifier<PlannerState> {
   /// Loads a previously cached schedule for the given [date].
   ///
   /// If no cached schedule exists, sets blocks to an empty list.
+  /// Always clears any stale error from a previous generation attempt.
   Future<void> loadCachedSchedule(DateTime date) async {
     final cached = await _repo.loadCachedSchedule(_userId, date);
     if (cached != null) {
-      state = state.copyWith(blocks: cached);
+      state = state.copyWith(blocks: cached, error: null);
     } else {
-      state = state.copyWith(blocks: []);
+      state = state.copyWith(blocks: [], error: null);
     }
   }
 
@@ -67,6 +69,9 @@ class PlannerNotifier extends StateNotifier<PlannerState> {
   /// Sets [PlannerState.isGenerating] during the API call. On success,
   /// resolves overlaps and saves to the database. On failure, sets the
   /// error message.
+  ///
+  /// The caching step (saveSchedule) is wrapped in its own try-catch so
+  /// a database error does not mask a successfully generated schedule.
   Future<void> generateSchedule({
     required List<PlannableItem> items,
     required EnergyPattern energyPattern,
@@ -82,14 +87,26 @@ class PlannerNotifier extends StateNotifier<PlannerState> {
       final resolved = TimelineConstants.resolveOverlaps(blocks);
       state = state.copyWith(blocks: resolved, isGenerating: false);
 
-      // Cache the generated schedule
-      await _repo.saveSchedule(
-        userId: _userId,
-        planDate: DateTime.now(),
-        blocks: resolved,
-        constraintsText: constraints,
-      );
-    } catch (e) {
+      // Cache the generated schedule. Errors here should not hide the
+      // successfully generated blocks from the UI.
+      try {
+        await _repo.saveSchedule(
+          userId: _userId,
+          planDate: DateTime.now(),
+          blocks: resolved,
+          constraintsText: constraints,
+        );
+      } catch (cacheError) {
+        // Log but do not propagate — the schedule is already displayed.
+        assert(() {
+          // ignore: avoid_print
+          print('[PlannerNotifier] Failed to cache schedule: $cacheError');
+          return true;
+        }());
+      }
+    } catch (e, st) {
+      debugPrint('[PlannerNotifier] generateSchedule FAILED: $e');
+      debugPrint('[PlannerNotifier] Stack trace:\n$st');
       state = state.copyWith(
         error: e.toString(),
         isGenerating: false,

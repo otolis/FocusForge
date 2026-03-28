@@ -57,6 +57,12 @@ class AuthStateNotifier extends Notifier<AppAuthState> {
   }
 
   /// Signs up with email and password, optionally setting a display name.
+  ///
+  /// When Supabase email confirmation is enabled (the default), the sign-up
+  /// succeeds but returns a null session. In that case the user is NOT
+  /// authenticated yet — they need to confirm their email first. We set the
+  /// state to [AuthStatus.unauthenticated] with a message prompting them to
+  /// check their inbox.
   Future<void> signUp({
     required String email,
     required String password,
@@ -69,6 +75,19 @@ class AuthStateNotifier extends Notifier<AppAuthState> {
         password: password,
         displayName: displayName,
       );
+
+      // When email confirmation is required, Supabase returns a user but
+      // no session. Treat this as "needs confirmation", not authenticated.
+      if (response.session == null) {
+        state = state.copyWith(
+          status: AuthStatus.unauthenticated,
+          errorMessage:
+              'Account created! Please check your email and confirm your '
+              'address before signing in.',
+        );
+        return;
+      }
+
       state = state.copyWith(
         status: AuthStatus.authenticated,
         user: response.user,
@@ -161,6 +180,9 @@ class AuthStateNotifier extends Notifier<AppAuthState> {
   String _mapError(Object error) {
     final message = error.toString().toLowerCase();
 
+    if (message.contains('email not confirmed')) {
+      return 'Please verify your email before signing in. Check your inbox for a confirmation link.';
+    }
     if (message.contains('invalid login credentials')) {
       return 'Incorrect email or password. Please try again.';
     }
