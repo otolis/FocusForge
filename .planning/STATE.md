@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Security & Hardening
 status: executing
-stopped_at: Completed 09-03-PLAN.md
+stopped_at: Completed 09-04-PLAN.md
 last_updated: "2026-03-28T12:00:00.000Z"
-last_activity: "2026-03-28 -- Completed 09-03: Table structural widgets for Monday.com-style board"
+last_activity: "2026-03-28 -- Completed 09-04: Table provider, widget composition, config sheets, view switcher"
 progress:
   total_phases: 4
   completed_phases: 0
   total_plans: 5
-  completed_plans: 3
+  completed_plans: 4
 ---
 
 # Project State
@@ -24,12 +24,12 @@ See: .planning/PROJECT.md (updated 2026-03-28)
 
 ## Current Position
 
-Phase: 09-redesign-boards-ui-monday-layout (Plan 3/4 complete)
-Plan: 09-04 next
+Phase: 09-redesign-boards-ui-monday-layout (Plan 4/4 complete)
+Plan: 09-05 next
 Status: Executing phase 9
-Last activity: 2026-03-28 - Completed quick task 260328-jqu: Fix bottom overflow by 2.0 pixels on planner time block card
+Last activity: 2026-03-28 - Completed 09-04: Table provider, widget composition, config sheets, view switcher
 
-Progress (Phase 9): [===============_____] 3/4 plans (75%)
+Progress (Phase 9): [====================] 4/5 plans (80%)
 
 ## Performance Metrics
 
@@ -58,6 +58,10 @@ Progress (Phase 9): [===============_____] 3/4 plans (75%)
 Decisions are logged in PROJECT.md Key Decisions table.
 Recent decisions affecting current work:
 
+- [09-04]: BoardTableProvider is a separate StateNotifier from BoardDetailProvider -- table-specific state isolated from board data state
+- [09-04]: Row reorder uses LongPressDraggable/DragTarget instead of ReorderableListView -- avoids nesting conflicts
+- [09-04]: Table view is default (activeIndex=0) per locked user decision
+- [09-04]: 4 ScrollControllers for scroll sync with bool guards to prevent recursion
 - [09-03]: TableHeaderRow uses LongPressDraggable/DragTarget for column reorder with visual drop zone indicator
 - [09-03]: TableDataRow uses Dart switch expression on ColumnType for type-safe cell dispatch to all 9 types
 - [09-03]: Zebra striping uses hardcoded hex colors toggled by theme brightness
@@ -98,6 +102,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-28T12:00:00.000Z
-Stopped at: Completed 09-03-PLAN.md
+Last session: 2026-03-28T12:27:30.000Z
+Stopped at: Completed 09-04-PLAN.md
 Resume file: None
