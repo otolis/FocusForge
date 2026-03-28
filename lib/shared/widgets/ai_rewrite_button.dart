@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-import '../../core/constants/supabase_constants.dart';
 
 /// A small icon button that calls the `rewrite-title` Supabase Edge Function
 /// to polish the text in the given [controller].
@@ -47,9 +46,6 @@ class _AiRewriteButtonState extends ConsumerState<AiRewriteButton> {
     try {
       final response = await Supabase.instance.client.functions.invoke(
         'rewrite-title',
-        headers: {
-          'Authorization': 'Bearer ${SupabaseConstants.anonKey}',
-        },
         body: {'title': rawTitle},
       );
 

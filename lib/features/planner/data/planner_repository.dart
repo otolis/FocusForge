@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+
 import '../../profile/domain/profile_model.dart';
 import '../domain/plannable_item_model.dart';
 import '../domain/schedule_block_model.dart';
@@ -76,6 +77,8 @@ class PlannerRepository {
   /// so callers should catch that (or a general [Exception]) for error
   /// handling. On success the SDK returns a [FunctionResponse] whose
   /// [data] is the already-decoded JSON body.
+  ///
+  /// The supabase_flutter SDK automatically includes the user's session JWT.
   Future<List<ScheduleBlock>> generateSchedule({
     required List<PlannableItem> items,
     required EnergyPattern energyPattern,
