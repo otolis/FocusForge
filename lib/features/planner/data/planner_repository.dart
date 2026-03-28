@@ -80,11 +80,13 @@ class PlannerRepository {
     required List<PlannableItem> items,
     required EnergyPattern energyPattern,
     String? constraints,
+    DateTime? planDate,
   }) async {
     final body = {
       'items': items.map((i) => i.toEdgeFunctionJson()).toList(),
       'energyPattern': energyPattern.toJson(),
       'constraints': constraints,
+      if (planDate != null) 'planDate': planDate.toIso8601String().split('T').first,
     };
     debugPrint('[PlannerRepo] Invoking generate-schedule with '
         '${items.length} items');

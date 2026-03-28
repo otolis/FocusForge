@@ -59,7 +59,7 @@ Respond with valid JSON in this exact format:
   return prompt
 }
 
-function buildUserPrompt(items: PlannableItem[]): string {
+function buildUserPrompt(items: PlannableItem[], planDate?: string): string {
   const itemList = items
     .map(
       (item) =>
@@ -67,7 +67,8 @@ function buildUserPrompt(items: PlannableItem[]): string {
     )
     .join('\n')
 
-  return `Schedule these items for today:\n${itemList}`
+  const dateLabel = planDate || 'today'
+  return `Schedule these items for ${dateLabel}:\n${itemList}`
 }
 
 Deno.serve(async (req: Request) => {
@@ -77,7 +78,7 @@ Deno.serve(async (req: Request) => {
   }
 
   try {
-    const { items, energyPattern, constraints } = await req.json()
+    const { items, energyPattern, constraints, planDate } = await req.json()
 
     const apiKey = Deno.env.get('GROQ_API_KEY')
     if (!apiKey) {
@@ -85,7 +86,7 @@ Deno.serve(async (req: Request) => {
     }
 
     const systemPrompt = buildSystemPrompt(energyPattern, constraints)
-    const userPrompt = buildUserPrompt(items)
+    const userPrompt = buildUserPrompt(items, planDate)
 
     const response = await fetch(
       'https://api.groq.com/openai/v1/chat/completions',

@@ -76,6 +76,7 @@ class PlannerNotifier extends StateNotifier<PlannerState> {
     required List<PlannableItem> items,
     required EnergyPattern energyPattern,
     String? constraints,
+    DateTime? planDate,
   }) async {
     state = state.copyWith(isGenerating: true, error: null);
     try {
@@ -83,6 +84,7 @@ class PlannerNotifier extends StateNotifier<PlannerState> {
         items: items,
         energyPattern: energyPattern,
         constraints: constraints,
+        planDate: planDate,
       );
       final resolved = TimelineConstants.resolveOverlaps(blocks);
       state = state.copyWith(blocks: resolved, isGenerating: false);
@@ -92,7 +94,7 @@ class PlannerNotifier extends StateNotifier<PlannerState> {
       try {
         await _repo.saveSchedule(
           userId: _userId,
-          planDate: DateTime.now(),
+          planDate: planDate ?? DateTime.now(),
           blocks: resolved,
           constraintsText: constraints,
         );

@@ -383,11 +383,14 @@ class _PlannerScreenState extends ConsumerState<PlannerScreen> {
     final energyPattern = profile?.energyPattern ?? const EnergyPattern();
     final constraints =
         ref.read(plannerProvider(userId)).constraintsText;
+    final selectedDate =
+        ref.read(plannableItemsProvider(userId).notifier).selectedDate;
 
     await ref.read(plannerProvider(userId).notifier).generateSchedule(
           items: items,
           energyPattern: energyPattern,
           constraints: constraints,
+          planDate: selectedDate,
         );
   }
 
