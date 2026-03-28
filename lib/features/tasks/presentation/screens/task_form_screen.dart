@@ -41,6 +41,8 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen> {
   DateTime? _selectedDeadline;
   RecurrenceConfig? _recurrenceConfig;
   bool _isLoading = false;
+  bool _isFetchingTask = false;
+  String? _fetchError;
 
   bool get _isEditMode => widget.taskId != null;
 
@@ -67,11 +69,34 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen> {
     }
   }
 
-  void _loadExistingTask() {
+  Future<void> _loadExistingTask() async {
+    // Fast path: try the in-memory list first.
     final tasks = ref.read(taskListProvider).valueOrNull ?? [];
-    final task = tasks.where((t) => t.id == widget.taskId).firstOrNull;
-    if (task == null) return;
+    final memTask = tasks.where((t) => t.id == widget.taskId).firstOrNull;
+    if (memTask != null) {
+      _populateForm(memTask);
+      return;
+    }
 
+    // Slow path: fetch from Supabase (deep-link / direct navigation).
+    setState(() => _isFetchingTask = true);
+    try {
+      final task = await ref.read(taskRepositoryProvider).getTaskById(widget.taskId!);
+      if (!mounted) return;
+      if (task == null) {
+        setState(() => _fetchError = 'Task not found');
+      } else {
+        _populateForm(task);
+      }
+    } catch (_) {
+      if (!mounted) return;
+      setState(() => _fetchError = 'Could not load task. Please try again.');
+    } finally {
+      if (mounted) setState(() => _isFetchingTask = false);
+    }
+  }
+
+  void _populateForm(Task task) {
     setState(() {
       _existingTask = task;
       _titleController.text = task.title;
@@ -155,7 +180,25 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen> {
             ),
         ],
       ),
-      body: Form(
+      body: _isFetchingTask
+          ? const Center(child: CircularProgressIndicator())
+          : _fetchError != null
+              ? Center(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(Icons.error_outline, size: 48, color: Theme.of(context).colorScheme.error),
+                      const SizedBox(height: 16),
+                      Text(_fetchError!, style: Theme.of(context).textTheme.bodyLarge),
+                      const SizedBox(height: 16),
+                      TextButton(
+                        onPressed: () => context.pop(),
+                        child: const Text('Go Back'),
+                      ),
+                    ],
+                  ),
+                )
+              : Form(
         key: _formKey,
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(16),
@@ -426,6 +469,7 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen> {
   }
 
   Future<void> _updateTask() async {
+    if (_existingTask == null) return;
     final task = _existingTask!.copyWith(
       title: _titleController.text.trim(),
       description: _descriptionController.text.trim().isEmpty
@@ -467,6 +511,7 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen> {
   }
 
   Future<void> _saveRecurringTask(String scope) async {
+    if (_existingTask == null) return;
     setState(() => _isLoading = true);
     try {
       if (scope == 'this') {
@@ -591,6 +636,7 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen> {
   }
 
   Future<void> _deleteRecurringTask(String scope) async {
+    if (_existingTask == null) return;
     setState(() => _isLoading = true);
     try {
       if (scope == 'this') {

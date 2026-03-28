@@ -29,6 +29,17 @@ class TaskRepository {
     return data.map((json) => Task.fromJson(json)).toList();
   }
 
+  /// Fetches a single task by ID. Returns null if not found.
+  Future<Task?> getTaskById(String taskId) async {
+    final data = await _client
+        .from('tasks')
+        .select('*, categories(*)')
+        .eq('id', taskId)
+        .maybeSingle();
+    if (data == null) return null;
+    return Task.fromJson(data);
+  }
+
   Future<Task> createTask(Task task) async {
     final data = await _client.from('tasks').insert(task.toJson()).select('*, categories(*)').single();
     return Task.fromJson(data);
