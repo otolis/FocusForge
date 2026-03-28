@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Security & Hardening
 status: executing
-stopped_at: Completed 09-05-PLAN.md (Task 1 only; Task 2 human checkpoint pending)
-last_updated: "2026-03-28T12:38:01.938Z"
-last_activity: "2026-03-28 - Completed 09-04: Table provider, widget composition, config sheets, view switcher"
+stopped_at: Completed 10-02-PLAN.md
+last_updated: "2026-03-28T13:18:18.447Z"
+last_activity: "2026-03-28 - Completed 10-02: Client-side RPC & Edge Function auth hardening"
 progress:
-  total_phases: 4
-  completed_phases: 1
-  total_plans: 5
-  completed_plans: 5
+  total_phases: 5
+  completed_phases: 2
+  total_plans: 7
+  completed_plans: 7
 ---
 
 # Project State
@@ -24,12 +24,12 @@ See: .planning/PROJECT.md (updated 2026-03-28)
 
 ## Current Position
 
-Phase: 09-redesign-boards-ui-monday-layout (Plan 4/4 complete)
-Plan: 09-05 next
-Status: Executing phase 9
-Last activity: 2026-03-28 - Completed 09-04: Table provider, widget composition, config sheets, view switcher
+Phase: 10-rpc-security-hardening (Plan 2/2 complete)
+Plan: 10-02 complete
+Status: Phase 10 complete
+Last activity: 2026-03-28 - Completed 10-02: Client-side RPC & Edge Function auth hardening
 
-Progress (Phase 9): [====================] 4/5 plans (80%)
+Progress (Phase 10): [====================] 2/2 plans (100%)
 
 ## Performance Metrics
 
@@ -51,6 +51,8 @@ Progress (Phase 9): [====================] 4/5 plans (80%)
 
 *Updated after each plan completion*
 | Phase 09 P05 | 5min | 1 tasks | 1 files |
+| Phase 10 P02 | 2min | 2 tasks | 4 files |
+| Phase 10 P01 | 2min | 2 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -72,11 +74,16 @@ Recent decisions affecting current work:
 - [09-01]: Groups stored in boards.metadata JSONB, not a separate table -- simpler schema, fewer joins
 - [09-01]: BoardMetadata provides sensible defaults when null/empty for backward compat
 - [09-01]: ColumnType uses snake_case serialization for due_date to match DB convention
+- [10-02]: Removed userId parameter from searchTasks() entirely -- callers no longer supply it
+- [10-02]: Removed SupabaseConstants imports when no longer referenced (clean unused import removal)
 - [v1.1]: Three parallel phases (10-12) touching independent subsystems: SQL migrations, notification service, auth/planner/lifecycle
 - [v1.1]: Phase numbering starts at 10 (phases 1-8 = v1.0, phase 9 = boards redesign)
 - [v1.0]: Parallel phase execution proven successful (phases 2-7 ran concurrently)
 - [Phase 09]: Used implements-based fake repositories to bypass Supabase constructor in widget tests
 - [Phase 09]: Suppressed pre-existing GroupFooterWidget overflow in tests via FlutterError.onError override
+- [Phase 10]: All 4 RPC rewrites in a single additive migration (00010) rather than separate files
+- [Phase 10]: Helper functions (is_board_member/owner/editor) revoked from anon but kept for authenticated to preserve RLS
+- [Phase 10]: Edge Function comments updated to reflect JWT-required security posture
 
 ### Pending Todos
 
@@ -86,6 +93,9 @@ None yet.
 
 - Phase 9 added (v1.0): Redesign boards UI to Monday.com-style layout (independent of v1.1)
 - Phases 10-12 added (v1.1): Security & Hardening milestone
+- Phase 10 expanded (v1.1): Added JWT verification for Edge Functions (SEC-05, SEC-06) from audit
+- Phase 11 expanded (v1.1): Added reminder scheduling gap (NOTIF-06) and quiet hours timezone (NOTIF-07) from audit
+- Phase 13 added (v1.1): Onboarding bypass, recurring task editing, date-range filter fixes from audit
 
 ### Blockers/Concerns
 
@@ -105,6 +115,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-28T12:38:01.935Z
-Stopped at: Completed 09-05-PLAN.md (Task 1 only; Task 2 human checkpoint pending)
+Last session: 2026-03-28T13:18:18.444Z
+Stopped at: Completed 10-01-PLAN.md
 Resume file: None
