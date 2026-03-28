@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Security & Hardening
-status: executing
-stopped_at: Completed 10-02-PLAN.md
-last_updated: "2026-03-28T13:18:18.447Z"
-last_activity: "2026-03-28 - Completed 10-02: Client-side RPC & Edge Function auth hardening"
+status: completed
+stopped_at: Completed 11-02-PLAN.md
+last_updated: "2026-03-28T14:12:01.938Z"
+last_activity: "2026-03-28 - Completed 11-03: Timezone-aware quiet hours"
 progress:
   total_phases: 5
-  completed_phases: 2
-  total_plans: 7
-  completed_plans: 7
+  completed_phases: 3
+  total_plans: 10
+  completed_plans: 10
 ---
 
 # Project State
@@ -24,12 +24,12 @@ See: .planning/PROJECT.md (updated 2026-03-28)
 
 ## Current Position
 
-Phase: 10-rpc-security-hardening (Plan 2/2 complete)
-Plan: 10-02 complete
-Status: Phase 10 complete
-Last activity: 2026-03-28 - Completed 10-02: Client-side RPC & Edge Function auth hardening
+Phase: 11-notification-logic-fixes (Plan 3/3 complete)
+Plan: 11-03 complete
+Status: Phase 11 complete
+Last activity: 2026-03-28 - Completed 11-03: Timezone-aware quiet hours
 
-Progress (Phase 10): [====================] 2/2 plans (100%)
+Progress (Phase 11): [====================] 3/3 plans (100%)
 
 ## Performance Metrics
 
@@ -53,6 +53,8 @@ Progress (Phase 10): [====================] 2/2 plans (100%)
 | Phase 09 P05 | 5min | 1 tasks | 1 files |
 | Phase 10 P02 | 2min | 2 tasks | 4 files |
 | Phase 10 P01 | 2min | 2 tasks | 2 files |
+| Phase 11 P02 | 2min | 2 tasks | 3 files |
+| Phase 11 P03 | 2min | 2 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -84,6 +86,12 @@ Recent decisions affecting current work:
 - [Phase 10]: All 4 RPC rewrites in a single additive migration (00010) rather than separate files
 - [Phase 10]: Helper functions (is_board_member/owner/editor) revoked from anon but kept for authenticated to preserve RLS
 - [Phase 10]: Edge Function comments updated to reflect JWT-required security posture
+- [Phase 11]: Reminder scheduling co-located with repository DB writes, not in viewmodel or service layer
+- [Phase 11]: Non-critical try/catch wrapping so scheduling failures never break primary CRUD operations
+- [Phase 11]: Idempotent delete-then-insert pattern for task reminder updates
+- [Phase 11]: toLocaleString with timeZone option for UTC-to-local conversion in Deno (no external library)
+- [Phase 11]: NULL timezone defaults to UTC -- safe fallback for existing users
+- [Phase 11]: copyWith clearTimezone bool pattern for explicitly nullifying timezone field
 
 ### Pending Todos
 
@@ -115,6 +123,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-28T13:18:18.444Z
-Stopped at: Completed 10-01-PLAN.md
+Last session: 2026-03-28T14:12:01.936Z
+Stopped at: Completed 11-02-PLAN.md
 Resume file: None
