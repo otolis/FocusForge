@@ -43,15 +43,30 @@ function isCategoryEnabled(reminder: any): boolean {
 /**
  * Determine if the current time falls within the user's quiet hours window.
  * Handles midnight wrap-around (e.g., 22:00 -- 07:00).
+ *
+ * Converts the current UTC time to the user's timezone before comparing
+ * against quiet hours start/end. Falls back to UTC if timezone is null.
  */
 function isInQuietHours(
   now: Date,
   quietStart: string | null,
-  quietEnd: string | null
+  quietEnd: string | null,
+  timezone: string | null
 ): boolean {
   if (!quietStart || !quietEnd) return false
 
-  const currentMinutes = now.getHours() * 60 + now.getMinutes()
+  // Convert current UTC time to user's local time
+  const tz = timezone || 'UTC'
+  let currentMinutes: number
+  try {
+    const userLocalStr = now.toLocaleString('en-US', { timeZone: tz })
+    const userLocal = new Date(userLocalStr)
+    currentMinutes = userLocal.getHours() * 60 + userLocal.getMinutes()
+  } catch {
+    // Invalid timezone string -- fall back to UTC
+    currentMinutes = now.getUTCHours() * 60 + now.getUTCMinutes()
+  }
+
   const [startH, startM] = quietStart.split(':').map(Number)
   const [endH, endM] = quietEnd.split(':').map(Number)
   const start = startH * 60 + startM
@@ -211,7 +226,7 @@ Deno.serve(async (_req: Request) => {
       // Filter: quiet hours
       if (
         reminder.quiet_hours_enabled &&
-        isInQuietHours(now, reminder.quiet_start, reminder.quiet_end)
+        isInQuietHours(now, reminder.quiet_start, reminder.quiet_end, reminder.timezone)
       ) {
         continue
       }
