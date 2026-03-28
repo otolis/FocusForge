@@ -162,7 +162,7 @@ class _PlannerScreenState extends ConsumerState<PlannerScreen> {
     // State 2: Error
     if (plannerState.error != null) {
       return Center(
-        child: Padding(
+        child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 32),
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -177,6 +177,22 @@ class _PlannerScreenState extends ConsumerState<PlannerScreen> {
                 "Oops, couldn't plan your day right now.\nLet's try again!",
                 textAlign: TextAlign.center,
                 style: context.textTheme.bodyLarge,
+              ),
+              const SizedBox(height: 12),
+              // Show actual error details for diagnosis.
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: context.colorScheme.errorContainer.withValues(alpha:0.3),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Text(
+                  plannerState.error!,
+                  textAlign: TextAlign.center,
+                  style: context.textTheme.bodySmall?.copyWith(
+                    color: context.colorScheme.onErrorContainer,
+                  ),
+                ),
               ),
               const SizedBox(height: 24),
               SizedBox(

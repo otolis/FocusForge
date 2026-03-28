@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/foundation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -87,10 +89,25 @@ class PlannerRepository {
     debugPrint('[PlannerRepo] Invoking generate-schedule with '
         '${items.length} items');
 
-    final response = await _client.functions.invoke(
-      'generate-schedule',
-      body: body,
-    );
+    final FunctionResponse response;
+    try {
+      response = await _client.functions.invoke(
+        'generate-schedule',
+        body: body,
+      );
+    } on FunctionException catch (e) {
+      // The SDK throws FunctionException for non-2xx status codes.
+      // Extract meaningful details for diagnosis.
+      final details = e.details;
+      final errorMsg = details is Map ? details['error'] ?? details : details;
+      debugPrint('[PlannerRepo] FunctionException: '
+          'status=${e.status}, '
+          'reasonPhrase=${e.reasonPhrase}, '
+          'details=$details');
+      throw Exception(
+        'Edge Function error (${e.status}): $errorMsg',
+      );
+    }
 
     final data = response.data;
     debugPrint('[PlannerRepo] Response status: ${response.status}, '
@@ -98,8 +115,8 @@ class PlannerRepository {
 
     if (data is! Map<String, dynamic>) {
       throw Exception(
-        'Schedule generation returned unexpected data type: '
-        '${data.runtimeType}',
+        'Unexpected response type: ${data.runtimeType}. '
+        'Response preview: ${data.toString().length > 200 ? data.toString().substring(0, 200) : data}',
       );
     }
 

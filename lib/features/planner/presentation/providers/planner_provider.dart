@@ -107,8 +107,12 @@ class PlannerNotifier extends StateNotifier<PlannerState> {
     } catch (e, st) {
       debugPrint('[PlannerNotifier] generateSchedule FAILED: $e');
       debugPrint('[PlannerNotifier] Stack trace:\n$st');
+      // Strip the leading "Exception: " prefix for cleaner display.
+      final msg = e.toString();
+      final display =
+          msg.startsWith('Exception: ') ? msg.substring(11) : msg;
       state = state.copyWith(
-        error: e.toString(),
+        error: display,
         isGenerating: false,
       );
     }
