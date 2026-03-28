@@ -29,7 +29,7 @@
 **Parallel execution:** Phases 10, 11, 12, and 13 touch independent subsystems (SQL/Edge Functions, notification Dart service, auth/planner/boards Dart code, onboarding/task forms) and CAN run in parallel across separate terminals.
 
 - [x] **Phase 10: RPC & Edge Function Security** - Lock down SECURITY DEFINER RPCs + enable JWT verification on Edge Functions (completed 2026-03-28)
-- [ ] **Phase 11: Notification Logic Fixes** - Fix cold-start routing, action handlers, snooze, reminder scheduling, and preference honoring
+- [x] **Phase 11: Notification Logic Fixes** - Fix cold-start routing, action handlers, snooze, reminder scheduling, and preference honoring (completed 2026-03-28)
 - [ ] **Phase 12: Auth, Planner & Lifecycle Cleanup** - Hide placeholder Google sign-in, make planner import idempotent, fix FCM lifecycle and board RLS
 - [ ] **Phase 13: Onboarding, Recurring Tasks & Filter Fixes** - Fix onboarding bypass, recurring task editing, and date-range filter off-by-one
 
@@ -135,7 +135,7 @@ Phases 10, 11, 12, 13 are parallel (no dependencies between them). Phase 9 is in
 | 7. Notifications & Reminders | v1.0 | 3/3 | Complete | 2026-03-22 |
 | 8. Integration & Deployment | v1.0 | 4/4 | Complete | 2026-03-22 |
 | 10. RPC & Edge Function Security | 2/2 | Complete    | 2026-03-28 | - |
-| 11. Notification Logic Fixes | 2/3 | In Progress|  | - |
+| 11. Notification Logic Fixes | 3/3 | Complete   | 2026-03-28 | - |
 | 12. Auth, Planner & Lifecycle | v1.1 | 0/? | Not started | - |
 | 13. Onboarding, Recurring & Filter | v1.1 | 0/? | Not started | - |
 | 9. Boards UI Redesign | -- | 3/5 | In progress | - |
