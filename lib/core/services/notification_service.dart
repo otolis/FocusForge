@@ -5,8 +5,13 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:go_router/go_router.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
+import '../constants/supabase_constants.dart';
 import '../../features/notifications/data/notification_repository.dart';
+import '../../features/notifications/domain/completion_pattern.dart';
+import '../../features/tasks/data/task_repository.dart';
+import '../../features/habits/data/habit_repository.dart';
 
 /// Global navigator key used for deep-link navigation from notification taps.
 ///
@@ -92,6 +97,8 @@ Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
       'type': data['type'],
       'item_id': data['item_id'],
       'route': data['route'],
+      'title': data['title'] ?? '',
+      'body': data['body'] ?? '',
     }),
   );
 }
@@ -99,8 +106,8 @@ Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 /// Top-level action handler for notification button taps (background).
 ///
 /// Runs in the background isolate. Parses the payload to determine action.
-/// - 'complete': Marks the task/habit as complete via direct Supabase call.
-/// - 'snooze': Inserts a new scheduled_reminder with a delayed remind_at.
+/// - 'complete': Marks the task/habit as complete via domain repositories.
+/// - 'snooze': Inserts a new scheduled_reminder using user's snooze preference.
 @pragma('vm:entry-point')
 void onBackgroundNotificationAction(NotificationResponse response) async {
   if (response.payload == null) return;
@@ -110,18 +117,90 @@ void onBackgroundNotificationAction(NotificationResponse response) async {
   final itemId = payload['item_id'] as String?;
   final type = payload['type'] as String?;
 
-  if (actionId == 'complete' && itemId != null && type != null) {
-    // In a background isolate, Supabase must be re-initialized.
-    // The actual completion logic will be wired when Supabase is available
-    // in the background isolate context.
-    // For now, this is the hook point for marking tasks/habits complete.
-    debugPrint(
-        'NotificationAction: complete $type $itemId');
-  } else if (actionId == 'snooze' && itemId != null) {
-    // Snooze: re-schedule the reminder for snooze_duration minutes later.
-    // Requires Supabase re-init in background isolate.
-    debugPrint(
-        'NotificationAction: snooze $type $itemId');
+  if (itemId == null || type == null) return;
+
+  try {
+    // Re-initialize Supabase in the background isolate. The persisted session
+    // is restored from local storage, so the client is authenticated.
+    try {
+      await Supabase.initialize(
+        url: SupabaseConstants.url,
+        anonKey: SupabaseConstants.anonKey,
+      );
+    } catch (_) {
+      // Already initialized (e.g. foreground isolate still alive).
+    }
+    final client = Supabase.instance.client;
+    final userId = client.auth.currentUser?.id;
+
+    if (actionId == 'complete') {
+      if (type == 'task_deadline') {
+        final taskRepo = TaskRepository(client);
+        final task = await taskRepo.getTaskById(itemId);
+        if (task != null && !task.isCompleted) {
+          final completed = task.copyWith(
+            isCompleted: true,
+            completedAt: DateTime.now(),
+          );
+          await taskRepo.updateTask(completed);
+
+          // Record completion for adaptive timing
+          if (userId != null) {
+            final notifRepo = NotificationRepository(client);
+            await notifRepo.recordCompletion(CompletionPattern(
+              id: '',
+              userId: userId,
+              itemType: 'task',
+              itemId: itemId,
+              deadlineAt: task.deadline,
+              completedAt: DateTime.now(),
+              createdAt: DateTime.now(),
+            ));
+          }
+        }
+      } else if (type == 'habit_reminder') {
+        final habitRepo = HabitRepository(client);
+        await habitRepo.logCompletion(itemId);
+
+        // Record completion for adaptive timing
+        if (userId != null) {
+          final notifRepo = NotificationRepository(client);
+          await notifRepo.recordCompletion(CompletionPattern(
+            id: '',
+            userId: userId,
+            itemType: 'habit',
+            itemId: itemId,
+            completedAt: DateTime.now(),
+            createdAt: DateTime.now(),
+          ));
+        }
+      }
+    } else if (actionId == 'snooze') {
+      if (userId != null) {
+        // Read user's snooze duration from notification_preferences
+        final prefsData = await client
+            .from('notification_preferences')
+            .select('snooze_duration')
+            .eq('user_id', userId)
+            .single();
+        final snoozeDuration = prefsData['snooze_duration'] as int? ?? 15;
+
+        await client.from('scheduled_reminders').insert({
+          'user_id': userId,
+          'reminder_type': type,
+          'item_id': itemId,
+          'remind_at': DateTime.now()
+              .add(Duration(minutes: snoozeDuration))
+              .toUtc()
+              .toIso8601String(),
+          'title': payload['title'] ?? 'Reminder',
+          'body': payload['body'] ?? '',
+          'deep_link_route': payload['route'],
+        });
+      }
+    }
+  } catch (e) {
+    debugPrint('NotificationAction error ($actionId): $e');
   }
 }
 
@@ -146,6 +225,17 @@ class NotificationService {
   factory NotificationService() => _instance;
 
   NotificationService._();
+
+  /// Pending deep-link route from a cold-start notification tap.
+  /// Stored during initialize(), consumed once by the router redirect.
+  static String? _pendingDeepLink;
+
+  /// Returns and clears the pending deep-link route. Returns null if none.
+  static String? consumePendingDeepLink() {
+    final link = _pendingDeepLink;
+    _pendingDeepLink = null;
+    return link;
+  }
 
   final FlutterLocalNotificationsPlugin _localNotifications =
       FlutterLocalNotificationsPlugin();
@@ -229,7 +319,9 @@ class NotificationService {
     final initialMessage =
         await FirebaseMessaging.instance.getInitialMessage();
     if (initialMessage != null) {
-      _handleMessageOpenedApp(initialMessage);
+      // On cold start, navigator context does not exist yet.
+      // Store the route for consumption by the router redirect.
+      _pendingDeepLink = initialMessage.data['route'] as String?;
     }
   }
 
@@ -261,22 +353,33 @@ class NotificationService {
         'type': data['type'],
         'item_id': data['item_id'],
         'route': data['route'],
+        'title': data['title'] ?? '',
+        'body': data['body'] ?? '',
       }),
     );
   }
 
-  /// Handles taps on local notifications (foreground).
+  /// Handles taps on local notifications and action buttons (foreground).
   ///
-  /// Extracts the `route` from the payload and navigates using GoRouter
-  /// via the [notificationNavigatorKey].
+  /// If an action button was pressed, delegates to [_handleComplete] or
+  /// [_handleSnooze]. Otherwise extracts the `route` from the payload and
+  /// navigates using GoRouter via the [notificationNavigatorKey].
   void _onNotificationTap(NotificationResponse response) {
     if (response.payload == null) return;
 
     final payload = jsonDecode(response.payload!) as Map<String, dynamic>;
-    final route = payload['route'] as String?;
+    final actionId = response.actionId;
 
-    if (route != null && notificationNavigatorKey.currentContext != null) {
-      GoRouter.of(notificationNavigatorKey.currentContext!).push(route);
+    if (actionId == 'complete') {
+      _handleComplete(payload);
+    } else if (actionId == 'snooze') {
+      _handleSnooze(payload);
+    } else {
+      // Body tap — navigate via deep link.
+      final route = payload['route'] as String?;
+      if (route != null && notificationNavigatorKey.currentContext != null) {
+        GoRouter.of(notificationNavigatorKey.currentContext!).push(route);
+      }
     }
   }
 
@@ -287,6 +390,99 @@ class NotificationService {
     final route = message.data['route'] as String?;
     if (route != null && notificationNavigatorKey.currentContext != null) {
       GoRouter.of(notificationNavigatorKey.currentContext!).push(route);
+    }
+  }
+
+  /// Marks a task as completed or records a habit log via domain repositories.
+  Future<void> _handleComplete(Map<String, dynamic> payload) async {
+    final itemId = payload['item_id'] as String?;
+    final type = payload['type'] as String?;
+    if (itemId == null || type == null) return;
+
+    try {
+      final client = Supabase.instance.client;
+      final userId = client.auth.currentUser?.id;
+
+      if (type == 'task_deadline') {
+        final taskRepo = TaskRepository(client);
+        final task = await taskRepo.getTaskById(itemId);
+        if (task != null && !task.isCompleted) {
+          final completed = task.copyWith(
+            isCompleted: true,
+            completedAt: DateTime.now(),
+          );
+          await taskRepo.updateTask(completed);
+
+          // Record completion for adaptive timing
+          if (userId != null) {
+            final notifRepo = NotificationRepository(client);
+            await notifRepo.recordCompletion(CompletionPattern(
+              id: '',
+              userId: userId,
+              itemType: 'task',
+              itemId: itemId,
+              deadlineAt: task.deadline,
+              completedAt: DateTime.now(),
+              createdAt: DateTime.now(),
+            ));
+          }
+        }
+      } else if (type == 'habit_reminder') {
+        final habitRepo = HabitRepository(client);
+        await habitRepo.logCompletion(itemId);
+
+        // Record completion for adaptive timing
+        if (userId != null) {
+          final notifRepo = NotificationRepository(client);
+          await notifRepo.recordCompletion(CompletionPattern(
+            id: '',
+            userId: userId,
+            itemType: 'habit',
+            itemId: itemId,
+            completedAt: DateTime.now(),
+            createdAt: DateTime.now(),
+          ));
+        }
+      }
+    } catch (e) {
+      debugPrint('NotificationAction complete error: $e');
+    }
+  }
+
+  /// Snoozes a notification by inserting a new scheduled reminder using the
+  /// user's configured snooze duration from notification_preferences.
+  Future<void> _handleSnooze(Map<String, dynamic> payload) async {
+    final itemId = payload['item_id'] as String?;
+    final type = payload['type'] as String?;
+    if (itemId == null || type == null) return;
+
+    try {
+      final client = Supabase.instance.client;
+      final userId = client.auth.currentUser?.id;
+      if (userId == null) return;
+
+      // Read user's snooze duration from notification_preferences
+      final prefsData = await client
+          .from('notification_preferences')
+          .select('snooze_duration')
+          .eq('user_id', userId)
+          .single();
+      final snoozeDuration = prefsData['snooze_duration'] as int? ?? 15;
+
+      await client.from('scheduled_reminders').insert({
+        'user_id': userId,
+        'reminder_type': type,
+        'item_id': itemId,
+        'remind_at': DateTime.now()
+            .add(Duration(minutes: snoozeDuration))
+            .toUtc()
+            .toIso8601String(),
+        'title': payload['title'] ?? 'Reminder',
+        'body': payload['body'] ?? '',
+        'deep_link_route': payload['route'],
+      });
+    } catch (e) {
+      debugPrint('NotificationAction snooze error: $e');
     }
   }
 
