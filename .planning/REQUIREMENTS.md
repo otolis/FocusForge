@@ -13,14 +13,16 @@ Requirements for the Security & Hardening milestone. Each maps to roadmap phases
 - [x] **SEC-02**: Task RPCs (`search_tasks`, `generate_recurring_instances`) validate ownership via `auth.uid()`
 - [x] **SEC-03**: Board RPCs (`create_board_with_defaults`, `invite_board_member`) validate ownership/auth via `auth.uid()`
 - [x] **SEC-04**: Function permissions hardened with REVOKE/GRANT EXECUTE to restrict direct client invocation
+- [x] **SEC-05**: Edge Functions (`generate-schedule`, `rewrite-title`) require valid JWT — unauthenticated anon-key-only calls rejected at gateway
+- [x] **SEC-06**: Client code passes user's session JWT (not anon key) when invoking Edge Functions
 
 ### Notifications
 
-- [ ] **NOTIF-01**: Deep links from terminated app route correctly on cold start (defer navigation until navigator context exists)
-- [ ] **NOTIF-02**: Notification task-complete action sets both `is_completed` and `completed_at` consistent with domain logic
-- [ ] **NOTIF-03**: Notification habit-complete action uses same-day upsert/increment logic from `habit_repository`
-- [ ] **NOTIF-04**: Snooze action handlers respect user's configured `snoozeDuration` preference instead of hardcoding 15 minutes
-- [ ] **NOTIF-05**: `recordCompletion` in notification_repository is called by production code so adaptive timing learns from real data
+- [x] **NOTIF-01**: Deep links from terminated app route correctly on cold start (defer navigation until navigator context exists)
+- [x] **NOTIF-02**: Notification task-complete action sets both `is_completed` and `completed_at` consistent with domain logic
+- [x] **NOTIF-03**: Notification habit-complete action uses same-day upsert/increment logic from `habit_repository`
+- [x] **NOTIF-04**: Snooze action handlers respect user's configured `snoozeDuration` preference instead of hardcoding 15 minutes
+- [x] **NOTIF-05**: `recordCompletion` in notification_repository is called by production code so adaptive timing learns from real data
 
 ### Auth
 
@@ -68,11 +70,13 @@ Which phases cover which requirements. Updated during roadmap creation.
 | SEC-02 | Phase 10 | Complete |
 | SEC-03 | Phase 10 | Complete |
 | SEC-04 | Phase 10 | Complete |
-| NOTIF-01 | Phase 11 | Pending |
-| NOTIF-02 | Phase 11 | Pending |
-| NOTIF-03 | Phase 11 | Pending |
-| NOTIF-04 | Phase 11 | Pending |
-| NOTIF-05 | Phase 11 | Pending |
+| SEC-05 | Phase 10 | Complete |
+| SEC-06 | Phase 10 | Complete |
+| NOTIF-01 | Phase 11 | Complete |
+| NOTIF-02 | Phase 11 | Complete |
+| NOTIF-03 | Phase 11 | Complete |
+| NOTIF-04 | Phase 11 | Complete |
+| NOTIF-05 | Phase 11 | Complete |
 | AUTH-01 | Phase 12 | Pending |
 | PLAN-01 | Phase 12 | Pending |
 | PLAN-02 | Phase 12 | Pending |

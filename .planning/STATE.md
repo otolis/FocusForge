@@ -3,8 +3,8 @@ gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Security & Hardening
 status: completed
-stopped_at: Completed 11-02-PLAN.md
-last_updated: "2026-03-28T14:12:01.938Z"
+stopped_at: Completed 11-01-PLAN.md
+last_updated: "2026-03-28T14:12:41.933Z"
 last_activity: "2026-03-28 - Completed 11-03: Timezone-aware quiet hours"
 progress:
   total_phases: 5
@@ -55,6 +55,7 @@ Progress (Phase 11): [====================] 3/3 plans (100%)
 | Phase 10 P01 | 2min | 2 tasks | 2 files |
 | Phase 11 P02 | 2min | 2 tasks | 3 files |
 | Phase 11 P03 | 2min | 2 tasks | 3 files |
+| Phase 11 P01 | 2min | 2 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -92,6 +93,9 @@ Recent decisions affecting current work:
 - [Phase 11]: toLocaleString with timeZone option for UTC-to-local conversion in Deno (no external library)
 - [Phase 11]: NULL timezone defaults to UTC -- safe fallback for existing users
 - [Phase 11]: copyWith clearTimezone bool pattern for explicitly nullifying timezone field
+- [Phase 11]: Cold-start deep links stored as static _pendingDeepLink consumed once by router redirect
+- [Phase 11]: Notification action handlers use domain repositories (TaskRepository/HabitRepository) instead of inline Supabase queries
+- [Phase 11]: recordCompletion in task_provider wrapped in inner try/catch to avoid breaking toggle on failure
 
 ### Pending Todos
 
@@ -123,6 +127,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-28T14:12:01.936Z
-Stopped at: Completed 11-02-PLAN.md
+Last session: 2026-03-28T14:12:41.930Z
+Stopped at: Completed 11-01-PLAN.md
 Resume file: None
