@@ -5,6 +5,7 @@ status: draft
 shadcn_initialized: false
 preset: none
 created: 2026-03-28
+revised: 2026-03-28
 ---
 
 # Phase 9 — UI Design Contract
@@ -21,10 +22,10 @@ created: 2026-03-28
 | Preset | not applicable |
 | Component library | Material 3 (Flutter SDK) |
 | Icon library | Material Icons (flutter/material.dart) |
-| Font (headings) | Nunito via google_fonts — weight 700 |
-| Font (body/labels) | Inter via google_fonts — weight 400, 500, 600 |
+| Font (headings) | Nunito via google_fonts — weight 700 (scoped to app-level headings outside this phase; not counted in this phase's weight budget) |
+| Font (body/labels) | Inter via google_fonts — weight 400, 600 |
 
-**Source:** Existing `lib/core/theme/text_theme.dart` and `app_theme.dart`.
+**Source:** Existing `lib/core/theme/text_theme.dart` and `app_theme.dart`. Nunito 700 is the app-wide heading font declared in earlier phases. This phase's table UI uses only Inter at weights 400 and 600.
 
 ---
 
@@ -36,8 +37,7 @@ Declared values (must be multiples of 4):
 |-------|-------|-------|
 | xs | 4px | Icon-to-text gaps, cell internal inline padding |
 | sm | 8px | Cell internal padding, row item spacing, group header icon-to-text gap |
-| md | 12px | Group header horizontal padding, card margin |
-| lg | 16px | Section padding, input content padding, view switcher horizontal padding |
+| lg | 16px | Group header horizontal padding, card margin, section padding, input content padding, view switcher horizontal padding |
 | xl | 24px | Board screen edge padding, space between view switcher and table |
 | 2xl | 32px | Not used in this phase |
 | 3xl | 48px | Not used in this phase |
@@ -57,40 +57,43 @@ Exceptions:
 | Role | Size | Weight | Line Height | Font | Usage in this phase |
 |------|------|--------|-------------|------|---------------------|
 | Body | 16px | 400 | 1.5 | Inter | Card detail sheet text, description cells |
-| Cell text | 13px | 500 | 1.3 | Inter | Status pill labels, priority pill labels, inline cell text |
-| Label | 14px | 400 | 1.4 | Inter | Column header text, group item count, due date values, "+ Add item" placeholder |
+| Label / Header | 14px | 400 | 1.4 | Inter | Column header text, group item count, due date values, "+ Add item" placeholder, view switcher tab labels |
 | Group header | 14px | 600 | 1.4 | Inter | Group name text on colored header bar |
-| View switcher tab | 14px | 500 | 1.4 | Inter | "Table" and "Kanban" tab labels |
-| Summary footer | 12px | 400 | 1.4 | Inter | Item count, date range span, status bar labels |
-| Timeline date label | 11px | 400 | 1.3 | Inter | Start/end date labels inside timeline bar |
-| Empty state body | 12px | 400 | 1.5 | Inter | "Set dates" placeholder in empty timeline cells |
+| Cell text | 13px | 400 | 1.3 | Inter | Status pill labels, priority pill labels, inline cell text |
+| Summary / Small | 12px | 400 | 1.4 | Inter | Item count in footer, date range span, status bar labels, timeline date labels ("d/M - d/M"), "Set dates" empty placeholder |
 
-**Source:** Existing `text_theme.dart` defines 28px display, 22px headline, 16px body, 14px label. This phase introduces 13px, 12px, and 11px for information-dense table cells — consistent with Monday.com's compact data display.
+**Font size budget (4 sizes):** 16px, 14px, 13px, 12px.
+**Font weight budget (2 weights):** 400 (regular), 600 (semibold).
+
+**Source:** Existing `text_theme.dart` defines 28px display, 22px headline, 16px body, 14px label. This phase introduces 13px and 12px for information-dense table cells — consistent with Monday.com's compact data display.
 
 ---
 
 ## Color
 
-### Surface Colors
+### Surface Colors (60% Dominant + 30% Secondary)
 
-| Role | Light Mode | Dark Mode | Usage |
-|------|-----------|-----------|-------|
-| Dominant surface (60%) | #FFFBF5 (cream) | #1E1B16 (charcoal) | Table background, page background |
-| Row surface (even) | #FFFBF5 | #1E1B16 | Even row background (same as surface) |
-| Row surface (odd/zebra) | #F5F0E8 | #252118 | Odd row background for zebra striping |
-| Row border | colorScheme.outlineVariant at 20% opacity | colorScheme.outlineVariant at 20% opacity | Horizontal row separator lines |
-| Column header surface | colorScheme.surfaceContainerHighest | colorScheme.surfaceContainerHighest | Column header bar background |
+| Role | Light Mode | Dark Mode | Usage | Split |
+|------|-----------|-----------|-------|-------|
+| Dominant surface (60%) | #FFFBF5 (cream) | #1E1B16 (charcoal) | Table background, page background | 60% dominant |
+| Column header surface | colorScheme.surfaceContainerHighest | colorScheme.surfaceContainerHighest | Column header bar background | 30% secondary |
+| Row surface (even) | #FFFBF5 | #1E1B16 | Even row background (same as dominant surface) | 30% secondary |
+| Row surface (odd/zebra) | #F5F0E8 | #252118 | Odd row background for zebra striping | 30% secondary |
+| Group header bars | User-assigned group color (default: #2196F3) | Same | Full-width colored header bars per group | 30% secondary |
+| Row border | colorScheme.outlineVariant at 20% opacity | colorScheme.outlineVariant at 20% opacity | Horizontal row separator lines | — |
+
+**30% secondary layer:** Group header colored bars, column header surface, and row zebra striping collectively form the mid-tone layer that provides visual structure between the dominant surface and the 10% accent highlights.
 
 **Source:** Existing `color_schemes.dart` — cream surface #FFFBF5, charcoal #1E1B16.
 
-### Accent and Semantic Colors
+### Accent and Semantic Colors (10% Accent)
 
 | Role | Value | Usage |
 |------|-------|-------|
 | Primary accent (10%) | colorScheme.primary (amber-derived) | View switcher active tab indicator, selected row highlight, focus ring on editing cells |
 | Tertiary accent | #2E7D6F (light) / #81C784 (dark) | Presence online dot (existing pattern) |
 
-**Accent reserved for:** Active view switcher tab underline, cell edit focus border, selected/hovered row highlight, primary CTA buttons only.
+**Accent reserved for:** Active view switcher tab underline, cell edit focus border (2px), selected/hovered row highlight, primary CTA buttons only.
 
 ### Monday.com Priority Pill Colors (fixed, not theme-derived)
 
@@ -133,31 +136,37 @@ Item count text on group headers: #FFFFFF at 70% opacity.
 
 ---
 
+## Focal Point
+
+**Primary visual anchor:** The colored `GroupHeaderWidget` bars are the focal point of the board table screen. Their user-assigned vibrant colors against the neutral cream/charcoal surface create the primary visual hierarchy, drawing the eye to group boundaries and making logical sections immediately scannable. All other elements (cells, footers, headers) are visually subordinate to these colored bars.
+
+---
+
 ## Component Inventory
 
 ### New Widgets (this phase)
 
 | Widget | Location | Visual Spec |
 |--------|----------|-------------|
-| `ViewSwitcher` | Top of board detail screen | Horizontal row: two tabs ("Table" with grid_view icon, "Kanban" with view_column icon). Active tab has primary color underline (2px) and semibold text. Inactive tab has no underline and normal weight text. Height: 48px. Background: surface color. |
+| `ViewSwitcher` | Top of board detail screen | Horizontal row: two tabs ("Table" with grid_view icon, "Kanban" with view_column icon). Active tab has primary color underline (2px) and semibold (600) text. Inactive tab has no underline and regular (400) weight text. Height: 48px. Background: surface color. Tab labels: 14px Inter. |
 | `BoardTableWidget` | Main content area in table tab | Sticky first column (200px) + horizontally scrollable remaining columns. Vertical scroll synced between fixed and scrollable sections. |
-| `TableHeaderRow` | Top of table (below ViewSwitcher) | Row of column headers. Background: surfaceContainerHighest. Height: 40px. Each header shows column name (14px, w500). Right edge has 6px invisible resize handle with resizeColumn cursor. Headers are drag-reorderable. Last header position has a "+" button to add columns. |
+| `TableHeaderRow` | Top of table (below ViewSwitcher) | Row of column headers. Background: surfaceContainerHighest. Height: 40px. Each header shows column name (14px, w400). Right edge has 6px invisible resize handle with resizeColumn cursor. Headers are drag-reorderable. Last header position has a "+" button to add columns. |
 | `TableDataRow` | One per card item | Height: 36px. Cells arranged in same column order as headers. Even/odd zebra striping. Bottom border: outlineVariant at 20% opacity, 1px. Single-tap any cell to enter edit mode. |
 | `GroupHeaderWidget` | Before each group's rows | Full-width bar at group color. Height: 40px. Contains: chevron_right/expand_more toggle icon (20px, white), 8px gap, group name (14px, w600, white), 8px gap, item count ("N items", 12px, white at 70%). Tap toggles collapse. Long-press or context menu for rename/delete. |
-| `GroupFooterWidget` | After each group's rows | Height: 32px. Background: surface with subtle top border. Contains: item count label, status distribution bar (horizontal segmented bar showing % of each status as colored segments, height 8px, rounded 4px), date range span text. |
+| `GroupFooterWidget` | After each group's rows | Height: 32px. Background: surface with subtle top border. Contains: item count label (12px), status distribution bar (horizontal segmented bar showing % of each status as colored segments, height 8px, rounded 4px), date range span text (12px). |
 | `AddItemRow` | After group footer | Height: 36px. Contains "+" icon (16px, primary) + text field with hint "Add item" (14px, onSurfaceVariant at 50%). Tap focuses the text field. Press Enter or blur with text to create item. New item inherits the parent group. |
-| `StatusCell` | Status column cell | Full-width colored fill, no border radius. Height: 36px. Label centered (13px, w500, white). Tap opens dropdown overlay listing all board status labels as color swatches with names. |
-| `PriorityCell` | Priority column cell | Full-width colored fill, no border radius. Height: 36px. Label centered (13px, w500, white). Tap opens dropdown overlay with 4 priority options showing preview colors. |
+| `StatusCell` | Status column cell | Full-width colored fill, no border radius. Height: 36px. Label centered (13px, w400, white). Tap opens dropdown overlay listing all board status labels as color swatches with names. |
+| `PriorityCell` | Priority column cell | Full-width colored fill, no border radius. Height: 36px. Label centered (13px, w400, white). Tap opens dropdown overlay with 4 priority options showing preview colors. |
 | `PersonCell` | Person column cell | Shows assignee avatar (CircleAvatar, radius 12) + display name truncated. If no assignee, shows gray user_outline icon. Tap opens member picker bottom sheet listing all board members with avatars. |
-| `TimelineCell` | Timeline column cell | If dates set: colored horizontal bar (status color at 70% opacity, border radius 4px) with "d/M - d/M" label (11px, white). Bar fills available space within 8px vertical padding. If no dates: "Set dates" text (12px, gray). Tap opens `showDateRangePicker`. |
+| `TimelineCell` | Timeline column cell | If dates set: colored horizontal bar (status color at 70% opacity, border radius 4px) with "d/M - d/M" label (12px, white). Bar fills available space within 8px vertical padding. If no dates: "Set dates" text (12px, gray). Tap opens `showDateRangePicker`. |
 | `DueDateCell` | Due date column cell | Date text formatted as "MMM d" (14px, onSurface). If overdue: text in error color. If no date: dash character (14px, onSurfaceVariant). Tap opens `showDatePicker`. |
 | `TextCell` | Name column and custom text columns | Display mode: text (14px for name column, 13px for custom). Truncated with ellipsis. Edit mode: borderless TextField, same font size, auto-focus. Save on Enter or blur. |
 | `NumberCell` | Custom number columns | Display mode: right-aligned number text (13px). Edit mode: borderless TextField with numeric keyboard. |
 | `CheckboxCell` | Custom checkbox columns | Centered Checkbox widget (Material 3 default). Tap toggles immediately (optimistic update). |
 | `LinkCell` | Custom link columns | Display mode: truncated URL text (13px, primary color, underlined). Tap-and-hold opens URL. Single tap enters edit mode with borderless TextField. |
-| `ColumnConfigSheet` | Bottom sheet for add/edit column | Modal bottom sheet. Column name text field + column type dropdown (status, priority, person, timeline, due_date, text, number, checkbox, link). "Add Column" / "Save" primary CTA button. |
+| `ColumnConfigSheet` | Bottom sheet for add/edit column | Modal bottom sheet. Column name text field + column type dropdown (status, priority, person, timeline, due_date, text, number, checkbox, link). Creation mode CTA: "Add Column". Edit mode CTA: "Update Column". |
 | `StatusConfigSheet` | Bottom sheet for status label management | Modal bottom sheet. List of current status labels: color circle (20px) + name text field + delete icon. "+ Add status" row at bottom. Color picker: row of 10 preset color circles. |
-| `GroupConfigSheet` | Bottom sheet for group management | Modal bottom sheet. Group name text field + color picker (same 10 preset circles). "Save" primary CTA button. |
+| `GroupConfigSheet` | Bottom sheet for group management | Modal bottom sheet. Group name text field + color picker (same 10 preset circles). Creation mode CTA: "Add group". Edit mode CTA: "Update Group". |
 
 ### Reused Widgets (from existing codebase)
 
@@ -241,15 +250,19 @@ Only ONE cell can be in edit mode at a time. The table provider holds an `editin
 | Primary CTA (add item) | "+ Add item" (inside each group's add row) |
 | Primary CTA (add column) | "+" icon in header row, tooltip: "Add column" |
 | Primary CTA (add group) | "+ Add group" (below last group, full-width row) |
+| Column config: create CTA | "Add Column" |
+| Column config: edit CTA | "Update Column" |
+| Group config: create CTA | "Add group" |
+| Group config: edit CTA | "Update Group" |
 | Empty state heading | "No items yet" |
 | Empty state body | "Tap '+ Add item' to create your first item in this group." |
 | Empty board heading | "Start building your board" |
 | Empty board body | "Add a group to organize your items, then add items within each group." |
 | Empty timeline cell | "Set dates" |
-| Empty due date cell | "—" (em dash) |
+| Empty due date cell | "\u2014" (em dash) |
 | Empty person cell | User outline icon (Icons.person_outline, 16px, onSurfaceVariant) |
 | Empty status cell | "Not Started" pill in gray (#9E9E9E) |
-| Empty description cell | "—" (em dash) |
+| Empty description cell | "\u2014" (em dash) |
 | Error state (load failure) | "Couldn't load board" / "Check your connection and pull down to retry." |
 | Error state (save failure) | SnackBar: "Couldn't save changes. Tap to retry." (with retry action) |
 | Destructive: delete group | "Delete group" / "Delete '{groupName}' and all its items? This can't be undone." |
