@@ -605,6 +605,36 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen> {
           await ref
               .read(taskListProvider.notifier)
               .updateTask(updatedParent);
+
+          // RECTASK-01: Upsert recurrence rule with current picker config
+          if (_recurrenceConfig != null && parent.recurrenceRuleId != null) {
+            await Supabase.instance.client
+                .from('recurrence_rules')
+                .update({
+                  'type': _recurrenceConfig!.type.name,
+                  'interval_days': _recurrenceConfig!.type == RecurrenceType.custom
+                      ? _recurrenceConfig!.intervalDays
+                      : null,
+                  'days_of_week': _recurrenceConfig!.type == RecurrenceType.weekly
+                      ? _recurrenceConfig!.daysOfWeek
+                      : null,
+                  'day_of_month': _recurrenceConfig!.type == RecurrenceType.monthly
+                      ? _recurrenceConfig!.dayOfMonth
+                      : null,
+                })
+                .eq('id', parent.recurrenceRuleId!);
+          }
+
+          // Delete incomplete future child instances so generate_recurring_instances
+          // can re-insert them with the updated pattern. The SQL function has a
+          // NOT EXISTS guard that would skip dates already occupied by old instances.
+          await Supabase.instance.client
+              .from('tasks')
+              .delete()
+              .eq('parent_task_id', parentId)
+              .eq('is_completed', false)
+              .gt('deadline', DateTime.now().toIso8601String());
+
           final repo = ref.read(taskRepositoryProvider);
           await repo.generateRecurringInstances(parentId);
         }
