@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:firebase_core/firebase_core.dart';
@@ -239,6 +240,10 @@ class NotificationService {
 
   final FlutterLocalNotificationsPlugin _localNotifications =
       FlutterLocalNotificationsPlugin();
+
+  /// Subscription to FCM token refresh events.
+  /// Stored so it can be cancelled on sign-out to prevent accumulation.
+  StreamSubscription<String>? _tokenRefreshSubscription;
 
   /// The three Android notification channels.
   static const _taskChannel = AndroidNotificationChannel(
@@ -493,12 +498,16 @@ class NotificationService {
     String userId,
     NotificationRepository repo,
   ) async {
+    // Cancel any previous subscription to prevent accumulation
+    await _tokenRefreshSubscription?.cancel();
+
     final token = await FirebaseMessaging.instance.getToken();
     if (token != null) {
       await repo.storeFcmToken(userId, token);
     }
 
-    FirebaseMessaging.instance.onTokenRefresh.listen((newToken) {
+    _tokenRefreshSubscription =
+        FirebaseMessaging.instance.onTokenRefresh.listen((newToken) {
       repo.storeFcmToken(userId, newToken);
     });
   }
@@ -510,6 +519,10 @@ class NotificationService {
     String userId,
     NotificationRepository repo,
   ) async {
+    // Cancel token refresh subscription to prevent stale listeners
+    await _tokenRefreshSubscription?.cancel();
+    _tokenRefreshSubscription = null;
+
     await repo.clearFcmToken(userId);
     await FirebaseMessaging.instance.deleteToken();
   }
