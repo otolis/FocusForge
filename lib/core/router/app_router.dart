@@ -1,9 +1,9 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../features/auth/presentation/providers/auth_provider.dart';
+import '../services/notification_service.dart';
 import '../../features/auth/presentation/screens/login_screen.dart';
 import '../../features/auth/presentation/screens/register_screen.dart';
 import '../../features/auth/presentation/screens/forgot_password_screen.dart';
@@ -23,10 +23,6 @@ import '../../shared/widgets/app_shell.dart';
 import '../../features/tasks/presentation/screens/task_list_screen.dart';
 import '../../features/tasks/presentation/screens/task_form_screen.dart';
 import '../../features/tasks/presentation/screens/category_management_screen.dart';
-
-/// Navigator key for the root navigator, used to push screens over the
-/// ShellRoute (no bottom nav visible on form screens).
-final _rootNavigatorKey = GlobalKey<NavigatorState>();
 
 /// Tracks whether onboarding has been completed so the redirect guard
 /// can check synchronously.
@@ -56,7 +52,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
   final authNotifier = ref.read(authNotifierProvider);
 
   return GoRouter(
-    navigatorKey: _rootNavigatorKey,
+    navigatorKey: notificationNavigatorKey,
     refreshListenable: authNotifier,
     initialLocation: '/login',
     redirect: (context, state) {
@@ -79,6 +75,12 @@ final appRouterProvider = Provider<GoRouter>((ref) {
 
       // Authenticated users on root redirect to first tab.
       if (isAuth && location == '/') return '/tasks';
+
+      // Consume pending deep link from cold-start notification tap
+      if (isAuth) {
+        final pendingRoute = NotificationService.consumePendingDeepLink();
+        if (pendingRoute != null) return pendingRoute;
+      }
 
       return null; // No redirect needed.
     },
@@ -113,18 +115,18 @@ final appRouterProvider = Provider<GoRouter>((ref) {
             routes: [
               GoRoute(
                 path: 'create',
-                parentNavigatorKey: _rootNavigatorKey,
+                parentNavigatorKey: notificationNavigatorKey,
                 builder: (context, state) => const TaskFormScreen(),
               ),
               GoRoute(
                 path: 'categories',
-                parentNavigatorKey: _rootNavigatorKey,
+                parentNavigatorKey: notificationNavigatorKey,
                 builder: (context, state) =>
                     const CategoryManagementScreen(),
               ),
               GoRoute(
                 path: ':id',
-                parentNavigatorKey: _rootNavigatorKey,
+                parentNavigatorKey: notificationNavigatorKey,
                 builder: (context, state) {
                   final taskId = state.pathParameters['id']!;
                   return TaskFormScreen(taskId: taskId);

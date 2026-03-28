@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../data/task_repository.dart';
 import '../../domain/task_model.dart';
+import '../../../notifications/data/notification_repository.dart';
+import '../../../notifications/domain/completion_pattern.dart';
 
 final taskRepositoryProvider = Provider<TaskRepository>(
   (ref) => TaskRepository(),
@@ -61,6 +63,24 @@ class TaskListNotifier extends AsyncNotifier<List<Task>> {
     try {
       final repo = ref.read(taskRepositoryProvider);
       await repo.updateTask(toggled);
+
+      // Record completion for adaptive timing (NOTIF-05)
+      if (toggled.isCompleted) {
+        try {
+          final notifRepo = NotificationRepository();
+          await notifRepo.recordCompletion(CompletionPattern(
+            id: '',
+            userId: toggled.userId,
+            itemType: 'task',
+            itemId: toggled.id,
+            deadlineAt: toggled.deadline,
+            completedAt: toggled.completedAt ?? DateTime.now(),
+            createdAt: DateTime.now(),
+          ));
+        } catch (_) {
+          // Non-critical: don't fail the toggle if recording fails
+        }
+      }
     } catch (e) {
       tasks[index] = previous;
       state = AsyncData(tasks);
