@@ -85,11 +85,11 @@ Plans:
   3. Each `addItem()` call during planner import completes before the next begins (no race conditions from unawaited futures)
   4. Signing out and back in does not accumulate stale FCM token refresh subscriptions (subscription cancelled on sign-out)
   5. Board co-members can see each other's profile display names and avatars on shared boards without RLS visibility errors
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 12-01: TBD
-- [ ] 12-02: TBD
+- [ ] 12-01-PLAN.md -- Hide Google sign-in buttons, fix FCM subscription lifecycle, add board co-member profile RLS
+- [ ] 12-02-PLAN.md -- Idempotent planner import with source linkage and sequential await
 
 ### Phase 13: Onboarding, Recurring Tasks & Filter Fixes
 **Goal**: Fix onboarding bypass allowing direct navigation to app routes, complete recurring task editing lifecycle, and fix date-range filter off-by-one exclusion
@@ -135,7 +135,7 @@ Phases 10, 11, 12, 13 are parallel (no dependencies between them). Phase 9 is in
 | 7. Notifications & Reminders | v1.0 | 3/3 | Complete | 2026-03-22 |
 | 8. Integration & Deployment | v1.0 | 4/4 | Complete | 2026-03-22 |
 | 10. RPC & Edge Function Security | 2/2 | Complete    | 2026-03-28 | - |
-| 11. Notification Logic Fixes | 3/3 | Complete   | 2026-03-28 | - |
-| 12. Auth, Planner & Lifecycle | v1.1 | 0/? | Not started | - |
+| 11. Notification Logic Fixes | 3/3 | Complete    | 2026-03-28 | - |
+| 12. Auth, Planner & Lifecycle | v1.1 | 0/2 | Not started | - |
 | 13. Onboarding, Recurring & Filter | v1.1 | 0/? | Not started | - |
 | 9. Boards UI Redesign | -- | 3/5 | In progress | - |
