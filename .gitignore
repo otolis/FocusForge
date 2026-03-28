@@ -45,6 +45,9 @@ app.*.map.json
 # Supabase secrets — never commit real credentials
 lib/core/constants/supabase_constants.dart
 
+# Firebase service account (will contain FCM credentials)
+supabase/functions/service-account.json
+
 # Environment files
 .env
 .env.*
