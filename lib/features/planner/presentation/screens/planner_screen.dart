@@ -357,7 +357,8 @@ class _PlannerScreenState extends ConsumerState<PlannerScreen> {
   }
 
   /// Imports uncompleted tasks and incomplete habits as plannable items.
-  void _importRealItems() {
+  /// Idempotent: skips items already imported for the current date.
+  Future<void> _importRealItems() async {
     final userId = _userId;
     if (userId.isEmpty) return;
 
@@ -368,17 +369,43 @@ class _PlannerScreenState extends ConsumerState<PlannerScreen> {
       );
       return;
     }
+
+    // Build set of already-imported source keys for the current date
+    final existingItems =
+        ref.read(plannableItemsProvider(userId)).valueOrNull ?? [];
+    final importedKeys = <String>{};
+    for (final item in existingItems) {
+      if (item.sourceType != null && item.sourceId != null) {
+        importedKeys.add('${item.sourceType}:${item.sourceId}');
+      }
+    }
+
     final notifier = ref.read(plannableItemsProvider(userId).notifier);
+    int importedCount = 0;
+
     for (final item in realItems) {
-      notifier.addItem(
+      // Skip already-imported items (idempotent)
+      final key = '${item.sourceType}:${item.sourceId}';
+      if (importedKeys.contains(key)) continue;
+
+      await notifier.addItem(
         title: item.title,
         durationMinutes: item.durationMinutes,
         energyLevel: item.energyLevel,
+        sourceType: item.sourceType,
+        sourceId: item.sourceId,
+      );
+      importedCount++;
+    }
+
+    if (mounted) {
+      final message = importedCount > 0
+          ? 'Imported $importedCount items'
+          : 'All items already imported';
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(message)),
       );
     }
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Imported ${realItems.length} items')),
-    );
   }
 
   Future<void> _generate(String userId) async {

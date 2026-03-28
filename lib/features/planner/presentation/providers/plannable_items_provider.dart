@@ -46,10 +46,15 @@ class PlannableItemsNotifier
   }
 
   /// Adds a new plannable item and refreshes the list.
+  ///
+  /// Optional [sourceType] and [sourceId] link the item back to a task or
+  /// habit for idempotent import (duplicates prevented by partial unique index).
   Future<void> addItem({
     required String title,
     required int durationMinutes,
     required EnergyLevel energyLevel,
+    String? sourceType,
+    String? sourceId,
   }) async {
     await _repo.addItem(
       userId: _userId,
@@ -57,6 +62,8 @@ class PlannableItemsNotifier
       durationMinutes: durationMinutes,
       energyLevel: energyLevel,
       planDate: _selectedDate,
+      sourceType: sourceType,
+      sourceId: sourceId,
     );
     await loadItems();
   }

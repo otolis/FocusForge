@@ -31,6 +31,8 @@ final realPlannableItemsProvider = Provider<List<PlannableItem>>((ref) {
       energyLevel: _mapPriorityToEnergy(task.priority),
       planDate: today,
       createdAt: task.createdAt,
+      sourceType: 'task',
+      sourceId: task.id,
     ));
   }
 
@@ -44,6 +46,8 @@ final realPlannableItemsProvider = Provider<List<PlannableItem>>((ref) {
       energyLevel: EnergyLevel.medium,
       planDate: today,
       createdAt: habit.createdAt,
+      sourceType: 'habit',
+      sourceId: habit.id,
     ));
   }
 
