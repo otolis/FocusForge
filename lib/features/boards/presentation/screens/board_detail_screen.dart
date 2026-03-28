@@ -7,12 +7,16 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/utils/extensions.dart';
 import '../../../../shared/widgets/app_text_field.dart';
 import '../../domain/board_model.dart';
+import '../../domain/board_table_column.dart';
 import '../providers/board_detail_provider.dart';
 import '../providers/board_realtime_provider.dart';
 import '../widgets/card_detail_sheet.dart';
 import '../widgets/column_header_widget.dart';
 import '../widgets/empty_column_placeholder.dart';
 import '../widgets/kanban_card_widget.dart';
+import '../widgets/status_config_sheet.dart';
+import '../widgets/table/board_table_widget.dart';
+import '../widgets/view_switcher.dart';
 import '../../../../shared/widgets/ai_rewrite_button.dart';
 
 /// Custom item class that extends [AppFlowyGroupItem] to bridge
@@ -26,12 +30,11 @@ class BoardCardItem extends AppFlowyGroupItem {
   String get id => card.id;
 }
 
-/// Full-screen Kanban board view using [AppFlowyBoard].
+/// Board detail screen with Table and Kanban view tabs.
 ///
-/// Displays board columns as horizontally scrollable groups, each
-/// taking 85% of screen width. Cards are long-press draggable between
-/// columns. Watches [boardDetailProvider] for state and activates
-/// [boardRealtimeProvider] for live updates from other users.
+/// Table view is the default (activeIndex=0). Kanban view preserves
+/// the existing [AppFlowyBoard] rendering. Both views share the same
+/// [boardDetailProvider] state and [boardRealtimeProvider] for live updates.
 class BoardDetailScreen extends ConsumerStatefulWidget {
   const BoardDetailScreen({super.key, required this.boardId});
 
@@ -44,6 +47,9 @@ class BoardDetailScreen extends ConsumerStatefulWidget {
 
 class _BoardDetailScreenState extends ConsumerState<BoardDetailScreen> {
   late final AppFlowyBoardController _boardController;
+
+  /// Active view: 0 = Table (default), 1 = Kanban.
+  int _activeViewIndex = 0;
 
   /// Hash of last synced state to avoid redundant rebuilds that would
   /// interrupt mid-gesture drags.
@@ -88,7 +94,11 @@ class _BoardDetailScreenState extends ConsumerState<BoardDetailScreen> {
       buffer.write('${col.id}:${col.name}|');
       final cards = state.cardsByColumn[col.id] ?? [];
       for (final card in cards) {
-        buffer.write('${card.id}:${card.position},');
+        buffer.write(
+          '${card.id}:${card.position}:${card.priority}:'
+          '${card.title}:${card.description}:'
+          '${card.dueDate}:${card.assigneeId},',
+        );
       }
       buffer.write(';');
     }
@@ -96,15 +106,11 @@ class _BoardDetailScreenState extends ConsumerState<BoardDetailScreen> {
   }
 
   /// Syncs the [AppFlowyBoardController] with the current Riverpod state.
-  ///
-  /// Only performs a full sync when the column/card structure actually
-  /// changes, to avoid killing mid-gesture drags.
   void _syncControllerWithState(BoardDetailState state) {
     final newHash = _computeSyncHash(state);
     if (newHash == _lastSyncHash) return;
     _lastSyncHash = newHash;
 
-    // Clear and rebuild all groups
     _boardController.clear();
     for (final column in state.columns) {
       final cards = state.cardsByColumn[column.id] ?? [];
@@ -170,13 +176,17 @@ class _BoardDetailScreenState extends ConsumerState<BoardDetailScreen> {
       );
     }
 
-    // Sync controller with current state
-    _syncControllerWithState(state);
-
     return Scaffold(
       appBar: AppBar(
         title: Text(state.board?.name ?? 'Board'),
         actions: [
+          // Status config button (only for owner/editor)
+          if (state.canEdit)
+            IconButton(
+              icon: const Icon(Icons.palette_outlined),
+              tooltip: 'Manage statuses',
+              onPressed: () => _showStatusConfig(state),
+            ),
           IconButton(
             icon: const Icon(Icons.settings_outlined),
             tooltip: 'Board settings',
@@ -185,59 +195,107 @@ class _BoardDetailScreenState extends ConsumerState<BoardDetailScreen> {
           ),
         ],
       ),
-      body: AppFlowyBoard(
-        controller: _boardController,
-        cardBuilder: (context, group, groupItem) {
-          final item = groupItem as BoardCardItem;
-          return AppFlowyGroupCard(
-            key: ValueKey(item.card.id),
-            child: KanbanCardWidget(
-              card: item.card,
-              onTap: () => showCardDetailSheet(
-                context,
-                ref,
-                item.card,
-                widget.boardId,
-              ),
-            ),
-          );
-        },
-        headerBuilder: (context, columnData) {
-          final columnId = columnData.headerData.groupId;
-          final column = state.columns
-              .where((c) => c.id == columnId)
-              .firstOrNull;
-          final cardCount = state.cardsByColumn[columnId]?.length ?? 0;
+      body: Column(
+        children: [
+          ViewSwitcher(
+            activeIndex: _activeViewIndex,
+            onTabChanged: (i) => setState(() => _activeViewIndex = i),
+          ),
+          Expanded(
+            child: _activeViewIndex == 0
+                ? BoardTableWidget(boardId: widget.boardId)
+                : _buildKanbanView(state),
+          ),
+        ],
+      ),
+    );
+  }
 
-          return ColumnHeaderWidget(
-            columnName: column?.name ?? columnData.headerData.groupName,
-            cardCount: cardCount,
-            userRole: state.currentUserRole,
-            onRename: (newName) => ref
-                .read(boardDetailProvider(widget.boardId).notifier)
-                .renameColumn(columnId, newName),
-            onDelete: () => ref
-                .read(boardDetailProvider(widget.boardId).notifier)
-                .deleteColumn(columnId),
+  // ─── Kanban View (preserved from existing code) ──────
+
+  Widget _buildKanbanView(BoardDetailState state) {
+    // Sync controller with current state for Kanban
+    _syncControllerWithState(state);
+
+    return AppFlowyBoard(
+      controller: _boardController,
+      cardBuilder: (context, group, groupItem) {
+        final item = groupItem as BoardCardItem;
+        return AppFlowyGroupCard(
+          key: ValueKey(item.card.id),
+          decoration: const BoxDecoration(color: Colors.transparent),
+          margin: EdgeInsets.zero,
+          child: KanbanCardWidget(
+            card: item.card,
+            onTap: () => showCardDetailSheet(
+              context,
+              ref,
+              item.card,
+              widget.boardId,
+            ),
+          ),
+        );
+      },
+      headerBuilder: (context, columnData) {
+        final columnId = columnData.headerData.groupId;
+        final column = state.columns
+            .where((c) => c.id == columnId)
+            .firstOrNull;
+        final cardCount = state.cardsByColumn[columnId]?.length ?? 0;
+
+        return ColumnHeaderWidget(
+          columnName: column?.name ?? columnData.headerData.groupName,
+          cardCount: cardCount,
+          userRole: state.currentUserRole,
+          onRename: (newName) => ref
+              .read(boardDetailProvider(widget.boardId).notifier)
+              .renameColumn(columnId, newName),
+          onDelete: () => ref
+              .read(boardDetailProvider(widget.boardId).notifier)
+              .deleteColumn(columnId),
+          onAddCard: () => _showAddCardDialog(columnId),
+        );
+      },
+      footerBuilder: (context, columnData) {
+        final columnId = columnData.headerData.groupId;
+        final cards = state.cardsByColumn[columnId];
+        if (cards == null || cards.isEmpty) {
+          return EmptyColumnPlaceholder(
             onAddCard: () => _showAddCardDialog(columnId),
           );
+        }
+        return const SizedBox.shrink();
+      },
+      groupConstraints: BoxConstraints.tightFor(
+        width: MediaQuery.of(context).size.width * 0.85,
+      ),
+      config: AppFlowyBoardConfig(
+        groupBackgroundColor: context.colorScheme.surfaceContainerLow,
+      ),
+    );
+  }
+
+  // ─── Dialogs ─────────────────────────────────────────
+
+  void _showStatusConfig(BoardDetailState state) {
+    final metadata = state.board?.metadata;
+    if (metadata == null) return;
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      builder: (_) => StatusConfigSheet(
+        currentLabels: metadata.statusLabels,
+        onSave: (updatedLabels) {
+          final updatedMetadata = BoardMetadata(
+            columnDefs: metadata.columnDefs,
+            statusLabels: updatedLabels,
+            groups: metadata.groups,
+          );
+          ref
+              .read(boardDetailProvider(widget.boardId).notifier)
+              .updateBoardMetadata(updatedMetadata);
         },
-        footerBuilder: (context, columnData) {
-          final columnId = columnData.headerData.groupId;
-          final cards = state.cardsByColumn[columnId];
-          if (cards == null || cards.isEmpty) {
-            return EmptyColumnPlaceholder(
-              onAddCard: () => _showAddCardDialog(columnId),
-            );
-          }
-          return const SizedBox.shrink();
-        },
-        groupConstraints: BoxConstraints.tightFor(
-          width: MediaQuery.of(context).size.width * 0.85,
-        ),
-        config: AppFlowyBoardConfig(
-          groupBackgroundColor: context.colorScheme.surfaceContainerLow,
-        ),
       ),
     );
   }
@@ -293,7 +351,8 @@ class _BoardDetailScreenState extends ConsumerState<BoardDetailScreen> {
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Could not add card. Please try again.')),
+          const SnackBar(
+              content: Text('Could not add card. Please try again.')),
         );
       }
     }
