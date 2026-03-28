@@ -28,7 +28,7 @@ See: .planning/PROJECT.md (updated 2026-03-28)
 Phase: 10-12 ready to plan (3 parallel phases)
 Plan: --
 Status: Ready to plan
-Last activity: 2026-03-28 -- Completed quick task 260328-4wf: Fix planner UX - filter scheduled items, show Regenerate FAB
+Last activity: 2026-03-28 -- Completed quick task 260328-4yd: Add AI title rewrite button to all title fields
 
 Progress: [░░░░░░░░░░░░░░░░░░░░] 0/? plans (0%)
 
@@ -85,9 +85,10 @@ None yet.
 | 260328-4kr | Fix CI web build: .gitkeep for empty asset dirs + conditional import for tflite_flutter | 2026-03-28 | 075c506 | [260328-4kr-fix-pubspec-yaml-so-ci-web-build-succeed](./quick/260328-4kr-fix-pubspec-yaml-so-ci-web-build-succeed/) |
 | 260328-4uj | Fix bottom overflow by 18 pixels on planner screen | 2026-03-28 | 78a05e7 | [260328-4uj-fix-bottom-overflow-by-18-pixels-on-plan](./quick/260328-4uj-fix-bottom-overflow-by-18-pixels-on-plan/) |
 | 260328-4wf | Fix planner UX: filter scheduled items from panel, show Regenerate FAB | 2026-03-28 | cf4a867 | [260328-4wf-fix-planner-ux-clear-scheduled-items-fro](./quick/260328-4wf-fix-planner-ux-clear-scheduled-items-fro/) |
+| 260328-4yd | Add AI title rewrite button to all title fields | 2026-03-28 | dd9a3b0 | [260328-4yd-add-ai-title-rewrite-button-to-all-title](./quick/260328-4yd-add-ai-title-rewrite-button-to-all-title/) |
 
 ## Session Continuity
 
-Last session: 2026-03-28T01:35:04Z
-Stopped at: Completed quick task 260328-4wf
-Resume file: .planning/quick/260328-4wf-fix-planner-ux-clear-scheduled-items-fro/260328-4wf-SUMMARY.md
+Last session: 2026-03-28T01:41:30Z
+Stopped at: Completed quick task 260328-4yd
+Resume file: .planning/quick/260328-4yd-add-ai-title-rewrite-button-to-all-title/260328-4yd-SUMMARY.md
